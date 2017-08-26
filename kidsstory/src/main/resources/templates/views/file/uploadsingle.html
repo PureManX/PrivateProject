@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	  layout:decorator="layout/mobileLayout">
+<head>
+	<style>
+	</style>
+</head>
+<body>
+<div id="content_wrap">
+	<section class="mContents" layout:fragment="content">
+		<article>
+			<form action="/preschool/file/upload/single" method="POST" enctype="multipart/form-data"  accept="image/*">
+				<input type="file" name="file" />
+				<input type="hidden" name="filetype"  value="image" />
+				<input type="submit" value="업로드" />
+			</form>
+		</article>
+	</section>
+</div>
+<script th:inline="javascript" layout:fragment="script">
+	/*<![CDATA[*/
+	/*]]>*/
+</script>
+</body>
+</html>

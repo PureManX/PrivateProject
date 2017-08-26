@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorator="layout/mobileLayout">
+<head>
+	<style>
+		section.mContents img {
+			width: 100%;
+			height: 100%;
+		}
+
+	</style>
+</head>
+<body>
+	<div id="content_wrap">
+		<section class="mContents" layout:fragment="content">
+			<img src="/images/bg/introduce.jpg" />
+		</section>
+	</div>
+</body>
+</html>

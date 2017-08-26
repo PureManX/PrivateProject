@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<meta name="viewport"
+		  content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,height=device-height"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta http-equiv="content-language" content="ko"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+	<title layout:title-pattern="$CONTENT_TITLE :: $DECORATOR_TITLE">Site Tilte</title>
+
+	<meta http-equiv="Expires" content="-1"/>
+	<meta http-equiv="Pragma" content="no-store, no-cache"/>
+	<meta http-equiv="Cache-Control" content="must-revalidate, private, max-age=0, no-cache, no-store"/>
+
+	<!-- js lib cdn -->
+	<link rel="stylesheet"
+		  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+		  integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+		  crossorigin="anonymous" />
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+			integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+			crossorigin="anonymous"></script>
+	<script
+			src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+			integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+			crossorigin="anonymous"></script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.kr.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" th:href="@{/css/common/common.css}"/>
+</head>
+<body>
+<div id="content_wrap">
+	<section class="mContents" layout:fragment="content">
+	</section>
+</div>
+<script th:inline="javascript" layout:fragment="script">
+	/*<![CDATA[*/
+	/*]]>*/
+</script>
+</body>
+</html>

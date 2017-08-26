@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	  layout:decorator="layout/mobileLayout">
+<head>
+	<link rel="stylesheet" th:href="@{/adminlte/dist/css/AdminLTE.min.css}"/>
+	<link rel="stylesheet" th:href="@{/adminlte/dist/css/skins/skin-red-light.min.css}"/>
+	<style>
+		div.busLineContainer {
+			background: #ececec;
+			padding-bottom: 10px;
+			padding-top: 10px;
+		}
+		.list-header>div {
+			padding: 10px;
+			background: #ffdf00;
+			text-align:  center;
+		}
+		.list-header>div>h3.school-name {
+			font-size: 19px;
+			margin-bottom: 5px;
+		}
+		.bus-line-item {
+			padding: 0 10px;
+			margin-bottom: 15px;
+		}
+
+		div.info-box {
+			box-shadow: none;
+		}
+		.info-box-icon {
+			padding: 10px;
+			border: none;
+			line-height: inherit;
+		}
+
+		.bus-line-name {
+			font-size: 18px;
+		}
+		.teacher-name {
+			margin-top: 8px;
+			font-size: 15px;
+		}
+	</style>
+</head>
+<body>
+<div id="content_wrap">
+	<section class="mContents" layout:fragment="content">
+		<div class="busLineContainer">
+			<div class="bus-line-item list-header">
+				<div>
+					<h3 class="school-name">동화나라 유치원</h3>
+					<h3 th:if="${lineType == 'ATT'}">등교 버스 노선</h3>
+					<h3 th:if="${lineType == 'COM'}">하교 버스 노선</h3>
+				</div>
+			</div>
+
+
+			<div class="bus-line-item" th:each="busLineItem : ${busLineList}">
+				<a th:href="@{'/board/teacher/busline/' + ${busLineItem.lineId}}">
+				<div class="info-box">
+					<span class="info-box-icon">
+						<img th:src="@{/images/common/ico_school_bus_front.png}" />
+					</span>
+
+					<div class="info-box-content">
+						<span class="info-box-text bus-line-name" th:text="${busLineItem.lineNm}"></span>
+						<span class="info-box-text bus-num" th:text="${busLineItem.busNum}"></span>
+						<span class="info-box-text teacher-name" th:text="${busLineItem.userNm + ' 선생님'}"></span>
+					</div>
+				</div>
+				</a>
+			</div>
+		</div>
+	</section>
+</div>
+<script th:inline="javascript" layout:fragment="script">
+	/*<![CDATA[*/
+	/*]]>*/
+</script>
+</body>
+</html>

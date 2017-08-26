@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	  layout:decorator="layout/mobileLayout">
+<head>
+	<style>
+		.buttonWrap {
+			margin-top: 12vw;
+			text-align: center;
+		}
+		.buttonWrap a{
+			display :inline-block;
+			margin: 0 3vw;
+			width: 20vw;
+			height: 20vw;
+		}
+		.buttonWrap a img.menuBtn {
+			width: 100%;
+			height: auto;
+		}
+
+		div.infoWrap {
+			background: #FFF;
+			border-bottom: 1px solid #ffdf00;
+			text-align: center;
+		}
+		div.infoWrap article{
+			padding: 5vw;
+		}
+		div.infoWrap article div.profImagWrap{
+			width: 50vw;
+			height: 50vw;
+		}
+		div.infoWrap article div.profTxtWrap{
+			margin-top: 5vw;
+		}
+		div.infoWrap article img{
+			width: 100%;
+			height: 100%;
+		}
+		.profWrap{
+			display: inline-block;
+		}
+
+		/* Bootstrap modal align vertical middle*/
+		.modal {
+			text-align: center;
+			padding: 0 !important;
+		}
+
+		.modal:before {
+			content: '';
+			display: inline-block;
+			height: 100%;
+			vertical-align: middle;
+			margin-right: -4px;
+		}
+
+		.modal-dialog {
+			display: inline-block;
+			text-align: left;
+			vertical-align: middle;
+		}
+		.modal-header {
+			/* 		background: #ffeccd; */
+			font-size: 1.2em;
+			font-weight: bold;
+		}
+		.modal-body {
+			text-align: center;
+		}
+		.modal-content {
+			border: none;
+			border-radius: 0;
+		}
+		.mContents {
+			background : #FFF;
+			height: 100%;
+		}
+	</style>
+</head>
+<body>
+	<div id="content_wrap">
+		<section class="mContents" layout:fragment="content">
+			<div class="infoWrap">
+				<article>
+					<div class="profWrap">
+						<div class="profImagWrap">
+							<img th:src="@{/file/data/{imgSrc}(imgSrc=${loginUser.children[0].imgSrc})}" class="img-circle" />
+						</div>
+						<div class="profTxtWrap">
+							<!--<h5 class="profNm fontsize_15e" th:text="${#httpServletRequest.getUserPrincipal().getName()}"></h5>-->
+							<h5 class="profNm fontsize_15e" th:text="${loginUser.children[0].userNm}"></h5>
+							<!--<h5 class="profNm fontsize_15e"><span sec:authentication="principal.loginUser.children[0].userNm"></span></h5>-->
+							<h5 class="profSch fontsize_13e" th:text="${loginUser.school.schName}"></h5>
+							<h5 class="profCls fontsize_12e" th:text="${loginUser.school.clsNm} + 반"></h5>
+						</div>
+					</div>
+				</article>
+			</div>
+			<div class="buttonWrap">
+				<article>
+					<!--<a>-->
+						<!--<img class="menuBtn" th:src="@{/images/menu/parents/btn_notice.png}" />-->
+					<!--</a>-->
+					<!--<a th:href="@{/test/parent/photoList}">-->
+						<!--<img class="menuBtn" th:src="@{/images/menu/parents/btn_album.png}" />-->
+					<!--</a>-->
+					<!--<a>-->
+						<!--<img class="menuBtn" th:src="@{/images/menu/parents/btn_eduschd.png}" />-->
+					<!--</a>-->
+					<!--<a>-->
+						<!--<img class="menuBtn" th:src="@{/images/menu/parents/btn_menu.png}" />-->
+					<!--</a>-->
+					<a th:href="@{/board/parent/unboadrequest/on}">
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_noatt.png}" />
+					</a>
+					<a th:href="@{/board/parent/unboadrequest/off}">
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_nocome.png}" />
+					</a>
+					<a th:href="@{/test/parent/reqMedi}">
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_reqmedi.png}" />
+					</a>
+					<!--<a>-->
+						<!--<img class="menuBtn" th:src="@{/images/menu/parents/btn_youtube.png}" />-->
+					<!--</a>-->
+				</article>
+			</div>
+
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+				 aria-labelledby="myModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">등하교 미탑승 처리</h4>
+						</div>
+						<div class="modal-body">
+							<div id="datepicker">
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+							<button type="button" class="btn btn-warning">미탑승 요청</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+	<script th:inline="javascript" layout:fragment="script">
+		/*<![CDATA[*/
+		$(document).ready(function() {
+			$("#datepicker").datepicker({
+				setDate : new Date()
+				,todayHighlight : true
+				,language : "kr"
+			});
+		});
+		/*]]>*/
+	</script>
+</body>
+</html>
+
+
+
+
+
+

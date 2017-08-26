@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	  layout:decorator="layout/mobileLayout">
+<head>
+	<style>
+		div.infoWrap {
+			background: #f8f8f8;
+			border-bottom: 1px solid #ffdf00;
+			text-align: center;
+			padding: 3vw;
+		}
+		div.infoWrap div.infoTitle {
+			background: #e6e6e6;
+			padding: 3vw;
+			font-size: 1.1em;
+			font-weight: bold;
+		}
+		div.infoWrap div.unboradListWrap{
+			width: 100%;
+			height: 100%;
+			padding: 2vw;
+			background: #FFF;
+			height: 45vw;
+			overflow: auto;
+		}
+		div.infoWrap div.unboradListWrap table tbody{
+			height: 50vw;
+			overflow: auto;
+			text-align: left;
+		}
+
+		div.calendarWrap {
+			border: 1px solid #ddd;
+			background: #FFF;
+		}
+		div.calendarWrap div.btnWrap {
+			padding: 2vw;
+			text-align: left;
+		}
+		div.calendarWrap div.btnWrap a {
+			width: 100%;
+			border-radius: 0;
+		}
+		.datepicker, .table-condensed {
+			width: 100%;
+			border-radius: 0;
+		}
+
+		td.colDate {
+			width: 30vw;
+		}
+		td.colFunc {
+			width: 10vw;
+			text-align: center;
+			color: #818098;
+		}
+		.btnWrap h4 {
+			margin : 2vw;
+			font-size : 1.2em;
+		}
+		input#unbReason {
+			border-radius: 0;
+			margin-bottom: 3vw;
+		}
+	</style>
+</head>
+<body>
+<div id="content_wrap">
+	<section class="mContents" layout:fragment="content">
+		<div class="infoWrap">
+			<div class="infoTitle" th:if="${boardingType == 'on'}">등원 미탑승 목록</div>
+			<div class="infoTitle" th:if="${boardingType == 'off'}">하원 미탑승 목록</div>
+			<div class="table-responsive unboradListWrap">
+				<table class="table table-hover">
+					<thead>
+					<tr>
+						<th>예정일</th>
+						<th colspan="2">미탑승사유</th>
+					</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<div class="calendarWrap">
+				<div class="datepicker" id="datepicker"></div>
+				<div class="btnWrap">
+					<h4>미탑승 사유</h4>
+					<input type="text" id="unbReason" class="form-control" />
+					<a class="btn btn-warning" href="#" role="button" onclick="regist()">미탑승 등록</a>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+<script th:inline="javascript" layout:fragment="script">
+	/*<![CDATA[*/
+
+	/*[+
+	 var lineDetailId = [[${lineDetailId}]];
+	 var boardingType = [[${boardingType}]];
+	 +]*/
+
+	Date.prototype.yyyymmdd = function(seperator) {
+		var mm = this.getMonth() + 1; // getMonth() is zero-based
+		var dd = this.getDate();
+
+		return [this.getFullYear(),
+			(mm>9 ? '' : '0') + mm,
+			(dd>9 ? '' : '0') + dd
+		].join(seperator);
+	};
+
+	$(document).ready(function() {
+		$(".datepicker").datepicker({
+			setDate : new Date()
+			,todayHighlight : true
+			,language : "kr"
+			,format : "yyyy-mm-dd"
+		});
+
+		getList();
+	});
+
+	function getList() {
+
+		/*[+
+		 var uri = [[@{/board/unboadlist/}]] + lineDetailId;
+		 +]*/
+
+		$(".unboradListWrap table tbody").empty();
+
+		$.get(uri, function(data, status) {
+			for (var i = 0; i < data.length; i++) {
+				var trItem = '<tr><td class="colDate">{histDate}</td><td>{unbReason}</td><td class="colFunc"><span class="glyphicon glyphicon-remove-circle"></span></td></tr>';
+
+				trItem = trItem.replace("{histDate}", data[i].histDate);
+				trItem = trItem.replace("{unbReason}", data[i].unbReason);
+				$(".unboradListWrap table tbody").append(trItem);
+			}
+		});
+	}
+	function regist() {
+		var param = {};
+
+		param.boardDiv = "N";
+		param.lineDtlId = lineDetailId
+		//param.histDate = new Date($("#datepicker").datepicker('getDate') +1).toISOString().slice(0,10).replace(/-/gi, "");
+		param.histDate = $("#datepicker").datepicker('getDate').yyyymmdd("");
+		param.unbReason = $("#unbReason").val();
+
+		console.log(JSON.stringify(param));
+
+		$.ajax({
+			type : "POST",
+			url : "/board/process",
+			data : JSON.stringify(param),
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			success : function(){
+				getList();
+				$("#unbReason").val("");
+				alert("성공적으로 저장되었습니다");
+			},
+			dataType : "JSON"
+		});
+	}
+	/*]]>*/
+</script>
+</body>
+</html>

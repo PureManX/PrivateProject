@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	  layout:decorator="layout/mobileLayout">
+<head>
+	<style>
+		div.childListWrap {
+			position: relative;
+		}
+
+		div.childListWrap div.overwrap {
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 100;
+			background: rgba(0, 0, 0, 0.3);
+			width: 100%;
+			height: 100%;
+			display: none;
+		}
+
+		div.childListWrap div.overwrap.display{
+			display: block;
+		}
+
+		div.childListWrap ul {
+			border-top: 1px solid #d3d3d3;
+		}
+		div.childListWrap ul li {
+			padding: 0 3vw;
+		}
+		div.studuent_info {
+			overflow: auto;
+			padding: 3vw 0;
+			border-bottom: 1px solid #d3d3d3;
+		}
+		div.studuent_info img {
+			width: 20vw;
+			height: 20vw;
+			border-radius: 10vw;
+		}
+		div.studuent_info div.stduent_text {
+			width: 50vw;
+			height: 20vw;
+			padding: 3vw;
+			margin-left: 1vw;
+		}
+		div.studuent_info div.btn_wrap {
+			width: 20vw;
+			height: 20vw;
+			padding: 3vw;
+			float: left;
+			position: relative;
+		}
+		div.studuent_info div.btn_wrap span {
+			width: 14vw;
+			height: 14vw;
+			border-radius: 7vw;
+			color: #FFF;
+			text-align: center;
+			line-height: 14vw;
+			display: inline-block;
+		}
+		div.studuent_info div.btn_wrap span.func {
+			position: absolute;
+			top: 3vw;
+			background: red;
+			display: none;
+			z-index: 200;
+		}
+
+		div.studuent_info div.btn_wrap span.animateComp {
+			display: block;
+			right: 18vw;
+			animation: btnMoveComp 1s;
+		}
+
+		div.studuent_info div.btn_wrap span.animateNoComp {
+			display: block;
+			right: 33vw;
+			animation: btnMoveNoComp 1s;
+		}
+
+		div.studuent_info div.btn_wrap span.animateCancel {
+			display: block;
+			right: 3vw;
+		}
+
+
+		@keyframes btnMoveComp {
+			0% { right: 3vw}
+			100% { right: 18vw}
+		}
+
+		@keyframes btnMoveNoComp {
+			0% { right: 3vw}
+			100% { right: 33vw}
+		}
+
+
+		div.studuent_info div.btn_wrap span.noComp {
+			background: #d9534f;
+		}
+		div.studuent_info div.btn_wrap span.comp {
+			background: #f1a142;
+		}
+		div.studuent_info div.btn_wrap span.ready, div.studuent_info div.btn_wrap span.cancel {
+			background: #75738d;
+		}
+
+		.modal {
+			text-align: center;
+			padding: 0 !important;
+		}
+
+		.modal:before {
+			content: '';
+			display: inline-block;
+			height: 100%;
+			vertical-align: middle;
+			margin-right: -4px;
+		}
+
+		.modal-dialog {
+			display: inline-block;
+			text-align: left;
+			vertical-align: middle;
+		}
+
+		#message-text {
+			min-width: 250px;
+		}
+
+		.header_wrapper{
+			overflow: auto;
+		}
+
+		.header_wrapper img{
+			width: 70px;
+			height: 70px;
+			background: white;
+		}
+
+		.studuent_info {
+			text-align: left;
+		}
+
+		.board_comp {
+			background: #f1f1f1;
+		}
+
+		.inline {
+			display : inline;
+		}
+
+		button.btn-sm {
+			width: 100%;
+			padding: 1vw 0;
+		}
+
+		h5.h5 {
+			margin-left: 1vw;
+		}
+	</style>
+</head>
+<body>
+<div id="content_wrap">
+	<section class="mContents" layout:fragment="content">
+		<div class="panel panel-warning">
+			<div class="panel-heading">
+				<div class="header_wrapper">
+					<div class="pull-left">
+						<h4 class="h4"></h4>
+						<h5 class="h5"></h5>
+					</div>
+					<img class="img-rounded pull-right" src="" />
+				</div>
+			</div>
+			<div class="childListWrap">
+				<div class="childListWrap overwrap"></div>
+				<ul>
+				</ul>
+			</div>
+		</div>
+	</section>
+</div>
+<script th:inline="javascript" layout:fragment="script">
+	/*<![CDATA[*/
+	var curDate = new Date();
+	var curMonth = curDate.getMonth() + 1;
+	var curDay = curDate.getDate();
+
+	curMonth = curMonth < 10 ? "0" + curMonth : curMonth;
+	curDay = curDay < 10 ? "0" + curDay : curDay;
+
+	var histDate =  curMonth + "" + curDay;
+
+	$(document).ready(function() {
+		initHeaderInfo();
+		refresh();
+	});
+
+	function initHeaderInfo() {
+		$.get("/board/lineinfo/2", function(data, status) {
+			$(".header_wrapper h4").text(data.lineNm + "(" + data.busNum + ")");
+			$(".header_wrapper h5").text(data.userNm + " 선생님");
+			$(".header_wrapper img").attr("src", "/file/data" + data.imgSrc);
+		});
+	}
+
+	function updateTest(button) {
+		var btnType = $(button).text();
+
+		var param = {};
+
+		if (btnType == "하차") {
+			param.boardDiv = "C";
+		} else if (btnType == "미하차") {
+			param.boardDiv = "N";
+		}
+
+		param.lineDtlId = $(button).closest("div.studuent_info").parent().attr("id").replace("stdu_", "");
+		param.histDate = histDate;
+
+		$.ajax({
+			type : "POST",
+			url : "/board/process",
+			data : JSON.stringify(param),
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			success : function(){
+				refresh();
+			},
+			dataType : "JSON"
+		});
+	}
+
+	function refresh() {
+		$("div.childListWrap ul").empty();
+
+		$.get("/board/list/2/" + histDate, function(data, status) {
+			var curFlg = false;
+			for (var i = 0; i < data.length; i++) {
+				if (curFlg == false && data[i].boardDiv == null) {
+					addList(data[i], true);
+					curFlg = true;
+				} else {
+					addList(data[i], false);
+				}
+			}
+		});
+	}
+
+	function addList(lineDtlData, curFlg) {
+		$("div.overwrap").removeClass("display");
+
+		var liId = "stdu_" + lineDtlData.lineDtlId
+		$("div.childListWrap ul")
+			.append(
+				'<li class="" id="' + liId +'"><div class="studuent_info"><a href="/test/test2"><img class="img-rounded pull-left" src=""></a><div class="stduent_text pull-left"><h4 class="h4 inline"></h4><h5 class="h5 inline stdu_cls"></h5><h5 class="h5 board_tm"></h5></div><div class="btn_wrap"></div></div></li>');
+
+		$("#" + liId + " h4").text(lineDtlData.userNm);
+		$("#" + liId + " h5.stdu_cls").text(lineDtlData.clsNm + "반");
+		$("#" + liId + " h5.board_tm").text(lineDtlData.boardTm.substring(0, 2) + ":" + lineDtlData.boardTm.substring(2, 4) + " " + lineDtlData.boardLoc);
+		$("#" + liId + " img").attr("src", "/file/data" + lineDtlData.imgSrc);
+
+		if (lineDtlData.boardDiv == "C" || lineDtlData.boardDiv == "N") {
+			$("#" + liId).addClass("board_comp");
+
+			if (lineDtlData.boardDiv == "C") {
+				$("#" + liId + " div.btn_wrap").append('<span class="comp">하차</span>');
+			} else if (lineDtlData.boardDiv == "N") {
+				$("#" + liId + " div.btn_wrap").append('<span class="noComp">미하차</span>');
+			}
+		} else {
+// 		if (curFlg) {
+// 			$("#" + liId + " div.btn_wrap").append('<button class="btn btn-warning btn-sm" onclick="updateTest(this)">탑승</button>');
+// 			$("#" + liId + " div.btn_wrap").append(' <button class="btn btn-danger btn-sm" onclick="updateTest(this)">미탑승</button>');
+// 		} else {
+			$("#" + liId + " div.btn_wrap").append('<span class="ready">대기</span><span class="func cancel">취소</span><span class="func comp">하차</span><span class="func noComp">미하차</span>');
+			$("#" + liId + " div.btn_wrap span.ready").on("click", function(){
+				$("#" + liId + " div.btn_wrap span.cancel").addClass("animateCancel");
+				$("#" + liId + " div.btn_wrap span.comp").addClass("animateComp");
+				$("#" + liId + " div.btn_wrap span.comp").on("click", function(){
+					updateTest($("#" + liId + " div.btn_wrap span.comp"))
+				});
+				$("#" + liId + " div.btn_wrap span.noComp").addClass("animateNoComp");
+				$("#" + liId + " div.btn_wrap span.noComp").on("click", function(){
+					updateTest($("#" + liId + " div.btn_wrap span.noComp"))
+				});
+				$("div.overwrap").addClass("display");
+			});
+			$("#" + liId + " div.btn_wrap span.cancel").on("click", function(){
+				$("#" + liId + " div.btn_wrap span.cancel").removeClass("animateCancel");
+				$("#" + liId + " div.btn_wrap span.comp").removeClass("animateComp");
+				$("#" + liId + " div.btn_wrap span.noComp").removeClass("animateNoComp");
+				$("div.overwrap").removeClass("display");
+			});
+// 		}
+
+		}
+
+	}
+	/*]]>*/
+</script>
+</body>
+</html>

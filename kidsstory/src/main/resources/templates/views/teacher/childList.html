@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	  layout:decorator="layout/mobileLayout">
+<head>
+	<style>
+		div#content_wrap{
+			background: white;
+		}
+		div.searchWrap {
+			margin-top: 2vw;
+			width: 100%;
+			text-align: center;
+			padding: 2vw 5vw;
+		}
+		div.childListWrap {
+			width: 100vw;
+		}
+
+		/* 학생 리스트 영역*/
+		div.childListWrap ul {
+			border-top: 1px solid #CCC;
+		}
+		div.childListWrap ul li {
+			border-bottom: 1px solid #CCC;
+			padding: 1vw 3vw;
+		}
+		div.childListWrap ul li div.childList {
+			width: 100vw;
+			height: 20vw;
+		}
+		div.childListWrap ul li div.childList div.childImgWrap {
+			width: 20vw;
+			height: 20vw;
+			padding: 1vw;
+		}
+		div.childListWrap ul li div.childList div.childImgWrap img {
+			width: 100%;
+			height: 100%;
+		}
+
+		div.childListWrap ul li div.childList div.childTxtWrap {
+			width: 44vw;
+			padding: 2vw;
+		}
+		div.childListWrap ul li div.childList div.childTxtWrap h4.childName {
+			font-weight: bold;
+			height: 10vw;
+		}
+		div.childListWrap ul li div.childList div.childTxtWrap h4.parentName {
+			height: 6vw;
+		}
+		div.childListWrap ul li div.childList div.funcWrap {
+			text-align: right;
+		}
+		div.childListWrap ul li div.childList div.funcWrap img {
+			width: 14vw;
+			height: 14vw;
+			padding: 2vw;
+			margin: 3vw 0;
+		}
+	</style>
+</head>
+<body>
+	<div id="content_wrap">
+		<section class="mContents" layout:fragment="content">
+			<div class="searchWrap">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="개나리반 아이들" aria-describedby="btnSearch" />
+					<span class="input-group-addon"><span class="glyphicon glyphicon-search" id="btnSearch" aria-hidden="true"></span></span>
+				</div>
+			</div>
+			<div class="childListWrap">
+				<ul>
+					<!-- 		<li> -->
+					<!-- 			<div class="childList"> -->
+					<!-- 				<div class="childImgWrap pull-left"> -->
+					<!-- 					<img src="/preschool/resources/img/prof_1.jpg" class="img-circle"> -->
+					<!-- 				</div> -->
+					<!-- 				<div class="childTxtWrap pull-left"> -->
+					<!-- 					<h4 class="childName fontsize_15e">김신</h4> -->
+					<!-- 					<h4 class="parentName fontsize_11e">학부모 : 왕여</h4> -->
+					<!-- 				</div> -->
+					<!-- 				<div class="funcWrap pull-left"> -->
+					<!-- 					<a href="tel:010-2570-9371"> -->
+					<!-- 						<img alt="통화버튼" src="/preschool/resources/img/button/btn_call.png"> -->
+					<!-- 					</a> -->
+					<!-- 					<a href="/preschool/test/test/test2"> -->
+					<!-- 						<img alt="메세지" src="/preschool/resources/img/button/btn_msg.png"> -->
+					<!-- 					</a> -->
+					<!-- 				</div> -->
+					<!-- 			</div> -->
+					<!-- 		</li> -->
+				</ul>
+			</div>
+		</section>
+	</div>
+	<script th:inline="javascript" layout:fragment="script">
+		/*<![CDATA[*/
+		$(document).ready(function() {
+			refresh();
+		});
+
+		function addChildList(childVo) {
+
+			var innerHtml = '<li><div class="childList"><div class="childImgWrap pull-left"><img src="{imgSrc}" class="img-circle"></div>';
+			innerHtml += '<div class="childTxtWrap pull-left"><h4 class="childName fontsize_15e">{childNm}</h4><h4 class="parentName fontsize_11e">학부모 : {parentNm}</h4></div>';
+			innerHtml += '<div class="funcWrap pull-left"><a href="tel:{parentTel}"><img alt="통화버튼" src="/images/button/btn_call.png"></a>';
+			innerHtml += '<a href="/user/chat?targetId={childId}"><img alt="메세지" src="/images/button/btn_msg.png"></a></div></div></li>';
+
+			innerHtml = innerHtml.replace("{imgSrc}", "/file/data" + childVo.imgSrc);
+			innerHtml = innerHtml.replace("{childNm}", childVo.userNm);
+			innerHtml = innerHtml.replace("{parentNm}", childVo.parNm);
+			innerHtml = innerHtml.replace("{parentTel}", childVo.parContact);
+			innerHtml = innerHtml.replace("{childId}", childVo.userId);
+
+			$("div.childListWrap ul").append(innerHtml);
+		}
+
+		function refresh() {
+			$("div.childListWrap ul").empty();
+
+			/*[+
+			 var uri = [[@{/teacher/childList/}]] + [[${loginUser.user.contact}]];
+			 +]*/
+
+			$.get(uri, function(data, status) {
+				for (var i = 0; i < data.length; i++) {
+					addChildList(data[i]);
+				}
+			});
+		}
+		/*]]>*/
+	</script>
+</body>
+</html>

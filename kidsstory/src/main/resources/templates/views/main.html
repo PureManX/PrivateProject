@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	  layout:decorator="layout/mobileLayout">
+<head>
+	<style>
+		article {
+			text-align: center;
+		}
+		article a {
+			display: inline-block;
+			width: 20vw;
+			height: 20vw;
+			text-align: center;
+			line-height: 20vw;
+			border: 1px solid #DDD;
+		}
+	</style>
+
+</head>
+<body>
+<div id="content_wrap">
+	<section class="mContents" layout:fragment="content">
+		<article>
+			<span sec:authentication="name"></span>
+			<br />
+			<a th:href="@{test/main/main_guest}">게스트</a>
+			<a th:href="@{test/main/main_teacher}">선생님</a>
+			<a th:href="@{/test/main/main_parents}">학부모</a>
+		</article>
+	</section>
+</div>
+</body>
+</html>

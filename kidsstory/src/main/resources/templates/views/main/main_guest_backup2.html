@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorator="layout/template">
+<head>
+	<style>
+		div#content_wrap {
+			background-image: url("/images/bg/guest.png");
+			background-size: 100%;
+			width: 100%;
+			height: 100%;
+		}
+		.buttonWrap {
+			margin-top: 32vw;
+			text-align: center;
+		}
+
+		.buttonWrap a {
+			display: inline-block;
+			margin: 1vw;
+			width: 22vw;
+			height: 22vw;
+		}
+
+		.buttonWrap a img.menuBtn {
+			width: 100%;
+			height: auto;
+		}
+
+		div.mainBgWrapp {
+			margin-top: 25vw;
+			width: 100%;
+		}
+
+		.mainSchBg {
+			text-align: center;
+		}
+
+		.mainSchBg img {
+			width: 70vw;
+		}
+
+		.modal {
+			text-align: center;
+			padding: 0!important;
+		}
+
+		.modal:before {
+			content: '';
+			display: inline-block;
+			height: 100%;
+			vertical-align: middle;
+			margin-right: -4px;
+		}
+
+		.modal-dialog {
+			display: inline-block;
+			text-align: left;
+			vertical-align: middle;
+		}
+		.modal-body h2 {
+			margin: 10px;
+			font-size: 16px;
+		}
+	</style>
+	<script>
+		function callNumber(num){
+			location.href = 'tel:' + num;
+		}
+	</script>
+</head>
+<body>
+	<div id="content_wrap">
+		<section class="mContents" layout:fragment="content">
+			<div class="buttonWrap">
+				<article>
+					<a th:href="@{/guest/introduce}">
+						<img class="menuBtn" th:src="@{/images/menu/guest/01.png}" />
+					</a>
+					<a th:href="@{/?hpnum=01625709371}">
+						<img class="menuBtn" th:src="@{/images/menu/guest/02.png}" />
+					</a>
+				</article>
+				<article>
+					<a href="#" data-toggle="modal" data-target="#myModal">
+						<img class="menuBtn" th:src="@{/images/menu/guest/03.png}" />
+					</a>
+				</article>
+			</div>
+
+			<!-- Modal -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-body">
+							<h2>키즈스토리 상담원에게 연결 합니다.</h2>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary btn-sm" onclick="callNumber('010-5232-1976')">연결</button>
+							<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">닫기</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</section>
+	</div>
+</body>
+</html>

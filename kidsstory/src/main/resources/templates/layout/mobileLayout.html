@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<meta name="viewport"
+		  content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,height=device-height"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta http-equiv="content-language" content="ko"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+	<title layout:title-pattern="$CONTENT_TITLE :: $DECORATOR_TITLE">Site Tilte</title>
+
+	<meta http-equiv="Expires" content="-1"/>
+	<meta http-equiv="Pragma" content="no-store, no-cache"/>
+	<meta http-equiv="Cache-Control" content="must-revalidate, private, max-age=0, no-cache, no-store"/>
+
+	<!-- js lib cdn -->
+	<link rel="stylesheet"
+		  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+		  integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+		  crossorigin="anonymous" />
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+			integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+			crossorigin="anonymous"></script>
+	<script
+			src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+			integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+			crossorigin="anonymous"></script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.kr.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" th:href="@{/css/common/common.css}"/>
+</head>
+<body>
+	<div id="content_wrap">
+		<header class="topHead" layout:fragment="header">
+			<div class="home_ico">
+				<a th:href="@{/}">
+					<img alt="home icon" th:src="@{/images/common/header_home.png}" />
+				</a>
+			</div>
+			<div class="home_img">
+				<img alt="home icon" th:src="@{/images/common/header_main.png}" />
+			</div>
+			<div class="home_menu">
+				<img alt="home menu" th:src="@{/images/common/header_list.png}" onclick="toggleSideMenu()"/>
+			</div>
+		</header>
+		<nav class="side-menu-wrap hidden">
+			<div class="dimmed"></div>
+			<ul class="side-menu" th:if="${loginUser.userType.code == 'GST'}">
+				<li>
+					<a th:href="@{/guest/introduce}">소개</a>
+				</li>
+				<li>
+					<a th:href="@{/?hpnum=01625709371}">둘러보기</a>
+				</li>
+			</ul>
+			<ul class="side-menu" th:if="${loginUser.userType.code == 'PAR'}">
+				<li>
+					<a th:href="@{/board/parent/unboadrequest/on}">등교 미탑승</a>
+				</li>
+				<li>
+					<a th:href="@{/board/parent/unboadrequest/off}">하교 미탑승</a>
+				</li>
+				<li>
+					<a th:href="@{/test/parent/reqMedi}">투약 의뢰서</a>
+				</li>
+			</ul>
+			<ul class="side-menu" th:if="${loginUser.userType.code == 'TCH'}">
+				<li>
+					<a th:href="@{/board/teacher/buslinelist/on}">등원차량관리</a>
+				</li>
+				<li>
+					<a th:href="@{/board/teacher/buslinelist/off}">하원차량관리</a>
+				</li>
+				<li>
+					<a th:href="@{/test/teacher/childList}">우리반아이들</a>
+				</li>
+			</ul>
+		</nav>
+		<section class="mContents" layout:fragment="content">
+		</section>
+		<footer class="fixedFooter" layout:fragment="header" th:if="${loginUser.userType.code != 'GST'}">
+			<div class="footerContainer" th:if="${loginUser.userType.code == 'PAR'}">
+				<a href="tel:01055557777">
+					<img alt="home icon" th:src="@{/images/menu/common/footer_call.png}" />
+				</a>
+				<a th:href="@{/board/parent/busline}">
+					<img alt="home icon" th:src="@{/images/menu/common/footer_bus.png}" />
+				</a>
+				<a th:href="@{/user/chat?targetId=} + ${loginUser.school.hrTeacherId}">
+					<img alt="home icon" th:src="@{/images/menu/common/footer_msg.png}" />
+				</a>
+				<a href="#" onclick="alert('준비중입니다')">
+					<img alt="home icon" th:src="@{/images/menu/common/footer_mall.png}" />
+				</a>
+			</div>
+			<div class="footerContainer" th:if="${loginUser.userType.code == 'TCH'}">
+				<a href="#">
+					<img alt="home icon" th:src="@{/images/menu/common/footer_msg.png}" />
+				</a>
+				<a href="#">
+					<img alt="home icon" th:src="@{/images/menu/common/footer_food_menu.png}" />
+				</a>
+				<a th:href="@{/board/linhist/delete/1}">
+					<img alt="home icon" th:src="@{/images/menu/common/footer_setting.png}" />
+				</a>
+				<a th:href="@{/board/linhist/delete/2}">
+					<img alt="home icon" th:src="@{/images/menu/common/footer_camera.png}" />
+				</a>
+			</div>
+		</footer>
+	</div>
+	<script>
+		function toggleSideMenu() {
+			$("nav.side-menu-wrap").toggleClass("hidden");
+		}
+
+	</script>
+	<script layout:fragment="script">
+
+	</script>
+</body>
+</html>

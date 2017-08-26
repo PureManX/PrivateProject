@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorator="layout/mobileLayout">
+<head>
+	<style>
+		div.reqForm {
+			padding: 3vw;
+			text-align: center;
+		}
+		div.formBody {
+			background: #FAFAFA;
+			text-align: left;
+			padding: 4vw;
+		}
+		div.formBody h5 {
+			display: inline-block;
+			text-align: center;
+			font-size: 0.9em;
+			font-weight: bold;
+			color: #878787;
+			margin-bottom: 3vw;
+			width: 100%;
+		}
+		div.formTitle, div.formFooter {
+			background: #cecece;
+			height: 16vw;
+		}
+		div.formTitle {
+			padding : 3vw;
+			border-top-left-radius: 3vw;
+			border-top-right-radius: 3vw;
+		}
+		div.formTitle img {
+			height: 10vw
+		}
+		div.formFooter {
+			padding: 2vw;
+			border-bottom-left-radius: 3vw;
+			border-bottom-right-radius: 3vw;
+		}
+		div.formFooter input[type='button']{
+			width: 12vw;
+			height: 12vw;
+			border-top-left-radius: 6vw;
+			border-top-right-radius: 6vw;
+			border-bottom-left-radius: 6vw;
+			border-bottom-right-radius: 6vw;
+			padding: 0;
+			border: none;
+			margin: 0 3vw;
+		}
+		div.formFooter #btnCancel {
+			background: #aeaeae;
+			color: #FFF;
+			font-size: 1.1em;
+		}
+		div.formFooter #btnSubmit {
+			background: #ffdf00;
+			color: #696969;
+			font-size: 1.1em;
+		}
+		div.formItem {
+			border-bottom: 1px solid #CECECE;
+		}
+		div.formItem label{
+			width: 20vw;
+		}
+		div.formItem span {
+			padding : 3vw;
+			font-size: 1.1em;
+			line-height: 1.1em;
+			display: inline-block;
+		}
+		div.formItem input[type='text']{
+			border: none;
+			width: 60vw;
+			text-align: left;
+			font-size: 1.1em;
+			line-height: 1.1em;
+			padding: 2.5vw;
+		}
+	</style>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(document).ready(function() {
+			$(".formItem input[name='adminDt']").datepicker({
+				setDate : new Date()
+				,todayHighlight : true
+				,language : "kr"
+				,format : "yyyy-mm-dd"
+				,autoclose : true
+			});
+
+			$(".formItem input[name='symptom']").focusout(function(){
+				console.log("test");
+			})
+
+		});
+
+		function regist() {
+			/*[+
+			$.ajax({
+				type : "POST",
+				url : [[@{/user/reqmedi/create}]],
+				data : JSON.stringify(makeParam()),
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+				success : function(){
+					resetForm();
+					alert("성공적으로 요청하였습니다.");
+				},
+				dataType : "JSON"
+			});
+			 +]*/
+		}
+
+		function makeParam() {
+			var param = {};
+
+			var adminType =[];
+			$(".formItem input[name='adminType']:checked").each(function(){
+				adminType.push($(this).val())
+			});
+
+			var keepType =[];
+			$(".formItem input[name='keepType']").each(function(){
+				keepType.push($(this).val())
+			});
+
+			param["symptom"] = $(".formItem input[name='symptom']").val();
+			param["adminDt"] = $(".formItem input[name='adminDt']").val();
+			param["adminTm"] = $(".formItem input[name='adminTm']").val();
+			param["adminCapa"] = $(".formItem input[name='adminCapa']").val();
+			param["adminType"] = adminType.join(",");
+			param["adminCnt"] = $(".formItem input[name='adminCnt']").val();
+			param["sympDesc"] = $(".formItem input[name='sympDesc']").val();
+			param["keepType"] = keepType.join(",");
+			param["userId"] = $("input[name='userId']").val();
+
+// 		$(".formBody .formItem input[type='text']").each(function(){
+// 			param[$(this).attr("name")] = $(this).val();
+// 		});
+
+			return param;
+		}
+
+		function resetForm() {
+			$(".formItem input[name='symptom']").val("");
+			$(".formItem input[name='adminDt']").val("");
+			$(".formItem input[name='adminTm']").val("");
+			$(".formItem input[name='adminCapa']").val("");
+			$(".formItem input[name='adminType']").each(function(){
+				$(this).prop('checked', false);
+			});
+			$(".formItem input[name='adminCnt']").val("");
+			$(".formItem input[name='sympDesc']").val("");
+			$(".formItem input[name='keepType']").each(function(){
+				$(this).prop('checked', false);
+			});
+		}
+
+		/*]]>*/
+	</script>
+</head>
+<body>
+<div id="content_wrap">
+	<section class="mContents" layout:fragment="content">
+		<div class="reqForm">
+			<div class="formTitle">
+				<img th:src="@{/images/menu/parents/reqmediTitle.png}" />
+			</div>
+			<div class="formBody">
+				<form>
+					<h5>금일 아이의 투약을 선생님께 신청합니다.</h5>
+					<div class="formItem">
+						<label>이름</label>
+						<input type="text" placeholder="이름" name="userNm"
+							   th:value="${loginUser.children[0].userNm + ' (' + loginUser.school.clsNm + '반)'}"/>
+					</div>
+					<div class="formItem">
+						<label>투약일</label>
+						<input type="text" placeholder="예) 2017-02-28" name="adminDt" />
+					</div>
+					<div class="formItem">
+						<label>증상</label>
+						<input type="text" placeholder="예) 감기몸살" name="symptom" />
+					</div>
+					<div class="formItem"><!-- adminType -->
+						<label>종류</label>
+						<span>물약</span><input type="checkbox" name="adminType" value="W" />
+						<span>가루약</span><input type="checkbox" name="adminType" value="D" />
+					</div>
+					<div class="formItem">
+						<label>용량</label>
+						<input type="text" placeholder="예) 한봉, 5ml, 5cc" name="adminCapa" />
+					</div>
+					<div class="formItem">
+						<label>횟수</label>
+						<input type="text" placeholder="예) 1회" name="adminCnt" />
+					</div>
+					<div class="formItem">
+						<label>투약시간</label>
+						<input type="text" placeholder="예) 식후 30분, 오후 3시" name="adminTm" />
+					</div>
+					<div class="formItem"><!-- keepType -->
+						<label>보관방법</label>
+						<span>실온</span><input type="checkbox" name="keepType" value="R" />
+						<span>냉장</span><input type="checkbox" name="keepType" value="C" />
+					</div>
+					<div class="formItem">
+						<label>기타</label>
+						<input type="text" placeholder="예) 열 나고 콧물 남" name="sympDesc" />
+					</div>
+					<input type="hidden" value="" name="userId" th:value="${loginUser.children[0].userId}"/>
+				</form>
+			</div>
+			<div class="formFooter">
+				<input type="button" value="취소" id="btnCancel" onclick="resetForm()" />
+				<input type="button" value="확인" id="btnSubmit" onclick="regist()" />
+			</div>
+		</div>
+	</section>
+</div>
+</body>
+</html>

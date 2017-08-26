@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	  layout:decorator="layout/mobileLayout">
+<head>
+	<link rel="stylesheet" th:href="@{/adminlte/dist/css/AdminLTE.min.css}"/>
+	<link rel="stylesheet" th:href="@{/adminlte/dist/css/skins/skin-red-light.min.css}"/>
+	<style>
+
+		div.busLineContainer {
+			background: #ececec;
+			padding-bottom: 10px;
+			padding-top: 10px;
+		}
+
+		.timeline {
+			margin: 0;
+		}
+		.timeline:before {
+			left : 38px;
+			background: #FFFFFF;
+		}
+		.timeline>li {
+			margin-left: 10px;
+		}
+		.timeline>li:last-child {
+			margin-bottom: 0;
+		}
+		.timeline>li>.fa {
+			width: 60px;
+			height: 60px;
+			left : 0;
+			border : 2px solid #FFFFFF;
+			z-index: 50;
+		}
+		/*.timeline>li>.fa.board {*/
+			/*border : 2px solid #777777;*/
+		/*}*/
+		.timeline>li>.timeline-item {
+			margin-left: 70px;
+			margin-right: 0px;
+			-webkit-box-shadow: none;
+			box-shadow: none;
+		}
+
+		.timeline-header>.headerName {
+			color: #6d6b4f;
+			font-size : 20px;
+		}
+		.timeline-header>.headerClassName {
+			color: #6d6b4f;
+			font-size : 16px;
+		}
+
+		.bus-line-header {
+			z-index: 1999;
+		}
+		.bus-line-header>.box {
+			background: #ffdf00;
+			margin-bottom: 0;
+			/*-webkit-transition: all 1s ease-in-out;*/
+			/*transition: all 1s ease-in-out;*/
+			box-shadow: none;
+		}
+		.bus-line-header>.box>.widget-user-header {
+			padding : 3vw;
+			color : #484844;
+		}
+		.bus-line-header .widget-user-image img.teacher-image {
+			width : 50px;
+			height: 50px;
+		}
+		.bus-line-header .bus-line-area {
+			margin-top: 5px;
+		}
+		.bus-line-header .bus-line-name {
+			font-size: 18px;
+			margin-left: 15px;
+		}
+
+		.bus-line-header .teacher-name {
+			font-size: 15px;
+			margin-left: 10px;
+		}
+		.bus-line-header .bus-image {
+			width: 25px;
+			height: auto;
+		}
+		.bus-line-header .bus-icon {
+			float: right;
+		}
+		.affix .teacher-name {
+			display: none;
+		}
+		.affix .bus-icon {
+			margin-top: 6px;
+		}
+		.affix .box {
+			height: 15vw;
+		}
+		.affix {
+			width: 100%;
+			height: 15vw;
+			left: 0;
+			top: 0;
+			overflow: hidden;
+			position: fixed;
+			-webkit-transition: all 1s ease-in-out;
+			transition: all 1s ease-in-out;
+			z-index: 1999;
+			-webkit-align-items: center;
+			align-items: center;
+			-webkit-justify-content: center;
+			justify-content: center;
+		}
+		.bus-line-header.affix .widget-user-image img.teacher-image{
+			width: 9vw;
+			height: 9vw;
+			float: left;
+		}
+
+
+		.timeline-item>.no-current {
+			height: 60px;
+		}
+		div.timeline-item.board {
+			border: 1px solid #00a65a;
+			box-sizing: border-box;
+			background: #e2fff2;
+		}
+		div.timeline-item.unboard {
+			border: 1px solid #dd4b39;
+			box-sizing: border-box;
+			background: #f8f2f2;
+		}
+		.timeline-header .button-area {
+			float: right;
+		}
+
+		.timeline>li>.timeline-item>.time {
+			color: #4d4d4d;
+		}
+
+		.board .address, .unboard .address {
+			margin-top: 4px;
+		}
+		.address>span {
+			margin-left: 10px;
+			font-size: 12px;
+		}
+
+		.btn.btn-xs {
+			width: 13vw;
+		}
+
+		.unboard:before, .board:before {
+			content: '';
+			position: absolute;
+			top: 0;
+			width: 4px;
+			background: #777777;
+			left: -43px;
+			margin: 0;
+			bottom: -15px;
+		}
+		.bus-line-header:before {
+			content: '';
+			position: absolute;
+			top: 5px;
+			width: 4px;
+			background: #777777;
+			left: 28px;
+			margin: 0;
+			bottom: -15px;
+		}
+
+		@keyframes blink {
+			0% {
+				opacity: 0.1;
+			}
+			50% {
+				opacity: 0.7;
+			}
+			100% {
+				opacity: 0.1;
+			}
+		}
+
+		.blink-bus {
+			animation-name: blink;
+			animation-duration: 3s;
+			animation-timing-function: ease-in-out;
+			animation-iteration-count: infinite;
+			z-index: 100;
+			width: 25px;
+			position: absolute;
+			left: 40px;
+			top: -21px;
+		}
+
+		.bus-line-footer {
+			width: 100%;
+			height: 15vw;
+			background: #DDDDDD;
+		}
+	</style>
+</head>
+<body>
+<div id="content_wrap">
+	<section class="mContents" layout:fragment="content">
+		<div class="busLineContainer">
+			<!-- The time line -->
+			<ul class="timeline">
+				<!-- timeline time label -->
+				<li class="time-label">
+					<div class="bus-line-header">
+						<div class="box box-widget widget-user-2">
+							<!-- Add the bg color to the header using any of the bg-* classes -->
+							<div class="widget-user-header">
+								<div class="bus-icon">
+									<img class="bus-image" src="/images/common/bus-icon-5.png" />
+									<span class="bus-num">12가 3252</span>
+								</div>
+								<div class="widget-user-image">
+									<img class="img-circle teacher-image" src="/images/prof_1.jpg" alt="User Avatar" />
+									<span class="teacher-name">개나리반 선생님</span>
+								</div>
+								<!-- /.widget-user-image -->
+								<div class="bus-line-area">
+									<span class="bus-line-name"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<!-- /.timeline-label -->
+			</ul>
+		</div>
+	</section>
+</div>
+<script th:inline="javascript" layout:fragment="script">
+	/*<![CDATA[*/
+
+	/*[+
+	 var lineId = [[${lineId}]];
+	 var loginUserType = [[${loginUser.userType.code}]];
+	 +]*/
+
+	console.log(lineId);
+	console.log(loginUserType);
+
+	var curDate = new Date();
+	var curYear = curDate.getFullYear();
+	var curMonth = curDate.getMonth() + 1;
+	var curDay = curDate.getDate();
+
+	curMonth = curMonth < 10 ? "0" + curMonth : curMonth;
+	curDay = curDay < 10 ? "0" + curDay : curDay;
+
+	var histDate =  curYear + "" + curMonth + "" + curDay;
+	var lineType;
+	$(document).ready(function(){
+		$(".bus-line-header").affix({
+			offset : {
+				top : 30
+			}
+		});
+
+		initHeaderInfo();
+	});
+
+	function initHeaderInfo() {
+		$.get("/board/lineinfo/" + lineId, function(data, status) {
+			lineType = data.lineType;
+
+			console.log(lineType);
+			$(".bus-line-name").text(data.lineNm);
+			$(".teacher-name").text(data.userNm + " 선생님");
+			$(".widget-user-image img").attr("src", "/file/data" + data.imgSrc);
+			$(".bus-num").text(data.busNum);
+
+			refresh();
+		});
+	}
+
+	function refresh() {
+		$("ul.timeline li.bus-line-item").remove();
+
+		$.get("/board/list/" + lineId + "/" + histDate, function(data, status) {
+			var curFlg = false;
+			for (var i = 0; i < data.length; i++) {
+				if (curFlg == false && data[i].boardDiv == null) {
+					addList(data[i], true);
+					curFlg = true;
+				} else {
+					addList(data[i], false);
+				}
+			}
+
+			addLast();
+
+			// 로그인 유저 타입이 선생님일 경우에만 버튼의 클릭 이벤트 등록
+			if (loginUserType == "TCH") {
+				$("div.button-area .btn").each(function(){
+					$(this).on("click", function(){
+						updateTest(this);
+					})
+				});
+			}
+
+		});
+
+	}
+
+	function addLast() {
+		var busLineLastItemHtml = '<li class="bus-line-item"><div class="bus-line-footer"></div></li>';
+		$("ul.timeline").append(busLineLastItemHtml);
+	}
+
+	function addList(lineDtlData, curFlg) {
+		var liId = "stdu_" + lineDtlData.lineDtlId;
+		var completeText = (lineType == "ATT") ? "탑승": "하차";
+		var inCompleteText = (lineType == "ATT") ? "미탑승": "미하차";
+
+		var buttonOnHtml = '<span class="btn bg-green btn-xs">' + completeText + '</span>';
+		var buttonOffHtml = '<span class="btn bg-red btn-xs">' + inCompleteText + '</span>';
+		var blinkBusHtml = '<img class="blink-bus" src="/images/common/bus-icon-5.png" />';
+
+		var busLineItemHtml =
+			'<li id="{liId}" class="bus-line-item"><img class="fa fa-envelope img-rounded" src="{imgSrc}"/><div class="timeline-item">'
+			+ '<h3 class="timeline-header no-border no-current"><span class="headerName">{studentName}</span>'
+			+ ' <span class="headerClassName">{className}</span><div class="button-area"></div>'
+			+ '<div class="address"><span class="time">{boardTime}</span><span class="address">{boardAddress}</span></div></h3></div></li>'
+		;
+
+		var busLineItemHtmlReady =
+			'<li id="{liId}" class="bus-line-item"><img class="fa fa-envelope img-rounded" src="{imgSrc}"/><div class="timeline-item">'
+			+ '<h3 class="timeline-header"><span class="headerName">{studentName}</span>'
+			+ ' <span class="headerClassName">{className}</span><div class="button-area"></div></h3>'
+			+ '<div class="timeline-footer"><div class="address"><span class="time">{boardTime}</span><span>{boardAddress}</span></div></div>'
+		;
+
+		var insertHtml = busLineItemHtml;
+
+		if (lineDtlData.boardDiv == null) {
+			insertHtml = busLineItemHtmlReady;
+		}
+		insertHtml = insertHtml.replace("{liId}", liId);
+		insertHtml = insertHtml.replace("{imgSrc}", "/file/data" + lineDtlData.imgSrc);
+		insertHtml = insertHtml.replace("{studentName}", lineDtlData.userNm);
+		insertHtml = insertHtml.replace("{className}", lineDtlData.clsNm + "반");
+		insertHtml = insertHtml.replace("{boardTime}", lineDtlData.boardTm.substring(0, 2) + ":" + lineDtlData.boardTm.substring(2, 4));
+		insertHtml = insertHtml.replace("{boardAddress}", lineDtlData.boardLoc);
+
+		$("ul.timeline").append(insertHtml);
+
+		if (lineDtlData.boardDiv == "C") {
+			$("#" + liId + " .button-area").append(buttonOnHtml)
+			$("#" + liId + " .timeline-item").addClass('board');
+			$("#" + liId + " img.fa").addClass('board');
+		} else if (lineDtlData.boardDiv == "N") {
+			$("#" + liId + " .button-area").append(buttonOffHtml)
+			$("#" + liId + " .timeline-item").addClass('unboard');
+			$("#" + liId + " img.fa").addClass('unboard');
+		} else {
+			if (loginUserType == "TCH") {
+				$("#" + liId + " .button-area").append(buttonOnHtml);
+			}
+			if (lineType == "ATT") {
+				$("#" + liId + " .button-area").append(" " + buttonOffHtml);
+			}
+		}
+
+		if (curFlg) {
+			$("#" + liId).append(blinkBusHtml);
+		}
+
+	}
+
+	function updateTest(button) {
+		var btnType = $(button).text();
+
+		var param = {};
+
+		if (btnType == "탑승" || btnType == "하차") {
+			param.boardDiv = "C";
+		} else if (btnType == "미탑승") {
+			param.boardDiv = "N";
+		}
+
+		param.lineDtlId = $(button).closest("div.timeline-item").parent().attr("id").replace("stdu_", "");
+		param.histDate = histDate;
+
+		$.ajax({
+			type : "POST",
+			url : "/board/process",
+			data : JSON.stringify(param),
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			success : function(){
+				refresh();
+			},
+			dataType : "JSON"
+		});
+	}
+	/*]]>*/
+</script>
+</body>
+</html>
