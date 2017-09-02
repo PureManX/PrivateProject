@@ -111,8 +111,8 @@
 
 			innerHtml = innerHtml.replace("{imgSrc}", "/file/data" + childVo.imgSrc);
 			innerHtml = innerHtml.replace("{childNm}", childVo.userNm);
-			innerHtml = innerHtml.replace("{parentNm}", childVo.parNm);
-			innerHtml = innerHtml.replace("{parentTel}", childVo.parContact);
+			innerHtml = innerHtml.replace("{parentNm}", childVo.parents[0].userNm);
+			innerHtml = innerHtml.replace("{parentTel}", childVo.parents);
 			innerHtml = innerHtml.replace("{childId}", childVo.userId);
 
 			$("div.childListWrap ul").append(innerHtml);

@@ -92,7 +92,8 @@
 				<a th:href="@{/board/parent/busline}">
 					<img alt="home icon" th:src="@{/images/menu/common/footer_bus.png}" />
 				</a>
-				<a th:href="@{/user/chat?targetId=} + ${loginUser.school.hrTeacherId}">
+				<a th:href="@{/user/chat?targetId=} + ${loginUser.userClass.hrTeacherId}">
+				<!--<a th:href="@{/user/chat?targetId=} + 1">-->
 					<img alt="home icon" th:src="@{/images/menu/common/footer_msg.png}" />
 				</a>
 				<a href="#" onclick="alert('준비중입니다')">

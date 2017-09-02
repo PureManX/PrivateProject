@@ -17,12 +17,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @Configuration
 @EnableTransactionManagement
@@ -34,13 +38,27 @@ public class DatasourceConfig {
 //	@Autowired
 //	private DataSource dataSource;
 
+	@Autowired
+	Environment env;
 
 	@Bean
 	public DataSource dataSource() {
+
+//		String[] activeProfiles = env.getActiveProfiles();
+		String databaseUrl = "jdbc:mysql://localhost:3306/cnkisoft";
+		System.out.print(System.getenv());
+		String prof = System.getenv("USERNAME");
+
+		System.out.print(prof);
+//		ArrayList<String> profileList = (ArrayList<String>) Arrays.asList(activeProfiles);
+//		if (profileList.contains("local")) {
+		if ("PureMaN".equals(prof)) {
+			databaseUrl = "jdbc:mysql://cnkisoft.cafe24.com:3306/cnkisoft";
+		}
+
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-//		dataSource.setUrl("jdbc:mysql://cnkisoft.cafe24.com:3306/cnkisoft");
-		dataSource.setUrl("jdbc:mysql://localhost:3306/cnkisoft");
+		dataSource.setUrl(databaseUrl);
 		dataSource.setUsername("cnkisoft");
 		dataSource.setPassword("dkagh0211!@@");
 		dataSource.setValidationQuery("SELECT 1");

@@ -1,8 +1,10 @@
 package kr.cnkisoft.preschool.common.controller;
 
 import kr.cnkisoft.framework.security.AuthUtils;
+import kr.cnkisoft.preschool.push.service.PushService;
 import kr.cnkisoft.preschool.user.domain.LoginUserVo;
 import kr.cnkisoft.preschool.user.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
@@ -20,12 +23,16 @@ import javax.servlet.http.HttpServletResponse;
  * Handles requests for the application home page.
  */
 @Controller
+@Slf4j
 public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
 	@Autowired
 	UserService userService;
+
+	@Autowired
+	PushService pushService;
 
 	@RequestMapping(value="/test/{path}/{page}")
 	public ModelAndView test3(@PathVariable String path, @PathVariable String page) {
@@ -87,6 +94,20 @@ public class HomeController {
 		mav.setViewName("views/guest/introduce");
 
 		return mav;
+	}
+
+	@RequestMapping(value="/auth/regist")
+	@ResponseBody
+	public String authRegist(
+			@RequestParam(value="deviceId", required = false) String deviceId
+			, @RequestParam(value="mobileNum", required = false) String mobileNum
+			, @RequestParam(value="ostype", required = false) String ostype
+		) {
+
+		log.info("deviceId : {} / mobileNum : {} / ostype : {}", deviceId, mobileNum, ostype);
+
+		pushService.registPushId(mobileNum, deviceId, ostype);
+		return "OK";
 	}
 
 }

@@ -89,18 +89,22 @@ nav.side-menu-wrap{
 nav .side-menu {
 	position: absolute;
 	z-index: 1000;
-	border: 1px solid #ffdf00;
+	/* border: 1px solid #ffdf00; */
 	background: #FFFFFF;
 	top: 0;
+	height: 100%;
 }
 
 nav .side-menu li {
 	padding: 3vw;
+	width: 45vw;
+	text-align: left;
+	border-bottom: 1px solid #cecece;
 }
 
 nav .side-menu li a{
 	color: #7d7d7d;
-	font-size: 3.5vw;
+	font-size: 5vw;
 	font-weight: bold;
 }
 
@@ -126,18 +130,19 @@ section.mContents{
 footer.fixedFooter{
 	position: fixed;
 	width : 100%;
-	height: 15vw;
+	height: 20vw;
 	left : 0;
 	bottom : 0;
 	background: #FFFFFF;
 	z-index: 1000;
+	border-top: 1px solid #eaeaea;
 }
 footer.fixedFooter a{
-	padding: 0 5vw;
+	padding: 0 2vw;
 }
 footer.fixedFooter img{
-	width: 15vw;
-	height: 15vw;
+	width: 20vw;
+	height: 20vw;
 }
 .footerContainer {
 	display: -webkit-flex;

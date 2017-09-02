@@ -2,11 +2,14 @@ package kr.cnkisoft.preschool.board.controller;
 
 import kr.cnkisoft.framework.security.AuthUtils;
 import kr.cnkisoft.preschool.board.mapper.BoardMapper;
+import kr.cnkisoft.preschool.board.service.BoardService;
 import kr.cnkisoft.preschool.board.vo.BoardLineDto;
 import kr.cnkisoft.preschool.board.vo.LineDetailVo;
-import kr.cnkisoft.preschool.board.vo.LineHistVo;
+import kr.cnkisoft.preschool.board.vo.BoardLineHistDto;
 import kr.cnkisoft.preschool.common.domain.CommonResultVo;
 import kr.cnkisoft.preschool.user.domain.LoginUserVo;
+import kr.cnkisoft.preschool.user.domain.ParentVo;
+import kr.cnkisoft.preschool.user.domain.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,9 @@ public class BoardController {
 	
 	@Autowired
 	BoardMapper boardMapper;
+
+	@Autowired
+	BoardService boardService;
 	
 	@RequestMapping(value="/board/list/{lineId}/{histDate}")
 	@ResponseBody
@@ -28,16 +34,16 @@ public class BoardController {
 	
 	@RequestMapping(value="/board/unboadlist/{lineDtlId}")
 	@ResponseBody
-	public List<LineHistVo> unboardList(@PathVariable int lineDtlId) {
+	public List<BoardLineHistDto> unboardList(@PathVariable int lineDtlId) {
 		return boardMapper.selectListLineHist(lineDtlId);
 	}
 	
 	@RequestMapping(value="/board/process", method=RequestMethod.POST)
 	@ResponseBody
-	public LineHistVo boardProcess(@RequestBody LineHistVo param) {
-		boardMapper.insertBoardHist(param);
+	public CommonResultVo boardProcess(@RequestBody BoardLineHistDto boardLineHist) {
+		boardService.processBoarding(boardLineHist);
 		
-		return param;
+		return new CommonResultVo();
 	}
 	
 	@RequestMapping(value="/board/lineinfo/{lineId}")
@@ -52,7 +58,7 @@ public class BoardController {
 
 		String lineType = "on".equals(type) ? "ATT" : "COM";
 
-		Integer lineDetailId = boardMapper.selectLineDetailIdByLoginParents(lineType, AuthUtils.getLoginUser().getChildren().get(0).getUserId());
+		Integer lineDetailId = boardMapper.selectLineDetailIdByLoginParents(lineType, ((ParentVo)(AuthUtils.getLoginUser().getUser())).getChildren().get(0).getUserId());
 
 		LoginUserVo loginUser = AuthUtils.getLoginUser();
 		String viewName = "views/parent/unboarding";
@@ -67,7 +73,7 @@ public class BoardController {
 		ModelAndView mav = new ModelAndView();
 		String viewName = "views/teacher/boarding";
 		mav.setViewName(viewName);
-		mav.addObject("lineId", 1);
+		mav.addObject("lineId", boardService.getCurrentUserBusLineId());
 		return mav;
 	}
 
@@ -86,7 +92,11 @@ public class BoardController {
 
 		String lineType = "on".equals(type) ? "ATT" : "COM";
 
-		List<BoardLineDto> busLineList = boardMapper.selectBoardLineListInfoByLineType(lineType);
+		UserVo user = AuthUtils.getLoginUser().getUser();
+
+		String prescoolCode = user.getPreschool().getSchCd();
+
+		List<BoardLineDto> busLineList = boardMapper.selectBoardLineListInfoByLineType(lineType, prescoolCode);
 
 		String viewName = "views/teacher/boardingList";
 		mav.setViewName(viewName);
@@ -102,4 +112,10 @@ public class BoardController {
 		return new CommonResultVo<String>();
 	}
 
+	@RequestMapping(value="/board/line/start/{lineId}")
+	@ResponseBody
+	public CommonResultVo<String> startBoardService(@PathVariable Integer lineId) {
+		boardService.startBoardService(lineId);
+		return new CommonResultVo<String>();
+	}
 }

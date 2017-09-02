@@ -50,7 +50,7 @@
 		<div class="busLineContainer">
 			<div class="bus-line-item list-header">
 				<div>
-					<h3 class="school-name">동화나라 유치원</h3>
+					<h3 class="school-name" th:text="${loginUser.school.schName + ' 유치원'}"></h3>
 					<h3 th:if="${lineType == 'ATT'}">등교 버스 노선</h3>
 					<h3 th:if="${lineType == 'COM'}">하교 버스 노선</h3>
 				</div>

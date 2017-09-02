@@ -1,6 +1,5 @@
 package kr.cnkisoft.preschool.user.controller;
 
-import kr.cnkisoft.framework.enums.LoginUserType;
 import kr.cnkisoft.framework.security.AuthUtils;
 import kr.cnkisoft.preschool.common.domain.CommonResultVo;
 import kr.cnkisoft.preschool.user.domain.*;
@@ -44,7 +43,7 @@ public class UserController {
 	
 	@RequestMapping(value = "/teacher/childList/{contact}")//, produces="application/json")
 	@ResponseBody
-	public List<StudentDto> chilList(@PathVariable String contact) {
+	public List<StudentVo> chilList(@PathVariable String contact) {
 		return userService.getStudentListByTeacherContact(contact);
 	}
 	
@@ -88,8 +87,8 @@ public class UserController {
 
 		LoginUserVo loginUser = AuthUtils.getLoginUser();
 
-		UserDto sourceUser = loginUser.getUser();
-		UserDto targetUser = userService.getUser(targetId);
+		UserVo sourceUser = loginUser.getUser();
+		UserVo targetUser = userService.getUser(targetId);
 
 		log.info(sourceUser.toString());
 		log.info(targetUser.toString());

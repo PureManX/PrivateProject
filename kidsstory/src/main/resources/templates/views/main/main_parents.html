@@ -11,7 +11,7 @@
 		}
 		.buttonWrap a{
 			display :inline-block;
-			margin: 0 3vw;
+			margin: 0 2vw;
 			width: 20vw;
 			height: 20vw;
 		}
@@ -94,25 +94,25 @@
 							<h5 class="profNm fontsize_15e" th:text="${loginUser.children[0].userNm}"></h5>
 							<!--<h5 class="profNm fontsize_15e"><span sec:authentication="principal.loginUser.children[0].userNm"></span></h5>-->
 							<h5 class="profSch fontsize_13e" th:text="${loginUser.school.schName}"></h5>
-							<h5 class="profCls fontsize_12e" th:text="${loginUser.school.clsNm} + 반"></h5>
+							<h5 class="profCls fontsize_12e" th:text="${loginUser.userClass.clsNm} + 반"></h5>
 						</div>
 					</div>
 				</article>
 			</div>
 			<div class="buttonWrap">
 				<article>
-					<!--<a>-->
-						<!--<img class="menuBtn" th:src="@{/images/menu/parents/btn_notice.png}" />-->
-					<!--</a>-->
-					<!--<a th:href="@{/test/parent/photoList}">-->
-						<!--<img class="menuBtn" th:src="@{/images/menu/parents/btn_album.png}" />-->
-					<!--</a>-->
-					<!--<a>-->
-						<!--<img class="menuBtn" th:src="@{/images/menu/parents/btn_eduschd.png}" />-->
-					<!--</a>-->
-					<!--<a>-->
-						<!--<img class="menuBtn" th:src="@{/images/menu/parents/btn_menu.png}" />-->
-					<!--</a>-->
+					<a onclick="readyButton()">
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_notice.png}" />
+					</a>
+					<a onclick="readyButton()">
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_album.png}" />
+					</a>
+					<a onclick="readyButton()">
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_eduschd.png}" />
+					</a>
+					<a onclick="readyButton()">
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_menu.png}" />
+					</a>
 					<a th:href="@{/board/parent/unboadrequest/on}">
 						<img class="menuBtn" th:src="@{/images/menu/parents/btn_noatt.png}" />
 					</a>
@@ -122,9 +122,9 @@
 					<a th:href="@{/test/parent/reqMedi}">
 						<img class="menuBtn" th:src="@{/images/menu/parents/btn_reqmedi.png}" />
 					</a>
-					<!--<a>-->
-						<!--<img class="menuBtn" th:src="@{/images/menu/parents/btn_youtube.png}" />-->
-					<!--</a>-->
+					<a onclick="readyButton()">
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_youtube.png}" />
+					</a>
 				</article>
 			</div>
 
@@ -160,6 +160,10 @@
 				,language : "kr"
 			});
 		});
+
+		function readyButton() {
+			alert("준비중입니다");
+		}
 		/*]]>*/
 	</script>
 </body>

@@ -2,6 +2,7 @@ package kr.cnkisoft.framework.security;
 
 import kr.cnkisoft.preschool.user.domain.LoginUserVo;
 import kr.cnkisoft.preschool.user.domain.UserDto;
+import kr.cnkisoft.preschool.user.domain.UserVo;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -16,8 +17,9 @@ public class LoginUserDetails implements UserDetails{
 
 	public LoginUserDetails(LoginUserVo loginUser) {
 		if (loginUser.getUser() == null) {
-//			loginUser = new LoginUserVo();
-			UserDto guestUser = new UserDto();
+			loginUser = new LoginUserVo();
+
+			UserVo guestUser = new UserVo();
 			guestUser.setUserNm("게스트");
 
 			loginUser.setUser(guestUser);

@@ -3,10 +3,12 @@ package kr.cnkisoft.preschool.user.domain;
 import kr.cnkisoft.preschool.common.domain.CommonDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class UserDto extends CommonDto{
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class UserDto extends CommonDto {
 	private Integer userId;
 	private String userNm;
 	private String userType;

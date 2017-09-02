@@ -22,4 +22,8 @@ public class AuthUtils {
 
 		return loginUser;
 	}
+
+	public static Integer getLoginUserId() {
+		return AuthUtils.getLoginUser().getLoginUserId();
+	}
 }

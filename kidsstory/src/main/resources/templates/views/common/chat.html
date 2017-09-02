@@ -97,8 +97,8 @@
 				<div class="header_wrapper">
 					<img class="img-rounded pull-left" src="" />
 					<div class="pull-right">
-						<h4 class="h4" th:text="${loginUser.school.clsNm} + '반 ' + ${targetUser.userNm} + ' 선생님'" th:if="${loginUser.userType.code == 'PAR'}"></h4>
-						<h4 class="h4" th:text="${loginUser.school.clsNm} + '반 ' + ${targetUser.userNm} + ' 부모님'" th:if="${loginUser.userType.code == 'TCH'}"></h4>
+						<h4 class="h4" th:text="${loginUser.userClass.clsNm} + '반 ' + ${targetUser.userNm} + ' 선생님'" th:if="${loginUser.userType.code == 'PAR'}"></h4>
+						<h4 class="h4" th:text="${loginUser.userClass.clsNm} + '반 ' + ${targetUser.userNm} + ' 부모님'" th:if="${loginUser.userType.code == 'TCH'}"></h4>
 						<a th:href="'tel:' + ${targetUser.contact}"><span class="glyphicon glyphicon glyphicon-earphone" aria-hidden="true"></span></a>
 						<!--<h5 class="h5">삼성파크빌</h5>-->
 						<!--<h5 class="h5">오전 8시 30분</h5>-->
@@ -134,7 +134,7 @@
 	var targetUserId = [[${targetUser.userId}]];
 	var targetUserName = [[${targetUser.userNm}]];
 //	[# th:if="${targetUser.userType == 'STU'}"]
-	var targetParentName = [[${targetUser.userType == 'STU' ? targetUser.parNm : ''}]];
+	var targetParentName = [[${targetUser.userType == 'STU' ? targetUser.parents[0].userNm : ''}]];
 //	[/]
 	var targetUserImgsrc = [[${targetUser.imgSrc}]];
 //	var childVo = getChildbyId(targetUserId);

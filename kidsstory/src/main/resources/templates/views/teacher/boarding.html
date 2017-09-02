@@ -202,7 +202,15 @@
 		.bus-line-footer {
 			width: 100%;
 			height: 15vw;
-			background: #DDDDDD;
+			background: #FFFFFF;
+		}
+		.bus-line-area button {
+			position: absolute;
+			right: 3vw;
+			bottom: 3vw;
+		}
+		.affix .bus-line-area button {
+			display: none;
 		}
 	</style>
 </head>
@@ -220,15 +228,16 @@
 							<div class="widget-user-header">
 								<div class="bus-icon">
 									<img class="bus-image" src="/images/common/bus-icon-5.png" />
-									<span class="bus-num">12가 3252</span>
+									<span class="bus-num"></span>
 								</div>
 								<div class="widget-user-image">
-									<img class="img-circle teacher-image" src="/images/prof_1.jpg" alt="User Avatar" />
-									<span class="teacher-name">개나리반 선생님</span>
+									<img class="img-circle teacher-image" src="" alt="User Avatar" />
+									<span class="teacher-name"></span>
 								</div>
 								<!-- /.widget-user-image -->
 								<div class="bus-line-area">
 									<span class="bus-line-name"></span>
+									<button class="btn bg-green btn-xs" onclick="startBoardService()" th:if="${loginUser.userType.code == 'TCH'}">출발</button>
 								</div>
 							</div>
 						</div>
@@ -266,6 +275,12 @@
 				top : 30
 			}
 		});
+
+		if (lineId == null) {
+			alert("현재 학생이 승차한 노선이 없습니다.");
+			history.back();
+			return false;
+		}
 
 		initHeaderInfo();
 	});
@@ -389,6 +404,7 @@
 			param.boardDiv = "N";
 		}
 
+		param.lineId = lineId;
 		param.lineDtlId = $(button).closest("div.timeline-item").parent().attr("id").replace("stdu_", "");
 		param.histDate = histDate;
 
@@ -402,6 +418,22 @@
 			},
 			success : function(){
 				refresh();
+			},
+			dataType : "JSON"
+		});
+	}
+
+	function startBoardService() {
+
+		$.ajax({
+			type : "POST",
+			url : "/board/line/start/" + lineId,
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			success : function(){
+				console.log("success");
 			},
 			dataType : "JSON"
 		});

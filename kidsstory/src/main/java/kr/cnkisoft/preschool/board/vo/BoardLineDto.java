@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 public class BoardLineDto extends CommonDto{
 	private Integer lineId;
 	private String schCd;
-	private String busId;
+	private Integer busId;
 	private String lineNm;
 	private String lineType;
 	private String sttusCd;
