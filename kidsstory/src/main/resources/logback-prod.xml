@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="ROLLING_FILE_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${catalina.home}/logs/kidsstory/info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${catalina.home}/logs/kidsstory/info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 100MB -->
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- keep x days' worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        	<charset>UTF-8</charset>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %5level [%40.40logger{40}:%5.5line] : %msg%n</pattern>
+   		</encoder>
+    </appender>
+    
+    <root>
+        <level value="INFO"/>
+        <appender-ref ref="ROLLING_FILE_APPENDER"/>
+    </root>
+
+	<logger name="org.springframework" level="INFO" additivity="false">
+		<appender-ref ref="ROLLING_FILE_APPENDER" />
+	</logger>
+
+	<logger name="kr.cnkisoft" level="INFO" additivity="false">
+		<appender-ref ref="ROLLING_FILE_APPENDER" />
+	</logger>
+
+</configuration>

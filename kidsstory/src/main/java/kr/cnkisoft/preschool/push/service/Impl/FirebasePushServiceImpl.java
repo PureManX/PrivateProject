@@ -33,19 +33,18 @@ public class FirebasePushServiceImpl implements PushService{
 	@Override
 	public void sendPush(String deviceId, String Message, String uri) {
 		JSONObject body = new JSONObject();
-		body.put("to", deviceId);
-//		body.put("priority", "high");
-
-//		JSONObject notification = new JSONObject();
-//		notification.put("title", "Test");
-//		notification.put("body", "테스트 메세지");
-
-		JSONObject data = new JSONObject();
-		data.put("text", Message);
-		data.put("url", uri);
-
-//		body.put("notification", notification);
-		body.put("data", data);
+		
+		try {
+			body.put("to", deviceId);
+			
+			JSONObject data = new JSONObject();
+			data.put("text", Message);
+			data.put("url", uri);
+			
+			body.put("data", data);
+		} catch (Exception e) {
+			log.error("JSON create error");
+		}
 
 		log.info(body.toString());
 
@@ -54,7 +53,6 @@ public class FirebasePushServiceImpl implements PushService{
 		MediaType mediaType = new MediaType("application", "json", utf8);
 		header.setContentType(mediaType);
 		header.add("Authorization", "key=" + KIDSSTORY_FCM_SERVER_KEY);
-//		header.add("Content-Type", "application/json");
 
 		HttpEntity<String> request = new HttpEntity<>(body.toString(), header);
 

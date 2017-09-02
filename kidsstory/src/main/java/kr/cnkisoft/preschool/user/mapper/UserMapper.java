@@ -2,13 +2,21 @@ package kr.cnkisoft.preschool.user.mapper;
 
 import java.util.List;
 
-import kr.cnkisoft.preschool.user.domain.*;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.springframework.stereotype.Repository;
 
-@Repository
+import kr.cnkisoft.preschool.user.domain.LoginUserVo;
+import kr.cnkisoft.preschool.user.domain.ParentVo;
+import kr.cnkisoft.preschool.user.domain.PreschoolClassDto;
+import kr.cnkisoft.preschool.user.domain.PreschoolVo;
+import kr.cnkisoft.preschool.user.domain.ReqMediDto;
+import kr.cnkisoft.preschool.user.domain.ReqMediVo;
+import kr.cnkisoft.preschool.user.domain.UserDto;
+import kr.cnkisoft.preschool.user.domain.UserMsgDto;
+
+@Mapper
 public interface UserMapper {
 	
 	@Select("SELECT a.*, b.FILE_TYPE, b.FILE_NM FROM USER_INFO a left join FILE_INFO b on a.PROF_IMG_ID = b.FILE_ID WHERE a.CONTACT = #{contact}")

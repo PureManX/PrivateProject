@@ -6,10 +6,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.filter.CharacterEncodingFilter;
-import org.springframework.web.filter.CommonsRequestLoggingFilter;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import kr.cnkisoft.framework.filter.RequestLoggingFilter;
 
 /**
  * Created by PureMaN on 2017-05-29.
@@ -45,11 +46,13 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	}
 
 	@Bean
-	public CommonsRequestLoggingFilter requestLoggingFilter() {
-		CommonsRequestLoggingFilter loggingFilter = new CommonsRequestLoggingFilter();
-//		loggingFilter.setIncludeClientInfo(true);
+	public RequestLoggingFilter requestLoggingFilter() {
+		RequestLoggingFilter loggingFilter = new RequestLoggingFilter();
+		loggingFilter.setIncludeClientInfo(false);
+		loggingFilter.setIncludeHeaders(true);
 		loggingFilter.setIncludeQueryString(true);
 		loggingFilter.setIncludePayload(true);
 		return loggingFilter;
 	}
+
 }

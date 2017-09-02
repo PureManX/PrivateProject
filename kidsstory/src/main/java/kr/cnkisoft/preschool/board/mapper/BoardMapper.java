@@ -1,15 +1,21 @@
 package kr.cnkisoft.preschool.board.mapper;
 
-import kr.cnkisoft.preschool.board.vo.*;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
-@Repository
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import kr.cnkisoft.preschool.board.vo.BoardLineDetailDto;
+import kr.cnkisoft.preschool.board.vo.BoardLineDto;
+import kr.cnkisoft.preschool.board.vo.BoardLineHistDto;
+import kr.cnkisoft.preschool.board.vo.BoardLineServiceDto;
+import kr.cnkisoft.preschool.board.vo.LineDetailVo;
+import kr.cnkisoft.preschool.board.vo.PreschoolBusDto;
+
+@Mapper
 public interface BoardMapper {
 
 	final String SELECT_LINE_DETAIL = 

@@ -1,14 +1,15 @@
 package kr.cnkisoft.preschool.common.file.mapper;
 
-import kr.cnkisoft.preschool.common.file.domain.FileInfoDto;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
-@Repository
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import kr.cnkisoft.preschool.common.file.domain.FileInfoDto;
+
+@Mapper
 public interface FileMapper {
 
 	@Insert("INSERT INTO FILE_INFO (FILE_NM, FILE_TYPE, CREATED_BY, CREATED_DT) VALUES(#{fileNm}, #{fileType}, #{createdBy}, now())")
