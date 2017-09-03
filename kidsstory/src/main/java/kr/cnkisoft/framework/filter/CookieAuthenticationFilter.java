@@ -1,15 +1,6 @@
 package kr.cnkisoft.framework.filter;
 
-import kr.cnkisoft.framework.security.LoginUserDetails;
-import kr.cnkisoft.preschool.user.domain.LoginUserVo;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.util.StringUtils;
-import org.springframework.web.filter.GenericFilterBean;
+import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -18,7 +9,18 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.GenericFilterBean;
+
+import kr.cnkisoft.framework.security.LoginUserDetails;
+import kr.cnkisoft.framework.utils.HttpSupportUtils;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by PureMaN on 2017-06-01.
@@ -40,24 +42,11 @@ public class CookieAuthenticationFilter extends GenericFilterBean {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-		Cookie authCookie = getCookieByName(request, COOKIE_NAME);
+		Cookie authCookie = HttpSupportUtils.getCookieByName(request, COOKIE_NAME);
 
 		String requestUri = request.getRequestURI().toString().trim();
 
-		if (requestUri.equals("/")) {
-			String hpNum = request.getParameter("hpnum");
-
-			if (StringUtils.isEmpty(hpNum)) {
-				hpNum = "01000000000";
-			}
-			authCookie = new Cookie("KidsStory", hpNum);
-			authCookie.setMaxAge(-1);
-			authCookie.setPath("/");
-
-			response.addCookie(authCookie);
-		}
-
-		log.info(requestUri);
+		addAuthenticationCookies(request, response);
 
 		if (authCookie != null) {
 
@@ -67,7 +56,7 @@ public class CookieAuthenticationFilter extends GenericFilterBean {
 
 			UserDetails userDetails = userDetailsService.loadUserByUsername(authCookie.getValue());
 
-			log.info(((LoginUserDetails)userDetails).getLoginUser().toString());
+			log.info(((LoginUserDetails)userDetails).getLoginUser().getUser().toString());
 
 			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, null);
 
@@ -84,18 +73,28 @@ public class CookieAuthenticationFilter extends GenericFilterBean {
 			}
 		}
 	}
+	
+	private void addAuthenticationCookies(HttpServletRequest request, HttpServletResponse response) {
+		String requestUri = request.getRequestURI().toString().trim();
+		
+		if (requestUri.equals("/")) {
+			String hpNum = request.getParameter("hpnum");
 
-	private Cookie getCookieByName(HttpServletRequest request, String cookieName) {
-		Cookie[] cookies = request.getCookies();
-
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals(cookieName)) {
-					return cookie;
+			if (StringUtils.isEmpty(hpNum)) {
+				String cookileHpNum = HttpSupportUtils.getCookieValue(request, COOKIE_NAME);
+				if (cookileHpNum != null) {
+					hpNum = cookileHpNum;
+				} else {
+					hpNum = "01000000000";
 				}
 			}
-		}
+			
+			Cookie authCookie = new Cookie("KidsStory", hpNum);
+			authCookie.setMaxAge(-1);
+			authCookie.setPath("/");
 
-		return null;
+			response.addCookie(authCookie);
+		}
 	}
+
 }
