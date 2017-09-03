@@ -22,10 +22,18 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.AbstractRequestLoggingFilter;
 
 public class RequestLoggingFilter extends AbstractRequestLoggingFilter{
+	
+	RequestMatcher requestMatcher;
+	
+	public RequestLoggingFilter(RequestMatcher requestMatcher) {
+		this.requestMatcher = requestMatcher;
+	}
+
 	@Override
 	protected boolean isIncludePayload() {
 		return true;
@@ -57,14 +65,19 @@ public class RequestLoggingFilter extends AbstractRequestLoggingFilter{
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-
-		
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		HttpRequestWrapper httpServletRequestWrapper = new HttpRequestWrapper(httpServletRequest);
 
-		logger.info(createMessage(httpServletRequestWrapper, "Request Start == [", "]"));
+		boolean requireLogging = requireLogging(request);
+		if (requireLogging) {
+			logger.info(createMessage(httpServletRequestWrapper, "Request Start == [", "]"));
+		}
+		
 		filterChain.doFilter(httpServletRequestWrapper, response);
-		logger.info("Request End ===========");
+		
+		if (requireLogging) {
+			logger.info("Request End ==");
+		}
 	}
 	
 	@Override
@@ -132,4 +145,7 @@ public class RequestLoggingFilter extends AbstractRequestLoggingFilter{
 		return msg.toString();
 	}
 
+	private boolean requireLogging(HttpServletRequest request) {
+		return !this.requestMatcher.matches(request);
+	}
 }

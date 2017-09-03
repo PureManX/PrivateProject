@@ -1,12 +1,9 @@
 package kr.cnkisoft.preschool.common.controller;
 
-import kr.cnkisoft.framework.security.AuthUtils;
-import kr.cnkisoft.preschool.push.service.PushService;
-import kr.cnkisoft.preschool.user.domain.LoginUserVo;
-import kr.cnkisoft.preschool.user.service.UserService;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import kr.cnkisoft.framework.security.AuthUtils;
+import kr.cnkisoft.preschool.push.service.PushService;
+import kr.cnkisoft.preschool.user.domain.LoginUserVo;
+import kr.cnkisoft.preschool.user.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Handles requests for the application home page.
@@ -25,8 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @Slf4j
 public class HomeController {
-	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
 	@Autowired
 	UserService userService;

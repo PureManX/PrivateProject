@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Created by PureMaN on 2017-06-05.
  */
 public enum JsonResultStatus implements CodeEnum{
-	SUCCESS(10, "000", "Success")
+	SUCCESS(10, "0", "Success")
 	, NODATA(20, "100", "No Data")
 	, ERROR(99, "500", "Server Error")
 	;

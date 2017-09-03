@@ -52,7 +52,7 @@ public class FileController {
 		FileInfoDto param = new FileInfoDto();
 		param.setFileNm(fileName);
 		param.setFileType(filetype.toUpperCase());
-		param.setCreatedBy("3");
+		param.setCreatedBy(3);
 		
 		try {
 			fileMapper.insertFileInfo(param);

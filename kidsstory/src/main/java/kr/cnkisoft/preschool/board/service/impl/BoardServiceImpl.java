@@ -37,8 +37,10 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public void processBoarding(BoardLineHistDto baordLineHist) {
+		
+		String histDate = DateUtils.currentDateOfYear();
 
-		List<BoardLineDetailDto> boardLineDetailListbefore = boardMapper.selectListNonBoardingListByLineId(baordLineHist.getLineId());
+		List<BoardLineDetailDto> boardLineDetailListbefore = boardMapper.selectListNonBoardingListByLineId(baordLineHist.getLineId(), histDate);
 
 		if (boardLineDetailListbefore.isEmpty()) {
 			// 에러 처리
@@ -47,9 +49,10 @@ public class BoardServiceImpl implements BoardService {
 		// 남은 노선 첫번째 id와 요청한 id가 같지 않으면 미리 탑성/미탑승 처리
 		boolean reservedRequest = !(boardLineDetailListbefore.get(0).getLineDtlId().equals(baordLineHist.getLineDtlId()));
 
+		baordLineHist.setCreatedBy(AuthUtils.getLoginUserId());
 		boardMapper.insertBoardHist(baordLineHist);
 
-		List<BoardLineDetailDto> boardLineDetailList = boardMapper.selectListNonBoardingListByLineId(baordLineHist.getLineId());
+		List<BoardLineDetailDto> boardLineDetailList = boardMapper.selectListNonBoardingListByLineId(baordLineHist.getLineId(), histDate);
 
 		if (boardLineDetailList.isEmpty()) {
 			// 더이상 운행할 노선이 남지 않았으므로 push를 보낼 필요가 없다
@@ -78,7 +81,7 @@ public class BoardServiceImpl implements BoardService {
 	public void sendPushToAllUsersInBusLine(Integer lineId, String histDate) {
 		BoardLineInfoVo lineInfo = getBoardLineInfo(lineId);
 
-		List<BoardLineDetailDto> boardLineDetailDtoList = boardMapper.selectListNonBoardingListByLineId(lineId);
+		List<BoardLineDetailDto> boardLineDetailDtoList = boardMapper.selectListNonBoardingListByLineId(lineId, histDate);
 
 		for (BoardLineDetailDto boardLineDetail: boardLineDetailDtoList) {
 			PreSchoolPushIdDto pushInfo = userService.getPushInfoByLineDetailId(boardLineDetail.getLineDtlId());
@@ -102,6 +105,7 @@ public class BoardServiceImpl implements BoardService {
 		boardLineService.setLineId(lineId);
 		boardLineService.setServiceStartDt(new Date());
 		boardLineService.setServiceTeacherId(serviceTeacherId);
+		boardLineService.setCreatedBy(serviceTeacherId);
 
 		// 운행 서비스 기록 추가
 		boardMapper.insertBoardService(boardLineService);
@@ -133,5 +137,23 @@ public class BoardServiceImpl implements BoardService {
 		PreschoolBusDto bus = boardMapper.selectPreschoolBus(line.getBusId());
 
 		return BoardLineInfoVo.builder().bus(bus).line(line).build();
+	}
+
+	@Override
+	public void reserveUnboard(BoardLineHistDto boarDLineHist) {
+		boarDLineHist.setCreatedBy(AuthUtils.getLoginUserId());
+		
+		boardMapper.insertBoardHist(boarDLineHist);
+		
+	}
+
+	@Override
+	public void cancelReserverUnboard(String lineHistId) {
+		boardMapper.deleteBoardHist(lineHistId);
+	}
+
+	@Override
+	public BoardLineServiceDto getBoardService(Integer lineId) {
+		return boardMapper.selectStartedBoardService(lineId);
 	}
 }

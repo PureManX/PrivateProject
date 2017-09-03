@@ -1,19 +1,29 @@
 package kr.cnkisoft.preschool.user.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import kr.cnkisoft.framework.enums.LoginUserType;
 import kr.cnkisoft.framework.security.AuthUtils;
 import kr.cnkisoft.preschool.common.domain.CommonResultVo;
 import kr.cnkisoft.preschool.push.domain.PreSchoolPushIdDto;
 import kr.cnkisoft.preschool.push.mapper.PushMapper;
-import kr.cnkisoft.preschool.user.domain.*;
+import kr.cnkisoft.preschool.user.domain.LoginUserVo;
+import kr.cnkisoft.preschool.user.domain.ParentVo;
+import kr.cnkisoft.preschool.user.domain.PreschoolClassDto;
+import kr.cnkisoft.preschool.user.domain.PreschoolVo;
+import kr.cnkisoft.preschool.user.domain.ReqMediDto;
+import kr.cnkisoft.preschool.user.domain.ReqMediVo;
+import kr.cnkisoft.preschool.user.domain.StudentVo;
+import kr.cnkisoft.preschool.user.domain.TeacherVo;
+import kr.cnkisoft.preschool.user.domain.UserDto;
+import kr.cnkisoft.preschool.user.domain.UserVo;
 import kr.cnkisoft.preschool.user.mapper.UserMapper;
 import kr.cnkisoft.preschool.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -26,28 +36,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public LoginUserVo getLoginUser(String contact) {
-		LoginUserVo loginUserVo = new LoginUserVo();
-		UserDto user = userMapper.selectUserbyContact(contact);
-
-		if (user != null) {
-			loginUserVo.setUser(getUserByContact(contact));
-
-//			PreschoolDto preschoolDto = userMapper.selectPreschoolbyClsId(user.getClsId());
-
-
-			if ("PAR".equals(user.getUserType())) {
-//				List<StudentVo> children = userMapper.selectListStudentByParentId(user.getUserId());
-//				loginUserVo.setChildren(children);
-
-				loginUserVo.setUserType(LoginUserType.PARENT);
-			} else if ("TCH".equals(user.getUserType())) {
-//				List<StudentVo> children = userMapper.selectListStudentByTeacherContact(user.getContact());
-//				loginUserVo.setChildren(children);
-
-				loginUserVo.setUserType(LoginUserType.TEACHER);
-			}
-
-		}
+		LoginUserVo loginUserVo = new LoginUserVo(getUserByContact(contact));
 
 		return loginUserVo;
 	}
@@ -56,6 +45,10 @@ public class UserServiceImpl implements UserService {
 		UserVo user = null;
 		UserDto userDto = userMapper.selectUserbyContact(contact);
 
+		if (userDto == null) {
+			return createGuestUser(contact);
+		}
+		
 		if ("PAR".equals(userDto.getUserType())) {
 			user = getParent(userDto);
 		} else if ("TCH".equals(userDto.getUserType())) {
@@ -102,6 +95,15 @@ public class UserServiceImpl implements UserService {
 		teacherVo.setStudentList(getStudentListByTeacherContact(userDto.getContact()));
 
 		return teacherVo;
+	}
+	
+	private UserVo createGuestUser(String contact) {
+		UserVo userVo = new UserVo();
+		
+		userVo.setContact(contact);
+		userVo.setUserType(LoginUserType.GUEST.getCode());
+		
+		return userVo;
 	}
 
 	private List<StudentVo> getChildrenByParentId(Integer parentId) {
@@ -154,7 +156,7 @@ public class UserServiceImpl implements UserService {
 		parent.setUserType("PAR");
 		parent.setSttusCd("A");
 		parent.setSchCd(AuthUtils.getLoginUser().getSchool().getSchCd());
-		parent.setCreatedBy(String.valueOf(AuthUtils.getLoginUser().getUser().getUserId()));
+		parent.setCreatedBy(AuthUtils.getLoginUser().getUser().getUserId());
 
 		return userMapper.insertUser(parent);
 	}

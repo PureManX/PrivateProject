@@ -2,15 +2,22 @@ package kr.cnkisoft.preschool.user.domain;
 
 import kr.cnkisoft.framework.enums.LoginUserType;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class LoginUserVo{
 	private LoginUserType userType = LoginUserType.GUEST;
 
 	private UserVo user;
-
+	
+	public LoginUserVo(UserVo user) {
+		this.user = user;
+		this.userType = LoginUserType.fromCode(user.getUserType());
+	}
+	
 	public PreschoolVo getSchool() {
 		return user.getPreschool();
 	}
@@ -42,4 +49,8 @@ public class LoginUserVo{
 	public Integer getLoginUserId() {
 		return user.getUserId();
 	}
+
+
+
+
 }

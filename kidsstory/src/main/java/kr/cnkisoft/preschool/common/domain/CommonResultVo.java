@@ -8,18 +8,18 @@ import lombok.Setter;
 public class CommonResultVo<T> {
 	@Getter
 	@Setter
-	private JsonResultStatus result = JsonResultStatus.SUCCESS;
+	private JsonResultStatus code = JsonResultStatus.SUCCESS;
 
 	@Getter
 	private T data;
 
 	public String getMessage() {
-		return result.getMessage();
+		return code.getMessage();
 	}
 
 	public void setData(T data) {
 		if (data == null) {
-			result = JsonResultStatus.NODATA;
+			code = JsonResultStatus.NODATA;
 		}
 
 		this.data = data;

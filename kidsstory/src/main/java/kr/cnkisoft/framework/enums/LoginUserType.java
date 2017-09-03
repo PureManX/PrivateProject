@@ -28,4 +28,16 @@ public enum LoginUserType implements CodeEnum{
 	public int getValue() {
 		return value;
 	}
+	
+	public static LoginUserType fromCode(String code) {
+		LoginUserType[] enums = LoginUserType.values();
+		
+		for (LoginUserType loginUserType : enums) {
+			if (loginUserType.getCode().equals(code)) {
+				return loginUserType;
+			}
+		}
+		
+		return null;
+	}
 }

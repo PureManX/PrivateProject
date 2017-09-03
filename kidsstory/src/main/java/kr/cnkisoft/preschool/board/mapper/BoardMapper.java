@@ -30,7 +30,7 @@ public interface BoardMapper {
 	@Select(SELECT_LINE_DETAIL)
 	public List<LineDetailVo> selectListLineDetail(@Param("lineId")int lineId, @Param("histDate")String histDate);
 	
-	@Insert("INSERT INTO PRESCH_LINE_HIST (LINE_DTL_ID, HIST_DATE, BOARD_DIV, UNB_REASON, CREATED_DT, CREATED_BY) VALUES(#{lineDtlId}, #{histDate}, #{boardDiv}, #{unbReason},now(), 'ADMIN');")
+	@Insert("INSERT INTO PRESCH_LINE_HIST (LINE_DTL_ID, HIST_DATE, BOARD_DIV, UNB_REASON, CREATED_DT, CREATED_BY) VALUES(#{lineDtlId}, #{histDate}, #{boardDiv}, #{unbReason}, now(), #{createdBy});")
 	public void insertBoardHist(BoardLineHistDto param);
 	
 	@Select("SELECT a.*, b.BUS_NUM, c.USER_NM, CONCAT('/', LOWER(d.FILE_TYPE), '/', d.FILE_NM) AS IMG_SRC FROM PRESCH_LINE a, PRESCH_BUS b, USER_INFO c , FILE_INFO d "
@@ -55,10 +55,10 @@ public interface BoardMapper {
 
 	// 버스 노선의 현재 날짜 미탑승 리스트 추출
 	@Select("SELECT detail.* FROM PRESCH_LINE_DTL detail" +
-			" LEFT JOIN PRESCH_LINE_HIST hist ON detail.LINE_DTL_ID = hist.LINE_DTL_ID AND hist.CREATED_DT >= CURRENT_DATE AND hist.CREATED_DT < adddate(CURRENT_DATE, 1)" +
+			" LEFT JOIN PRESCH_LINE_HIST hist ON detail.LINE_DTL_ID = hist.LINE_DTL_ID AND hist.HIST_DATE = #{histDate} " +
 			" WHERE detail.LINE_ID = #{lineId} AND hist.LINE_HIST_ID IS NULL" +
 			" ORDER BY BOARD_ORDER")
-	public List<BoardLineDetailDto> selectListNonBoardingListByLineId(@Param("lineId")Integer lineId);
+	public List<BoardLineDetailDto> selectListNonBoardingListByLineId(@Param("lineId")Integer lineId, @Param("histDate")String histDate);
 
 
 	@Insert("INSERT INTO PRESCH_LINE_SERVICE (LINE_ID, SERVICE_TEACHER_ID, SERVICE_START_DT, SERVICE_END_DT, CREATED_DT, CREATED_BY) " +
@@ -83,5 +83,22 @@ public interface BoardMapper {
 			"           AND SERVICE_END_DT IS NULL" +
 			" WHERE linedetail.STDU_ID = #{childId} ")
 	public List<Integer> selectLineIdInBoardService(@Param("childId")Integer childId);
+	
+	// 운행 기록 정보 삭제 
+	@Delete("DELETE FROM PRESCH_LINE_HIST WHERE LINE_HIST_ID = #{lineHistId}")
+	public int deleteBoardHist(@Param("lineHistId")String lineHistId);
 
+	
+	// 노선이 현재 운행중인지 조회
+	@Select("SELECT * FROM PRESCH_LINE_SERVICE WHERE LINE_ID = #{lineId} AND SERVICE_END_DT IS NULL "
+           + " AND SERVICE_START_DT >= CURRENT_DATE"
+           + " AND SERVICE_START_DT < adddate(CURRENT_DATE, 1)")
+	public BoardLineServiceDto selectStartedBoardService(@Param("lineId")Integer lineId);
+	
+	
+	// 노선이 현재 운행중인지 조회
+	@Delete("DELETE FROM PRESCH_LINE_SERVICE WHERE LINE_ID = #{lineId} "
+           + " AND SERVICE_START_DT >= CURRENT_DATE"
+           + " AND SERVICE_START_DT < adddate(CURRENT_DATE, 1)")
+	public int deleteBoardService(@Param("lineId")Integer lineId);
 }

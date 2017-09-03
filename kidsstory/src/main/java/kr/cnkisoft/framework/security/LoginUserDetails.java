@@ -1,12 +1,12 @@
 package kr.cnkisoft.framework.security;
 
-import kr.cnkisoft.preschool.user.domain.LoginUserVo;
-import kr.cnkisoft.preschool.user.domain.UserDto;
-import kr.cnkisoft.preschool.user.domain.UserVo;
+import java.util.Collection;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
+import kr.cnkisoft.preschool.user.domain.LoginUserVo;
+import kr.cnkisoft.preschool.user.domain.UserVo;
 
 /**
  * Created by PureMaN on 2017-06-04.

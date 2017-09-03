@@ -101,6 +101,7 @@
 	/*[+
 	 var lineDetailId = [[${lineDetailId}]];
 	 var boardingType = [[${boardingType}]];
+	 var unboardReserveUri = [[@{/rest/board/unboard/reserve/}]];
 	 +]*/
 
 	Date.prototype.yyyymmdd = function(seperator) {
@@ -126,28 +127,50 @@
 
 	function getList() {
 
-		/*[+
-		 var uri = [[@{/board/unboadlist/}]] + lineDetailId;
-		 +]*/
 
 		$(".unboradListWrap table tbody").empty();
 
-		$.get(uri, function(data, status) {
+		$.get(unboardReserveUri + lineDetailId, function(data, status) {
 			for (var i = 0; i < data.length; i++) {
-				var trItem = '<tr><td class="colDate">{histDate}</td><td>{unbReason}</td><td class="colFunc"><span class="glyphicon glyphicon-remove-circle"></span></td></tr>';
+				var trItem = '<tr><td class="colDate">{histDate}</td><td>{unbReason}</td><td class="colFunc"><span class="glyphicon glyphicon-remove-circle" id="{lineHistId}"></span></td></tr>';
 
+				trItem = trItem.replace("{lineHistId}", data[i].lineHistId);
 				trItem = trItem.replace("{histDate}", data[i].histDate);
 				trItem = trItem.replace("{unbReason}", data[i].unbReason);
 				$(".unboradListWrap table tbody").append(trItem);
 			}
+		
+			// 삭제 이벤트 등록
+			
+			$("td.colFunc span.glyphicon-remove-circle").each(function(){
+				$(this).on("click", function(){
+					var lineHistId = $(this).attr("id");
+					console.log("remove Id : " + lineHistId);
+					
+					$.ajax({
+						type : "DELETE",
+						url : unboardReserveUri + lineHistId,
+						headers: {
+							'Accept': 'application/json',
+							'Content-Type': 'application/json'
+						},
+						success : function(){
+							getList();
+							$("#unbReason").val("");
+							alert("성공적으로 삭제되었습니다.");
+						},
+						dataType : "JSON"
+					});		
+				})
+			});
 		});
 	}
+	
 	function regist() {
 		var param = {};
 
 		param.boardDiv = "N";
 		param.lineDtlId = lineDetailId
-		//param.histDate = new Date($("#datepicker").datepicker('getDate') +1).toISOString().slice(0,10).replace(/-/gi, "");
 		param.histDate = $("#datepicker").datepicker('getDate').yyyymmdd("");
 		param.unbReason = $("#unbReason").val();
 
@@ -155,7 +178,7 @@
 
 		$.ajax({
 			type : "POST",
-			url : "/board/process",
+			url : unboardReserveUri,
 			data : JSON.stringify(param),
 			headers: {
 				'Accept': 'application/json',

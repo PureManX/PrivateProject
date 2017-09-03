@@ -7,8 +7,8 @@ import java.util.Date;
 
 @Data
 public class CommonDto {
-	private String createdBy;
+	private Integer createdBy;
 	private Date createdDt;
-	private String updatedBy;
+	private Integer updatedBy;
 	private Date updatedDt;
 }

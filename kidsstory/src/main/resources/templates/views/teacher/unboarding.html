@@ -202,7 +202,7 @@
 	});
 
 	function initHeaderInfo() {
-		$.get("/board/lineinfo/2", function(data, status) {
+		$.get("/rest/board/lineinfo/2", function(data, status) {
 			$(".header_wrapper h4").text(data.lineNm + "(" + data.busNum + ")");
 			$(".header_wrapper h5").text(data.userNm + " 선생님");
 			$(".header_wrapper img").attr("src", "/file/data" + data.imgSrc);
@@ -225,7 +225,7 @@
 
 		$.ajax({
 			type : "POST",
-			url : "/board/process",
+			url : "/rest/board/process",
 			data : JSON.stringify(param),
 			headers: {
 				'Accept': 'application/json',

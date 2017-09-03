@@ -8,7 +8,7 @@
 	<link rel="stylesheet" th:href="@{/adminlte/dist/css/skins/skin-red-light.min.css}"/>
 	<style>
 
-		div.busLineContainer {
+		div.bus-line-container {
 			background: #ececec;
 			padding-bottom: 10px;
 			padding-top: 10px;
@@ -212,12 +212,16 @@
 		.affix .bus-line-area button {
 			display: none;
 		}
+		
+		.btn.btn-xs.board-service-button {
+			width: 20vw;
+		}
 	</style>
 </head>
 <body>
 <div id="content_wrap">
 	<section class="mContents" layout:fragment="content">
-		<div class="busLineContainer">
+		<div class="bus-line-container">
 			<!-- The time line -->
 			<ul class="timeline">
 				<!-- timeline time label -->
@@ -237,7 +241,7 @@
 								<!-- /.widget-user-image -->
 								<div class="bus-line-area">
 									<span class="bus-line-name"></span>
-									<button class="btn bg-green btn-xs" onclick="startBoardService()" th:if="${loginUser.userType.code == 'TCH'}">출발</button>
+									<button class="btn bg-green btn-xs board-service-button" th:if="${loginUser.userType.code == 'TCH'}">출발</button>
 								</div>
 							</div>
 						</div>
@@ -269,6 +273,10 @@
 
 	var histDate =  curYear + "" + curMonth + "" + curDay;
 	var lineType;
+	
+	
+	var boardServiceStarted = false;
+	
 	$(document).ready(function(){
 		$(".bus-line-header").affix({
 			offset : {
@@ -283,10 +291,11 @@
 		}
 
 		initHeaderInfo();
+		getBoardService();
 	});
 
 	function initHeaderInfo() {
-		$.get("/board/lineinfo/" + lineId, function(data, status) {
+		$.get("/rest/board/lineinfo/" + lineId, function(data, status) {
 			lineType = data.lineType;
 
 			console.log(lineType);
@@ -314,23 +323,15 @@
 			}
 
 			addLast();
-
-			// 로그인 유저 타입이 선생님일 경우에만 버튼의 클릭 이벤트 등록
-			if (loginUserType == "TCH") {
-				$("div.button-area .btn").each(function(){
-					$(this).on("click", function(){
-						updateTest(this);
-					})
-				});
-			}
-
 		});
 
 	}
 
 	function addLast() {
-		var busLineLastItemHtml = '<li class="bus-line-item"><div class="bus-line-footer"></div></li>';
+		var busLineLastItemHtml = '<li class="bus-line-item"><div class="bus-line-footer">'+ 
+			'<button class="btn bg-red btn-xs board-service-button" onclick="deleteBoardService()">기록삭제</button></div></li>';
 		$("ul.timeline").append(busLineLastItemHtml);
+
 	}
 
 	function addList(lineDtlData, curFlg) {
@@ -385,6 +386,12 @@
 			if (lineType == "ATT") {
 				$("#" + liId + " .button-area").append(" " + buttonOffHtml);
 			}
+			
+			$("#" + liId + " .button-area .btn").each(function(){
+				$(this).on("click", function(){
+					updateTest(this);
+				})
+			});
 		}
 
 		if (curFlg) {
@@ -394,6 +401,11 @@
 	}
 
 	function updateTest(button) {
+		if (!boardServiceStarted) {
+			alert("아직 노선 운행을 시작하지 않았습니다\n운행 출발 버튼을 눌러주세요");
+			return false;		
+		}
+		
 		var btnType = $(button).text();
 
 		var param = {};
@@ -410,7 +422,7 @@
 
 		$.ajax({
 			type : "POST",
-			url : "/board/process",
+			url : "/rest/board/process",
 			data : JSON.stringify(param),
 			headers: {
 				'Accept': 'application/json',
@@ -424,16 +436,47 @@
 	}
 
 	function startBoardService() {
-
 		$.ajax({
 			type : "POST",
-			url : "/board/line/start/" + lineId,
+			url : "/rest/board/service/" + lineId,
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json'
 			},
 			success : function(){
+				getBoardService();
 				console.log("success");
+			},
+			dataType : "JSON"
+		});
+	}
+	
+	function getBoardService() {
+		$.get("/rest/board/service/" + lineId, function(result, status) {
+			if (result.code == "0") {
+				$(".bus-line-area .board-service-button").text("출발완료");
+				
+				boardServiceStarted = true;
+			} else {
+				$(".bus-line-area .board-service-button").text("출발");
+				$(".bus-line-area .board-service-button").click(startBoardService);
+				
+				boardServiceStarted = false;
+			}
+		});
+	}
+	
+	function deleteBoardService() {
+		$.ajax({
+			type : "DELETE",
+			url : "/rest/board/service/" + lineId,
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			success : function(){
+				getBoardService();
+				refresh();
 			},
 			dataType : "JSON"
 		});
