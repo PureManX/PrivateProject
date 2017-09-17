@@ -19,5 +19,9 @@
 	<logger name="kr.cnkisoft" level="DEBUG" additivity="false">
 		<appender-ref ref="console" />
 	</logger>
+	
+	<logger name="org.apache.ibatis" level="DEBUG" additivity="false">
+		<appender-ref ref="console" />
+	</logger>
 
 </configuration>

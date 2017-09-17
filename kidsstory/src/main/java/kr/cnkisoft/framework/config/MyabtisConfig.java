@@ -48,6 +48,7 @@ public class MyabtisConfig {
 		configuration.setDefaultStatementTimeout(3000);
 		configuration.setMapUnderscoreToCamelCase(true);
 		configuration.setJdbcTypeForNull(JdbcType.NULL);
+		configuration.setUseActualParamName(true);
 
 		sessionFactoryBean.setConfiguration(configuration);
 

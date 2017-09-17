@@ -26,22 +26,29 @@
 			text-align: center;
 		}
 		div.infoWrap article{
-			padding: 5vw;
+			padding: 8vw;
 		}
-		div.infoWrap article div.profImagWrap{
-			width: 50vw;
-			height: 50vw;
+		div.infoWrap article div.profile-image-wrap{
+			width: 40vw;
+		    height: 40vw;
+		    display: inline-block;
+		    position: relative;
 		}
-		div.infoWrap article div.profTxtWrap{
+		div.infoWrap article div.profile-text-wrap{
 			margin-top: 5vw;
 		}
 		div.infoWrap article img{
 			width: 100%;
 			height: 100%;
 		}
-		.profWrap{
-			display: inline-block;
-		}
+		.profile-wrap{
+		    display: inline-block;
+		    width: 100%;
+		    height: 100%;
+		    text-align: center;
+		    border: 1px solid #b9b67a;
+		    padding: 3vw;
+   		}
 
 		/* Bootstrap modal align vertical middle*/
 		.modal {
@@ -78,27 +85,98 @@
 			background : #FFF;
 			height: 100%;
 		}
+		#profile-carousel .carousel-control {
+			background-image: none;
+			width: 10vw;
+		}
+		#profile-carousel .carousel-control span{
+			color: #e5cf39;
+		}
+		.carousel-indicators li, .carousel-indicators li.active {
+			background-color: #e5cf39;
+		}
+		#profile-carousel .glyphicon-camera {
+			width: 12vw;
+			height: 12vw;
+			position: absolute;
+			background: rgba(0,0,0,0);
+			right: 0;
+			top: 0;
+			font-size: 8vw;
+			color: #ffdf00;
+			padding: 2vw;
+		}
+		#profile-carousel .glyphicon-cloud-upload {
+			width: 12vw;
+			height: 12vw;
+			position: absolute;
+			background: rgba(0,0,0,0);
+			right: 0;
+			top: 12vw;
+			font-size: 8vw;
+			color: #ffdf00;
+			padding: 2vw;
+		}
+		input.file , .ui-input-text{
+			visibility: hidden;
+			position: absolute;
+		}
+		
 	</style>
+<!-- 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" /> -->
+	<script src="/js/lib/jquery.bcSwipe.js"></script>
 </head>
 <body>
 	<div id="content_wrap">
 		<section class="mContents" layout:fragment="content">
 			<div class="infoWrap">
-				<article>
-					<div class="profWrap">
-						<div class="profImagWrap">
-							<img th:src="@{/file/data/{imgSrc}(imgSrc=${loginUser.children[0].imgSrc})}" class="img-circle" />
-						</div>
-						<div class="profTxtWrap">
-							<!--<h5 class="profNm fontsize_15e" th:text="${#httpServletRequest.getUserPrincipal().getName()}"></h5>-->
-							<h5 class="profNm fontsize_15e" th:text="${loginUser.children[0].userNm}"></h5>
-							<!--<h5 class="profNm fontsize_15e"><span sec:authentication="principal.loginUser.children[0].userNm"></span></h5>-->
-							<h5 class="profSch fontsize_13e" th:text="${loginUser.school.schName}"></h5>
-							<h5 class="profCls fontsize_12e" th:text="${loginUser.userClass.clsNm} + 반"></h5>
+<!-- 				<article> -->
+<!-- 					<div class="profile-wrap" th:each="child : ${loginUser.children}"> -->
+<!-- 						<div class="profile-image-wrap"> -->
+<!-- 							<img th:src="@{/file/data/{imgSrc}(imgSrc=${child.imgSrc})}" class="img-circle" /> -->
+<!-- 						</div> -->
+<!-- 						<div class="profile-text-wrap"> -->
+<!-- 							<h5 class="profile-text-name fontsize_15e" th:text="${child.userNm}"></h5> -->
+<!-- 							<h5 class="profile-text-class fontsize_12e" th:text="${loginUser.userClass.clsNm} + 반"></h5> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 				</article> -->
+
+				<article id="profile-carousel" class="carousel slide" data-ride="carousel" data-interval="false">
+					<!-- Indicators -->
+					<ol class="carousel-indicators">
+						<li data-target="#profile-carousel" th:each="child, iterStat : ${loginUser.children}" 
+							th:attr="data-slide-to=${iterStat.index}" th:classappend="${iterStat.index == 0} ? active : ''"></li>
+					</ol>
+					
+					<!-- Wrapper for slides -->
+					<div class="carousel-inner">
+						<div class="item profile-wrap" th:each="child, iterStat : ${loginUser.children}" th:classappend="${iterStat.index == 0} ? active : ''">
+							<span class="glyphicon glyphicon-camera browse"></span>
+							<span class="glyphicon glyphicon-cloud-upload"></span>
+							<input type="file" class="file" th:attr="id=file_+${iterStat.index}"/>
+							<div class="profile-image-wrap">
+								<img th:src="@{/file/data/{imgSrc}(imgSrc=${child.imgSrc})}" class="img-circle" />
+							</div>
+							<div class="profile-text-wrap">
+								<h5 class="profile-text-name fontsize_15e" th:text="${child.userNm}"></h5>
+								<h5 class="profile-text-class fontsize_12e" th:text="${loginUser.userClass.clsNm} + 반"></h5>
+							</div>
 						</div>
 					</div>
+
+					<!-- Left and right controls -->
+					<a class="left carousel-control" href="#profile-carousel" role="button" data-slide="prev">
+						<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+						<span class="sr-only">Previous</span>
+					</a>
+					<a class="right carousel-control" href="#profile-carousel" role="button" data-slide="next">
+						<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+						<span class="sr-only">Next</span>
+					</a>
 				</article>
 			</div>
+			
 			<div class="buttonWrap">
 				<article>
 					<a onclick="readyButton()">
@@ -110,7 +188,7 @@
 					<a onclick="readyButton()">
 						<img class="menuBtn" th:src="@{/images/menu/parents/btn_eduschd.png}" />
 					</a>
-					<a onclick="readyButton()">
+					<a th:href="@{/menu/list}">
 						<img class="menuBtn" th:src="@{/images/menu/parents/btn_menu.png}" />
 					</a>
 					<a th:href="@{/board/parent/unboadrequest/on}">
@@ -122,8 +200,8 @@
 					<a th:href="@{/test/parent/reqMedi}">
 						<img class="menuBtn" th:src="@{/images/menu/parents/btn_reqmedi.png}" />
 					</a>
-					<a onclick="readyButton()">
-						<img class="menuBtn" th:src="@{/images/menu/parents/btn_youtube.png}" />
+					<a th:href="@{/notice/list}">
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_school_notice.png}" />
 					</a>
 				</article>
 			</div>
@@ -159,8 +237,42 @@
 				,todayHighlight : true
 				,language : "kr"
 			});
+			
+			
+			$(".carousel").bcSwipe({ threshold: 50 });
+			//swipeCarousel();
+			
+// 			$(document).on('click', '.browse', function(){
+// 				var file = $(this).parent().parent().parent().find('.file');
+// 				file.trigger('click');
+// 			});
+			
+			$(".browse").each(function(){
+				$(this).click(function(){
+					var file = $(this).parent().find("input.file");
+					file.trigger('click');
+				})
+			})
+			
+			$(".file").each(function(){
+				console.log($(this).attr("id"));
+			})
+			
+// 			$(document).on('change', '.file', function(){
+// 				$(this).parent().find('.form-control').val($(this).val().replace(/C:\\fakepath\\/i, ''));
+// 			});
 		});
+		
+		function swipeCarousel() {
+	  		 $(".carousel-inner").swiperight(function() {  
+	    		  $(this).parent().carousel('prev');  
+		    		});  
+			   $(".carousel-inner").swipeleft(function() {  
+			      $(this).parent().carousel('next');  
+		   });  
+		}
 
+		
 		function readyButton() {
 			alert("준비중입니다");
 		}

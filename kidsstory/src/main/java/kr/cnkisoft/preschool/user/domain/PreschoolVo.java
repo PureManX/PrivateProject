@@ -2,6 +2,7 @@ package kr.cnkisoft.preschool.user.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.List;
@@ -12,9 +13,10 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@NoArgsConstructor
 public class PreschoolVo extends PreschoolDto {
-	private List<PreschoolClassDto> classes;	// 학급
-	private TeacherVo director;					// 원장 선생님
+	protected List<PreschoolClassDto> classes;	// 학급
+	protected TeacherVo director;				// 원장 선생님
 
 	public List<TeacherVo> getTeachers() {
 		return null;

@@ -2,6 +2,7 @@ package kr.cnkisoft.preschool.user.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -10,6 +11,7 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@NoArgsConstructor
 public class UserVo extends UserDto {
-	private PreschoolVo preschool;
+	protected PreschoolVo preschool;
 }

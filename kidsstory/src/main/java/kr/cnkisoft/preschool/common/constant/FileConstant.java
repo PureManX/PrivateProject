@@ -4,9 +4,10 @@ public class FileConstant {
 	private static final String DATA_HOME_PATH = "/home/hosting_users/cnkisoft/tomcat/data";
 	private static final String DATA_FOLDER_IMAGE = "/image";
 	private static final String DATA_FOLDER_PROF = "/prof";
+	private static final String DATA_FOLDER_MENU = "/menu";
 	
 	enum Folder {
-		IMAGE(DATA_FOLDER_IMAGE), PROF(DATA_FOLDER_PROF);
+		IMAGE(DATA_FOLDER_IMAGE), PROF(DATA_FOLDER_PROF) ,MENU(DATA_FOLDER_MENU);
 		
 		private String folder;
 		

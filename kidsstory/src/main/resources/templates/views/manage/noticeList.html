@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	  layout:decorator="layout/mobileLayout">
+<head>
+	<style>
+		section.notice-list-wrap {
+			width: 100vw;
+			padding: 3vw;
+		}
+		section.contents-header {
+			padding: 3vw;
+		}
+		section.contents-header .page-title {
+			padding: 3vw;
+			width: 100%;
+			background: #cecece;
+			font-size: 6vw;
+			font-weight: bold;
+		}
+		article.notice-item {
+			position: relative;
+			min-height: 100px;
+			background: #ffffff;
+			border: 1px solid #d0d0d0;
+			width: 100%;
+			padding : 3vw;
+			margin-bottom: 5vw;
+		}
+		.notice-title {
+			height:20px;
+			line-height:20px;
+			font-size:20px;
+	        font-weight:bold;
+	        color:#101010;
+		}
+	
+		.notice-create-date {
+		    display:block; 
+			height:18px;
+			line-height:18px;
+			font-size:14px;
+	        color:#808080;
+	        margin-top: 3vw;
+		}
+		.notice-cotent {
+		    display:block; 
+			font-size:14px;
+	        margin-top:3vw;
+	        color:#808080;
+		}
+	</style>
+</head>
+<body>
+<div id="content_wrap">
+	<section class="mContents" layout:fragment="content">
+		<section class="contents-header">
+			<h3 class="page-title">공지사항</h3>
+		</section>
+		<section class="notice-list-wrap">
+			<article class="notice-item" th:each="noticeItem : ${noticeList}">
+				<h4 class="notice-title" th:text="${noticeItem.noticeTitle}"></h4>
+				<h5 class="notice-create-date" th:text="${noticeItem.createdDate}"></h5>
+				<p class="notice-cotent" th:utext="${noticeItem.noticeContent}"></p>
+			</article>
+		</section>
+	</section>
+</div>
+<script th:inline="javascript" layout:fragment="script">
+	/*<![CDATA[*/
+	/*]]>*/
+</script>
+</body>
+</html>

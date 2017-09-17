@@ -1,6 +1,5 @@
 package kr.cnkisoft.preschool.user.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,29 +41,28 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private UserVo getUserByContact(String contact) {
-		UserVo user = null;
-		UserDto userDto = userMapper.selectUserbyContact(contact);
+		UserVo user = userMapper.selectUserbyContact(contact);
 
-		if (userDto == null) {
+		if (user == null) {
 			return createGuestUser(contact);
 		}
 		
-		if ("PAR".equals(userDto.getUserType())) {
-			user = getParent(userDto);
-		} else if ("TCH".equals(userDto.getUserType())) {
-			user = getTeacher(userDto);
+		if ("PAR".equals(user.getUserType())) {
+			user = getParent(user);
+		} else if ("TCH".equals(user.getUserType())) {
+			user = getTeacher(user);
 		}
 
-		user.setPreschool(getPreschool(userDto));
+		user.setPreschool(getPreschool(user));
 
 		return user;
 	}
 
-	private PreschoolVo getPreschool(UserDto userDto) {
+	private PreschoolVo getPreschool(UserVo user) {
 		PreschoolVo preschool = null;
 
-		if (userDto != null && userDto.getClsId() != null) {
-			preschool = userMapper.selectPreschoolbyClsId(userDto.getClsId());
+		if (user != null && user.getClsId() != null) {
+			preschool = userMapper.selectPreschoolbyClsId(user.getClsId());
 			List<PreschoolClassDto> preschoolClassList = userMapper.selectListPreschoolClassbyPreshcoolCode(preschool.getSchCd());
 
 			preschool.setClasses(preschoolClassList);
@@ -74,25 +72,25 @@ public class UserServiceImpl implements UserService {
 		return  preschool;
 	}
 
-	private ParentVo getParent(UserDto userDto) {
-		ParentVo parentVo = new ParentVo(userDto);
-		parentVo.setPushInfo(getPushInfo(userDto.getUserId()));
-		parentVo.setChildren(getChildrenByParentId(userDto.getUserId()));
+	private ParentVo getParent(UserVo user) {
+		ParentVo parentVo = new ParentVo(user);
+		parentVo.setPushInfo(getPushInfo(user.getUserId()));
+		parentVo.setChildren(getChildrenByParentId(user.getUserId()));
 
 		return parentVo;
 	}
 
-	private StudentVo getStudentVo(UserDto userDto) {
-		StudentVo studentVo = new StudentVo(userDto);
+	private StudentVo getStudentVo(UserVo user) {
+		StudentVo studentVo = new StudentVo(user);
 
-		studentVo.setParents(userMapper.selectListParentsByChildId(userDto.getUserId()));
+		studentVo.setParents(userMapper.selectListParentsByChildId(user.getUserId()));
 
 		return studentVo;
 	}
 
-	private TeacherVo getTeacher(UserDto userDto) {
-		TeacherVo teacherVo = new TeacherVo(userDto);
-		teacherVo.setStudentList(getStudentListByTeacherContact(userDto.getContact()));
+	private TeacherVo getTeacher(UserVo user) {
+		TeacherVo teacherVo = new TeacherVo(user);
+		teacherVo.setStudentList(getStudentListByTeacherContact(user.getContact()));
 
 		return teacherVo;
 	}
@@ -107,34 +105,36 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private List<StudentVo> getChildrenByParentId(Integer parentId) {
-		List<UserDto> studentDtoList = userMapper.selectListStudentByParentId(parentId);
+		List<StudentVo> studentList = userMapper.selectListStudentByParentId(parentId);
 
-		List<StudentVo> studentList = new ArrayList<>();
-
-		for (UserDto userDto : studentDtoList) {
-			StudentVo studentVo = new StudentVo(userDto);
-			studentList.add(studentVo);
-		}
+//		List<StudentVo> studentList = new ArrayList<>();
+//
+//		for (UserDto userDto : studentDtoList) {
+//			StudentVo studentVo = new StudentVo(userDto);
+//			studentList.add(studentVo);
+//		}
 
 		return studentList;
 	}
 
 	@Override
 	public List<StudentVo> getStudentListByTeacherContact(String contact) {
-		List<UserDto> studentDtoList = userMapper.selectListStudentByTeacherContact(contact);
-
-		List<StudentVo> studentList = new ArrayList<>();
-
-		for (UserDto userDto : studentDtoList) {
-			StudentVo studentVo = new StudentVo(userDto);
-			studentList.add(studentVo);
-
-			ArrayList<ParentVo> parents = new ArrayList<>();
-
-			parents.add(getParent(userDto));
-
-			studentVo.setParents(parents);
-		}
+//		List<UserDto> studentDtoList = userMapper.selectListStudentByTeacherContact(contact);
+//
+//		List<StudentVo> studentList = new ArrayList<>();
+//
+//		for (UserDto userDto : studentDtoList) {
+//			StudentVo studentVo = new StudentVo(userDto);
+//			studentList.add(studentVo);
+//
+//			ArrayList<ParentVo> parents = new ArrayList<>();
+//
+//			parents.add(getParent(userDto));
+//
+//			studentVo.setParents(parents);
+//		}
+		
+		List<StudentVo> studentList = userMapper.selectListStudentByTeacherContact(contact);
 
 		return studentList;
 	}
@@ -187,7 +187,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private UserVo getTargetUser(Integer userId) {
-		UserDto targetuser = userMapper.selectUserbyUserId(userId);
+		UserVo targetuser = userMapper.selectUserbyUserId(userId);
 		UserVo returnUser = null;
 		if (targetuser != null) {
 

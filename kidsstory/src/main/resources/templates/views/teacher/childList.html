@@ -109,7 +109,8 @@
 			innerHtml += '<div class="funcWrap pull-left"><a href="tel:{parentTel}"><img alt="통화버튼" src="/images/button/btn_call.png"></a>';
 			innerHtml += '<a href="/user/chat?targetId={childId}"><img alt="메세지" src="/images/button/btn_msg.png"></a></div></div></li>';
 
-			innerHtml = innerHtml.replace("{imgSrc}", "/file/data" + childVo.imgSrc);
+			innerHtml = innerHtml.replace("{imgSrc}", "/file/data/" + childVo.imgSrc);
+			
 			innerHtml = innerHtml.replace("{childNm}", childVo.userNm);
 			innerHtml = innerHtml.replace("{parentNm}", childVo.parents[0].userNm);
 			innerHtml = innerHtml.replace("{parentTel}", childVo.parents);

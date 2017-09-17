@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	  layout:decorator="layout/mobileLayout">
+<head>
+	<style>
+		section.notice-list-wrap {
+			width: 100vw;
+			padding: 3vw;
+		}
+		section.contents-header {
+			padding: 3vw;
+		}
+		section.contents-header .page-title {
+			padding: 3vw;
+			width: 100%;
+			background: #cecece;
+			font-size: 6vw;
+			font-weight: bold;
+		}
+		article.menu-item {
+			position: relative;
+			min-height: 100px;
+			background: #ffffff;
+			border: 1px solid #d0d0d0;
+			width: 100%;
+			padding : 3vw;
+			margin-bottom: 3vw;
+		}
+		.menu-date {
+			height: 6vw;
+			line-height: 5vw;
+			font-size: 5vw;
+			font-weight: bold;
+			color: #101010;
+			border-bottom: 1px solid #CCC;
+		}
+		.menu-image-list-wrap {
+			display: -webkit-flex;
+			display:         flex;
+			-webkit-align-items: center;
+			align-items: center;
+			-webkit-justify-content: center;
+			justify-content: center;
+			margin-top: 2vw;
+		}
+		
+		.menu-image-wrap {
+			width: 28vw;
+			margin: 1vw;
+			padding: 1vw;
+			border: 1px solid #CCD;
+			text-align: center
+		}
+		.menu-image {
+			width: 100%;
+		}
+		.menu-type {
+			margin-top: 1vw;
+			display: inline-block;
+		}
+	</style>
+</head>
+<body>
+<div id="content_wrap">
+	<section class="mContents" layout:fragment="content">
+		<section class="contents-header">
+			<h3 class="page-title">식단표</h3>
+		</section>
+		<section class="notice-list-wrap">
+			<article class="menu-item" th:each="menuItem : ${menuList}">
+				<h5 class="menu-date" th:text="${menuItem.menuDate}"></h5>
+				<div class="menu-image-list-wrap">
+					<div class="menu-image-wrap" th:each="menuDetailItem : ${menuItem.menuDetailList}">
+						<img class="menu-image" th:src="@{/file/data{imgSrc}(imgSrc=${menuDetailItem.imgSrc})}"/>
+						<span class="menu-type" th:text="${menuDetailItem.menuType}"></span>
+					</div>
+				</div>
+			</article>
+		</section>
+	</section>
+</div>
+<script th:inline="javascript" layout:fragment="script">
+	/*<![CDATA[*/
+	/*]]>*/
+</script>
+</body>
+</html>
