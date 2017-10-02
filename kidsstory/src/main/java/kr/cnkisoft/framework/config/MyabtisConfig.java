@@ -17,6 +17,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 
+import kr.cnkisoft.framework.enums.MenuType;
+
 @Configuration
 @MapperScan(basePackages=ConfigConstant.BASE_PACKAGE, annotationClass=Mapper.class)
 public class MyabtisConfig {
@@ -49,6 +51,10 @@ public class MyabtisConfig {
 		configuration.setMapUnderscoreToCamelCase(true);
 		configuration.setJdbcTypeForNull(JdbcType.NULL);
 		configuration.setUseActualParamName(true);
+		
+		sessionFactoryBean.setTypeHandlers(new TypeHandler[]{
+				new MenuType.TypeHandler()
+		});
 
 		sessionFactoryBean.setConfiguration(configuration);
 
