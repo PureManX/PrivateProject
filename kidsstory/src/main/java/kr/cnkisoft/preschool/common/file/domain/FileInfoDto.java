@@ -10,5 +10,6 @@ public class FileInfoDto extends CommonDto{
 	private String fileId;
 	private String fileNm;
 	private String fileType;
+	private Integer clsId;
 	private String imgSrc;
 }

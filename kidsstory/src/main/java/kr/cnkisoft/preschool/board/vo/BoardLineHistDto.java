@@ -3,7 +3,6 @@ package kr.cnkisoft.preschool.board.vo;
 import groovy.transform.EqualsAndHashCode;
 import groovy.transform.ToString;
 import kr.cnkisoft.preschool.common.domain.CommonDto;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

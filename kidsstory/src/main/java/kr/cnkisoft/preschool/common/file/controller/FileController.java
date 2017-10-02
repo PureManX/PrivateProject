@@ -92,7 +92,7 @@ public class FileController {
 	
 	@RequestMapping("/file/list/image/{teacherId}")
 	@ResponseBody
-	public List<FileInfoDto> fileListImage(@PathVariable String teacherId) {
-		return fileMapper.selectListImageFileByTeacherId(teacherId);
+	public List<FileInfoDto> fileListImage(@PathVariable Integer teacherId) {
+		return fileMapper.selectListImageFileByCreatedBy(teacherId);
 	}
 }

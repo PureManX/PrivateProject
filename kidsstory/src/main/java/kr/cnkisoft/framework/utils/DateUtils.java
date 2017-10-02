@@ -2,7 +2,9 @@ package kr.cnkisoft.framework.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 /**
@@ -34,4 +36,35 @@ public class DateUtils {
 	}
 	
 	
+	public static String getFirstDayOfWeekString() {
+		return formattedDateString(getFirstDayOfWeekDate(Calendar.MONDAY), "yyyyMMdd");
+	}
+	
+	public static String getLasttDayOfWeekString() {
+		return formattedDateString(getLastDayOfWeekDate(Calendar.FRIDAY), "yyyyMMdd");
+	}
+	
+	public static Date getFirstDayOfWeekDate(int firstDay)
+	{
+	    Calendar c = new GregorianCalendar();
+
+	    while (c.get(Calendar.DAY_OF_WEEK) != firstDay)
+	    {
+	        c.add(Calendar.DAY_OF_MONTH, -1);
+	    }
+
+	    return c.getTime();
+	}
+	
+	public static Date getLastDayOfWeekDate(int firstDay)
+	{
+	    Calendar c = new GregorianCalendar();
+
+	    while (c.get(Calendar.DAY_OF_WEEK) != firstDay)
+	    {
+	        c.add(Calendar.DAY_OF_MONTH, +1);
+	    }
+
+	    return c.getTime();
+	}
 }

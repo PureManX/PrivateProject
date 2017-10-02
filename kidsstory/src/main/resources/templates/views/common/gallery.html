@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	  layout:decorator="layout/mobileLayout">
+<head>
+	<style>
+		section.gallery-list-wrap {
+			width: 100vw;
+			padding: 0 3vw 3vw 3vw;
+		}
+		section.contents-header {
+			padding: 3vw;
+		}
+		section.contents-header .page-title {
+			padding: 3vw;
+			width: 100%;
+			background: #FFF;
+			font-size: 6vw;
+			font-weight: bold;
+			text-align: center;
+			border: 1px solid #d0d0d0;
+		}
+		.tz-gallery .row {
+			margin: 0;
+			line-height: 0;
+			-webkit-column-count: 2;
+			-webkit-column-gap: 1vw;
+			-moz-column-count: 2;
+			-moz-column-gap: 1vw;
+			column-count: 2;
+			column-gap: 1vw;
+		}
+		.image-item {
+			width: 100% !important;
+			height: auto !important;
+			margin-bottom: 1vw;
+    	}
+	</style>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.1/baguetteBox.min.css" />
+	<link rel="stylesheet" href="/css/lib/gallery-grid.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.1/baguetteBox.min.js"></script>
+</head>
+<body>
+<div id="content_wrap">
+	<section class="mContents" layout:fragment="content">
+		<section class="contents-header">
+			<h3 class="page-title">사진첩</h3>
+		</section>
+		<section class="gallery-list-wrap">
+			<div class="tz-gallery">
+				<div class="row">
+					<div th:each="imageItem : ${imageList}" class="image-item">
+						<a class="lightbox" th:href="${imageItem.imgSrc}">
+							<img th:src="${imageItem.imgSrc}" class="img-thumbnail" />
+						</a>
+					</div>
+<!-- 					<a th:href="${imageItem.imgSrc}" download=""> -->
+<!-- 						<span class="glyphicon glyphicon-download-alt"></span> -->
+<!-- 					</a> -->
+				</div>
+			</div>
+		</section>
+	</section>
+</div>
+<script th:inline="javascript" layout:fragment="script">
+	/*<![CDATA[*/
+	$(document).ready(function() {
+		baguetteBox.run('.tz-gallery');
+		
+		$(".full-image").each(function(){
+			$(this).append("<a>download</a>");
+		});
+	});
+	/*]]>*/
+</script>
+</body>
+</html>

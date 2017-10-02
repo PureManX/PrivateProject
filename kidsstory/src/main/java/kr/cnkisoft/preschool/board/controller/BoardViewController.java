@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import kr.cnkisoft.framework.security.AuthUtils;
@@ -24,13 +25,16 @@ public class BoardViewController {
 	@Autowired
 	BoardService boardService;
 	
-	@RequestMapping(value="/board/parent/unboadrequest/{type}")
-	public ModelAndView parnetUnboadRequest(@PathVariable String type) {
+	@RequestMapping(value="/board/parent/unboadrequest")
+	public ModelAndView parnetUnboadRequest(
+			@RequestParam("type") String type
+			, @RequestParam("studendId") Integer studendId
+			) {
 		ModelAndView mav = new ModelAndView();
 
 		String lineType = "on".equals(type) ? "ATT" : "COM";
 
-		Integer lineDetailId = boardMapper.selectLineDetailIdByLoginParents(lineType, ((ParentVo)(AuthUtils.getLoginUser().getUser())).getChildren().get(0).getUserId());
+		Integer lineDetailId = boardMapper.selectLineDetailIdByLoginParents(lineType, studendId);
 
 		String viewName = "views/parent/unboarding";
 		mav.setViewName(viewName);

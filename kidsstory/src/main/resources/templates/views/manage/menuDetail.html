@@ -38,29 +38,28 @@
 			color: #101010;
 			border-bottom: 1px solid #CCC;
 		}
-		.menu-image-list-wrap {
-			display: -webkit-flex;
-			display:         flex;
-			-webkit-align-items: center;
-			align-items: center;
-			-webkit-justify-content: center;
-			justify-content: center;
-			margin-top: 2vw;
-		}
 		
 		.menu-image-wrap {
-			width: 28vw;
-			margin: 1vw;
+			width: 100%;
 			padding: 1vw;
-			border: 1px solid #CCD;
-			text-align: center
+			text-align: center;
+/* 			margin-top: 2vw; */
+			border-bottom: 2px solid #e4e4e4;
 		}
 		.menu-image {
 			width: 100%;
 		}
 		.menu-type {
-			margin-top: 1vw;
 			display: inline-block;
+			margin: 2vw 0;
+			background: #e4e4e4;
+			width: 100%;
+			padding: 2vw;
+			font-size: 4vw;
+			font-weight: bold;
+		}
+		.menu-content-list {
+			margin: 2vw;
 		}
 	</style>
 </head>
@@ -68,16 +67,17 @@
 <div id="content_wrap">
 	<section class="mContents" layout:fragment="content">
 		<section class="contents-header">
-			<h3 class="page-title">금주의 식단</h3>
+<!-- 			<h3 class="page-title">식단표</h3> -->
+			<h3 class="page-title" th:text="'식단 ' + ${menuList[0].formattedMenuDate}"></h3>
 		</section>
 		<section class="notice-list-wrap">
-			<article class="menu-item" th:each="menuItem : ${menuList}" th:onclick="'moveMenuDetail(' + ${menuItem.menuDate} + ')'">
-				<h5 class="menu-date" th:text="${menuItem.formattedMenuDate}"></h5>
-				<div class="menu-image-list-wrap">
-					<div class="menu-image-wrap" th:each="menuDetailItem : ${menuItem.menuDetailList}">
-						<img class="menu-image" th:src="@{/file/data{imgSrc}(imgSrc=${menuDetailItem.imgSrc})}"/>
-						<span class="menu-type" th:text="${menuDetailItem.menuType.name}"></span>
-					</div>
+			<article class="menu-item" th:each="menuItem : ${menuList}">
+				<div class="menu-image-wrap" th:each="menuDetailItem : ${menuItem.menuDetailList}">
+					<h5 class="menu-type" th:text="${menuDetailItem.menuType.name}">메뉴 유형</h5>
+					<img class="menu-image" th:src="@{/file/data{imgSrc}(imgSrc=${menuDetailItem.imgSrc})}"/>
+					<ul class="menu-content-list" >
+						<li th:each="menuContent : ${menuDetailItem.menuContentList}" th:text="${menuContent}">메뉴 1</li>
+					</ul>
 				</div>
 			</article>
 		</section>
@@ -85,9 +85,6 @@
 </div>
 <script th:inline="javascript" layout:fragment="script">
 	/*<![CDATA[*/
-	function moveMenuDetail(menuDate) {
-		location.href = "/menu/detail?menuDate=" + menuDate; 
-	}
 	/*]]>*/
 </script>
 </body>

@@ -49,7 +49,19 @@
 				</a>
 			</div>
 			<div class="home_img">
-				<img alt="home icon" th:src="@{/images/common/header_main.png}" />
+				<div class="header-title-wrap" th:if="${loginUser.userType.code != 'GST'}">
+					<div class="header-title-bg-wrapper">
+						<img alt="header-title-bg-left" class="header-title-bg-left" th:src="@{/images/common/header_preschool_title_bg_left.png}" />
+					</div>
+					<div class="header-title-bg-wrapper school-name-wrapper">
+						<span th:inline="text">[[${loginUser.school.schName}]]</span>
+					</div>
+					<div class="header-title-bg-wrapper">
+						<img alt="header-title-bg-right" class="header-title-bg-right" th:src="@{/images/common/header_preschool_title_bg_right.png}" />
+					</div>
+				</div>
+				<img alt="home icon" th:src="@{/images/common/header_main.png}" th:if="${loginUser.userType.code == 'GST'}"/>
+				
 			</div>
 			<div class="home_menu">
 				<img alt="home menu" th:src="@{/images/common/header_list.png}" onclick="toggleSideMenu()"/>

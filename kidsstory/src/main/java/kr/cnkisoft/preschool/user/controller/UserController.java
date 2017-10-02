@@ -98,4 +98,16 @@ public class UserController {
 
 		return mav;
 	}
+	
+	@RequestMapping(value= "/user/gallery/{classId}", method = RequestMethod.GET)
+	public ModelAndView userGallery(
+			@PathVariable(value = "classId", required = true)Integer classId) {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("views/common/gallery");
+		
+		mav.addObject("imageList", userService.getImageListOfClass(classId));
+
+		return mav;
+	}
+
 }

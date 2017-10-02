@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	  layout:decorator="layout/mobileLayout">
+<head>
+	<style>
+		div.photoListWrap {
+			width: 100vw;
+			padding: 3vw;
+		}
+		div.photoHeader {
+			text-align: center;
+			padding: 3vw;
+			font-size: 1.1em;
+			background: #EEE;
+			margin-bottom: 2vw;
+			color: #646464;
+		}
+		/* 학생 리스트 영역*/
+		div.photoListWrap ul {
+		}
+
+		a.thumbnail {
+			border-radius : 0;
+		}
+	</style>
+</head>
+<body>
+<div id="content_wrap">
+	<section class="mContents" layout:fragment="content">
+		<div class="photoListWrap">
+			<div class="photoHeader">개나리반 사진첩</div>
+			<ul>
+				<!-- 		<li> -->
+				<!-- 			<div class="childList"> -->
+				<!-- 				<div class="childImgWrap pull-left"> -->
+				<!-- 					<img src="/preschool/resources/img/prof_1.jpg" class="img-circle"> -->
+				<!-- 				</div> -->
+				<!-- 				<div class="childTxtWrap pull-left"> -->
+				<!-- 					<h4 class="childName fontsize_15e">김신</h4> -->
+				<!-- 					<h4 class="parentName fontsize_11e">학부모 : 왕여</h4> -->
+				<!-- 				</div> -->
+				<!-- 				<div class="funcWrap pull-left"> -->
+				<!-- 					<a href="tel:010-2570-9371"> -->
+				<!-- 						<img alt="통화버튼" src="/preschool/resources/img/button/btn_call.png"> -->
+				<!-- 					</a> -->
+				<!-- 					<a href="/preschool/test/test/test2"> -->
+				<!-- 						<img alt="메세지" src="/preschool/resources/img/button/btn_msg.png"> -->
+				<!-- 					</a> -->
+				<!-- 				</div> -->
+				<!-- 			</div> -->
+				<!-- 		</li> -->
+			</ul>
+		</div>
+	</section>
+</div>
+<script th:inline="javascript" layout:fragment="script">
+	/*<![CDATA[*/
+	$(document).ready(function() {
+		refresh();
+	});
+
+	function addPhotoList(photoVo) {
+
+		var innerHtml = '<li><div class="childList"><a href="#" class="thumbnail"><img src="{imgSrc}"></a></div></li>';
+
+		innerHtml = innerHtml.replace("{imgSrc}", "/preschool/file/data" + photoVo.imgSrc);
+
+		$("div.photoListWrap ul").append(innerHtml);
+	}
+
+	function refresh() {
+		$("div.photoListWrap ul").empty();
+
+		/*[+
+		var uri = [[@{/file/list/image/}]] + 3;
+		+]*/
+
+		$.get(uri, function(data, status) {
+			for (var i = 0; i < data.length; i++) {
+				addPhotoList(data[i]);
+			}
+		});
+	}
+	/*]]>*/
+</script>
+</body>
+</html>

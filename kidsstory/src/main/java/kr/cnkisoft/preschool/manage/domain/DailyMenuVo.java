@@ -14,6 +14,10 @@ public class DailyMenuVo {
 	List<PreschoolMenuDto> menuDetailList;
 
 	public DailyMenuVo(String menuDate) {
-		this.menuDate = DateUtils.convertStringDateFromString(menuDate, "yyyyMMdd", "yyyy년 MM월 dd일 (E)");
+		this.menuDate = menuDate;
+	}
+	
+	public String getFormattedMenuDate() {
+		return DateUtils.convertStringDateFromString(this.menuDate, "yyyyMMdd", "yyyy년 MM월 dd일 (E)");
 	}
 }

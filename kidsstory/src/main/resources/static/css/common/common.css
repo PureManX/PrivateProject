@@ -61,12 +61,55 @@ header .home_menu {
 header .home_menu img, header .home_ico img {
 	padding: 3vw;
 	height: 100%;
-	width: 100%;	
+	width: 100%;
+}
+header .home_img {
+	text-align: center;
 }
 header .home_img img{
 	height: 15vw;
 	padding: 2vw;	
 }
+
+header div.header-title-wrap{
+	height: 15vw;
+	text-align: center;
+}
+
+header div.header-title-wrap div.header-title-bg-wrapper{
+    position: relative;
+    display: inline-block;
+    line-height: 15vw;
+    height: 15vw;
+    vertical-align: middle;
+    min-width: 15vw;
+}
+
+header div.header-title-wrap span{
+	position: relative;
+    display: inline-block;
+    height: 15vw;
+    color: #6b6a57;
+    font-size: 6vw;
+    line-height: 15vw;
+    z-index: 20;
+}
+
+header div.header-title-wrap .header-title-bg-left{
+	position: absolute;
+	z-index: 19;
+	right: -7vw;
+}
+
+header div.header-title-wrap .header-title-bg-right{
+	position: absolute;
+	z-index: 19;
+	left: -7vw;
+    opacity: 0.8;
+    transform-origin: 50% 50%;
+    transform: rotate(15deg);
+}
+
 /* header.topHead:before { */
 /* 	content: ""; */
 /* 	display: block; */

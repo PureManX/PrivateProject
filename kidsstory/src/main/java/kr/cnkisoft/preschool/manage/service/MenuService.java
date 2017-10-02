@@ -5,5 +5,7 @@ import java.util.List;
 import kr.cnkisoft.preschool.manage.domain.DailyMenuVo;
 
 public interface MenuService {
-	public List<DailyMenuVo> getMenuListOfCurrentLoginUser();
+	public List<DailyMenuVo> getWekklyMenuListOfCurrentLoginUser();
+	public List<DailyMenuVo> getDailyMenuListOfCurrentLoginUser(String menuDate);
+	public List<DailyMenuVo> getDailyMenuListOfToday(String menuDate);
 }

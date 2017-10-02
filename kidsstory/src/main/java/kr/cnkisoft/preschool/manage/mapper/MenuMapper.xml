@@ -31,6 +31,21 @@
 			JOIN FILE_INFO file ON menu.MENU_IMG_ID = file.FILE_ID AND file.FILE_TYPE = 'MENU'
 		WHERE
 			SCH_CD = #{schCd}
+			AND MENU_DATE = #{menuDate}
+		ORDER BY
+			MENU_DATE, MENU_TYPE			
+	</select>
+	
+	<select id="selectListWeeklyMenu" resultMap="dailyMenu" parameterType="map">
+		SELECT
+			menu.*
+			, concat('/', lcase(file.FILE_TYPE), '/', file.FILE_NM) AS IMG_SRC
+		FROM
+			PRESCH_MENU menu
+			JOIN FILE_INFO file ON menu.MENU_IMG_ID = file.FILE_ID AND file.FILE_TYPE = 'MENU'
+		WHERE
+			SCH_CD = #{schCd}
+			AND MENU_DATE BETWEEN #{startDate} AND #{endDate} 
 		ORDER BY
 			MENU_DATE, MENU_TYPE			
 	</select>

@@ -9,6 +9,8 @@ import org.springframework.util.CollectionUtils;
 import kr.cnkisoft.framework.enums.LoginUserType;
 import kr.cnkisoft.framework.security.AuthUtils;
 import kr.cnkisoft.preschool.common.domain.CommonResultVo;
+import kr.cnkisoft.preschool.common.file.domain.FileInfoDto;
+import kr.cnkisoft.preschool.common.file.service.FileService;
 import kr.cnkisoft.preschool.push.domain.PreSchoolPushIdDto;
 import kr.cnkisoft.preschool.push.mapper.PushMapper;
 import kr.cnkisoft.preschool.user.domain.LoginUserVo;
@@ -32,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	PushMapper pushMapper;
+	
+	@Autowired
+	FileService fileService;
 	
 	@Override
 	public LoginUserVo getLoginUser(String contact) {
@@ -218,5 +223,10 @@ public class UserServiceImpl implements UserService {
 		}
 
 		return pushInfo;
+	}
+
+	@Override
+	public List<FileInfoDto> getImageListOfClass(Integer classId) {
+		return fileService.getFileListByClass(classId);
 	}
 }

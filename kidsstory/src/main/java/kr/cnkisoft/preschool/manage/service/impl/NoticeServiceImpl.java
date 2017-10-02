@@ -20,11 +20,18 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public List<PreschoolNoticeBoardDto> getNoticeListOfCurrentLoginUser() {
 		String preschoolCode = AuthUtils.getLoginUser().getSchool().getSchCd(); 
-		return getNoticeListByPreschoolCode(preschoolCode);
+		return getNoticeList(preschoolCode, "NOTICE");
 	}
 	
-	List<PreschoolNoticeBoardDto> getNoticeListByPreschoolCode(String preschoolCode) {
-		return noticeMapper.selectListNoticeByPreschoolCode(preschoolCode); 
+
+	@Override
+	public List<PreschoolNoticeBoardDto> getDiaryListOfCurrentLoginUser() {
+		String preschoolCode = AuthUtils.getLoginUser().getSchool().getSchCd();
+		return getNoticeList(preschoolCode, "DIARY");
+	}
+
+	List<PreschoolNoticeBoardDto> getNoticeList(String preschoolCode, String noticeType) {
+		return noticeMapper.selectListNotice(preschoolCode, noticeType); 
 	}
 
 }

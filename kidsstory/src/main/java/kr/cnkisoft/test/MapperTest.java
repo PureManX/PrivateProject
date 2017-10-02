@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import kr.cnkisoft.KidsstoryApplication;
+import kr.cnkisoft.framework.utils.DateUtils;
 import kr.cnkisoft.preschool.manage.domain.DailyMenuVo;
 import kr.cnkisoft.preschool.manage.mapper.MenuMapper;
 import kr.cnkisoft.preschool.user.domain.StudentVo;
@@ -35,7 +36,7 @@ public class MapperTest {
 	
 	@Test
 	public void test2() {
-		List<DailyMenuVo> studentList = menuMapper.selectListDailyMenu("TEST1");
+		List<DailyMenuVo> studentList = menuMapper.selectListDailyMenu("TEST1", DateUtils.currentDateOfYear());
 		
 		System.out.println(studentList);
 	}

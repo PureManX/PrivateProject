@@ -10,6 +10,6 @@ import kr.cnkisoft.preschool.manage.domain.PreschoolNoticeBoardDto;
 
 @Mapper
 public interface NoticeMapper {
-	@Select("SELECT * FROM PRESCH_NOTICE_BOARD WHERE SCH_CD = #{schCd}")
-	public List<PreschoolNoticeBoardDto> selectListNoticeByPreschoolCode(@Param("schCd")String schCd);
+	@Select("SELECT * FROM PRESCH_NOTICE_BOARD WHERE SCH_CD = #{schCd} AND NOTICE_TYPE = #{noticeType}")
+	public List<PreschoolNoticeBoardDto> selectListNotice(@Param("schCd")String schCd, @Param("noticeType")String noticeType);
 }

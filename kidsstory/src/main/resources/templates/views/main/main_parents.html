@@ -6,7 +6,7 @@
 <head>
 	<style>
 		.buttonWrap {
-			margin-top: 12vw;
+			margin-top: 10vw;
 			text-align: center;
 		}
 		.buttonWrap a{
@@ -20,24 +20,32 @@
 			height: auto;
 		}
 
-		div.infoWrap {
+		div.child-porfile-wrap {
 			background: #FFF;
-			border-bottom: 1px solid #ffdf00;
-			text-align: center;
 		}
-		div.infoWrap article{
-			padding: 8vw;
+		div.child-porfile-wrap article{
+			border: 2px solid #464b5e;
+			margin: 2vw;
 		}
-		div.infoWrap article div.profile-image-wrap{
+		div.child-porfile-wrap article div.profile-image-wrap {
 			width: 40vw;
 		    height: 40vw;
 		    display: inline-block;
 		    position: relative;
+		    float: left;
 		}
-		div.infoWrap article div.profile-text-wrap{
-			margin-top: 5vw;
+		div.child-porfile-wrap article div.profile-text-wrap {
+			display: block;
+			height: 30vw;
 		}
-		div.infoWrap article img{
+		
+		div.child-porfile-wrap article div.profile-button-wrap {
+			display: block;
+			text-align: right;
+			width: 100%;
+			padding-right: 5vw;
+		}
+		div.child-porfile-wrap article img{
 			width: 100%;
 			height: 100%;
 		}
@@ -45,9 +53,10 @@
 		    display: inline-block;
 		    width: 100%;
 		    height: 100%;
-		    text-align: center;
-		    border: 1px solid #b9b67a;
-		    padding: 3vw;
+		    text-align: left;
+		    padding: 3vw 6vw;
+		    background:  #f1f1f1;
+		    overflow: auto;
    		}
 
 		/* Bootstrap modal align vertical middle*/
@@ -95,31 +104,24 @@
 		.carousel-indicators li, .carousel-indicators li.active {
 			background-color: #e5cf39;
 		}
-		#profile-carousel .glyphicon-camera {
-			width: 12vw;
-			height: 12vw;
-			position: absolute;
-			background: rgba(0,0,0,0);
-			right: 0;
-			top: 0;
-			font-size: 8vw;
+		.glyphicon-camera, .glyphicon-cloud-upload {
+			width: 10vw;
+			height: 10vw;
+			font-size: 7vw;
 			color: #ffdf00;
-			padding: 2vw;
-		}
-		#profile-carousel .glyphicon-cloud-upload {
-			width: 12vw;
-			height: 12vw;
-			position: absolute;
-			background: rgba(0,0,0,0);
-			right: 0;
-			top: 12vw;
-			font-size: 8vw;
-			color: #ffdf00;
-			padding: 2vw;
+			padding: 1vw;
 		}
 		input.file , .ui-input-text{
 			visibility: hidden;
 			position: absolute;
+		}
+		.profile-desc-wrap {
+			float: right;
+			width: 40vw;
+			text-align: left;
+		}
+		.carousel-indicators {
+			bottom: -8vw;
 		}
 		
 	</style>
@@ -129,18 +131,7 @@
 <body>
 	<div id="content_wrap">
 		<section class="mContents" layout:fragment="content">
-			<div class="infoWrap">
-<!-- 				<article> -->
-<!-- 					<div class="profile-wrap" th:each="child : ${loginUser.children}"> -->
-<!-- 						<div class="profile-image-wrap"> -->
-<!-- 							<img th:src="@{/file/data/{imgSrc}(imgSrc=${child.imgSrc})}" class="img-circle" /> -->
-<!-- 						</div> -->
-<!-- 						<div class="profile-text-wrap"> -->
-<!-- 							<h5 class="profile-text-name fontsize_15e" th:text="${child.userNm}"></h5> -->
-<!-- 							<h5 class="profile-text-class fontsize_12e" th:text="${loginUser.userClass.clsNm} + 반"></h5> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 				</article> -->
+			<div class="child-porfile-wrap">
 
 				<article id="profile-carousel" class="carousel slide" data-ride="carousel" data-interval="false">
 					<!-- Indicators -->
@@ -152,15 +143,23 @@
 					<!-- Wrapper for slides -->
 					<div class="carousel-inner">
 						<div class="item profile-wrap" th:each="child, iterStat : ${loginUser.children}" th:classappend="${iterStat.index == 0} ? active : ''">
-							<span class="glyphicon glyphicon-camera browse"></span>
-							<span class="glyphicon glyphicon-cloud-upload"></span>
 							<input type="file" class="file" th:attr="id=file_+${iterStat.index}"/>
 							<div class="profile-image-wrap">
 								<img th:src="@{/file/data/{imgSrc}(imgSrc=${child.imgSrc})}" class="img-circle" />
 							</div>
-							<div class="profile-text-wrap">
-								<h5 class="profile-text-name fontsize_15e" th:text="${child.userNm}"></h5>
-								<h5 class="profile-text-class fontsize_12e" th:text="${loginUser.userClass.clsNm} + 반"></h5>
+							<div class="profile-desc-wrap">
+								<div class="profile-text-wrap">
+									<h5 class="profile-text-name fontsize_15e" th:text="${child.userNm}"></h5>
+									<h5 class="profile-text-class fontsize_12e" th:text="${loginUser.userClass.clsNm} + 반"></h5>
+								</div>
+								<div class="profile-button-wrap">
+									<span class="glyphicon glyphicon-camera browse"></span>
+									<span class="glyphicon glyphicon-cloud-upload"></span>
+								</div>
+								<div class="info">
+									<input type="hidden" class="class-id" th:value="${child.clsId}"/>
+									<input type="hidden" class="student-id" th:value="${child.userId}"/>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -176,25 +175,25 @@
 					</a>
 				</article>
 			</div>
-			
+
 			<div class="buttonWrap">
 				<article>
-					<a onclick="readyButton()">
-						<img class="menuBtn" th:src="@{/images/menu/parents/btn_notice.png}" />
+					<a th:href="@{/diary/list}">
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_diary.png}" />
 					</a>
-					<a onclick="readyButton()">
+					<a onclick="moveToGallery()">
 						<img class="menuBtn" th:src="@{/images/menu/parents/btn_album.png}" />
 					</a>
 					<a onclick="readyButton()">
-						<img class="menuBtn" th:src="@{/images/menu/parents/btn_eduschd.png}" />
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_calendar.png}" />
 					</a>
-					<a th:href="@{/menu/list}">
+					<a th:href="@{/menu/today}">
 						<img class="menuBtn" th:src="@{/images/menu/parents/btn_menu.png}" />
 					</a>
-					<a th:href="@{/board/parent/unboadrequest/on}">
+					<a onclick="moveToUnboardReserve('on')">
 						<img class="menuBtn" th:src="@{/images/menu/parents/btn_noatt.png}" />
 					</a>
-					<a th:href="@{/board/parent/unboadrequest/off}">
+					<a onclick="moveToUnboardReserve('off')">
 						<img class="menuBtn" th:src="@{/images/menu/parents/btn_nocome.png}" />
 					</a>
 					<a th:href="@{/test/parent/reqMedi}">
@@ -275,6 +274,30 @@
 		
 		function readyButton() {
 			alert("준비중입니다");
+		}
+		
+		function moveToUnboardReserve(type) {
+			var studentId = $(".active .student-id").val();
+			
+			var unboardReserverUri = "/board/parent/unboadrequest?type={type}&studendId={studendId}";
+
+			unboardReserverUri = unboardReserverUri.replace("{type}", type);
+			unboardReserverUri = unboardReserverUri.replace("{studendId}", studentId);
+			
+			location.href = unboardReserverUri;
+		}
+		
+		function moveToGallery() {
+			var classId = getClassId();
+			location.href = "/user/gallery/" + classId;
+		}
+		
+		function getClassId() {
+			var classId = $(".active .class-id").val();
+			
+			console.log(classId);
+			
+			return classId;
 		}
 		/*]]>*/
 	</script>

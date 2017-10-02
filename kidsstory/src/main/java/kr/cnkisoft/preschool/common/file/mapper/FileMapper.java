@@ -15,6 +15,9 @@ public interface FileMapper {
 	@Insert("INSERT INTO FILE_INFO (FILE_NM, FILE_TYPE, CREATED_BY, CREATED_DT) VALUES(#{fileNm}, #{fileType}, #{createdBy}, now())")
 	public int insertFileInfo(FileInfoDto param);
 	
-	@Select("SELECT a.*, CONCAT('/', LOWER(a.FILE_TYPE), '/', a.FILE_NM) AS IMG_SRC  FROM FILE_INFO a WHERE FILE_TYPE = 'IMAGE' AND CREATED_BY = #{createdBy}")
-	public List<FileInfoDto> selectListImageFileByTeacherId(@Param("createdBy")String createdBy);
+	@Select("SELECT a.*, CONCAT('/file/data/', LOWER(a.FILE_TYPE), '/', a.FILE_NM) AS IMG_SRC  FROM FILE_INFO a WHERE FILE_TYPE = 'IMAGE' AND CREATED_BY = #{createdBy}")
+	public List<FileInfoDto> selectListImageFileByCreatedBy(@Param("createdBy")Integer createdBy);
+	
+	@Select("SELECT a.*, CONCAT('/file/data/', LOWER(a.FILE_TYPE), '/', a.FILE_NM) AS IMG_SRC  FROM FILE_INFO a WHERE FILE_TYPE = 'IMAGE' AND CLS_ID = #{clsId}")
+	public List<FileInfoDto> selectListImageFileByClassId(@Param("clsId")Integer clsId);
 }
