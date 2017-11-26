@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+		>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+
+	<title>Kids Story Login</title>
+
+	<meta http-equiv="Expires" content="-1"/>
+	<meta http-equiv="Pragma" content="no-store, no-cache"/>
+	<meta http-equiv="Cache-Control" content="must-revalidate, private, max-age=0, no-cache, no-store"/>
+
+	<!-- Bootstrap 3.3.6 -->
+	<link rel="stylesheet" th:href="@{/adminlte/bootstrap/css/bootstrap.min.css}"/>
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css"/>
+	<!-- Ionicons -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css"/>
+	<!-- Theme style -->
+	<link rel="stylesheet" th:href="@{/adminlte/dist/css/AdminLTE.min.css}"/>
+	<!-- AdminLTE Skins. We have chosen the skin-blue for this starter
+		  page. However, you can choose any other skin. Make sure you
+		  apply the skin class to the body tag so the changes take effect.
+	-->
+	<link rel="stylesheet" th:href="@{/adminlte/dist/css/skins/skin-red-light.min.css}"/>
+	<!--<link rel="stylesheet" th:href="@{/adminlte/plugins/datatables/jquery.dataTables.min.css}"/>-->
+	<link rel="stylesheet" th:href="@{/adminlte/plugins/datatables/dataTables.bootstrap.css}"/>
+	<style type="text/css">
+		div.login-box-body {
+			overflow: auto;
+		}
+	</style>
+</head>
+<body class="hold-transition login-page">
+	<div class="login-box">
+		<div class="login-logo">
+			<a href="#">KidsStory</a>
+		</div>
+		<!-- /.login-logo -->
+		<div class="login-box-body">
+			<p class="login-box-msg">Sign in to start your session</p>
+
+			<form th:action="@{/admin/auth/processLogin}" method="post">
+				<div class="form-group has-feedback">
+					<input type="text" class="form-control" placeholder="ID" name="username">
+					<span class="glyphicon glyphicon glyphicon-pencil form-control-feedback"></span>
+				</div>
+				<div class="form-group has-feedback">
+					<input type="password" class="form-control" placeholder="Password" name="password">
+					<span class="glyphicon glyphicon-lock form-control-feedback"></span>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-block btn-flat">로그인</button>
+				</div>
+			</form>
+
+			<div class="pull-right">
+				<a href="#" class="small">비밀번호 찾기</a>
+				<span class="small"> | </span>
+				<a href="#" class="small">회원 가입</a>
+			</div>
+		</div>
+		<!-- /.login-box-body -->
+	</div>
+	<!-- /.login-box -->
+
+	<!-- jQuery 2.2.3 -->
+	<script th:src="@{/adminlte/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+	<!-- Bootstrap 3.3.6 -->
+	<script th:src="@{/adminlte/bootstrap/js/bootstrap.min.js}"></script>
+	<!-- AdminLTE App -->
+	<script th:src="@{/adminlte/dist/js/app.min.js}"></script>
+
+	<script th:src="@{/js/common/CommonUtils.js}"></script>
+	<script th:src="@{/adminlte/plugins/datatables/jquery.dataTables.min.js}"></script>
+	<script th:src="@{/adminlte/plugins/datatables/dataTables.bootstrap.min.js}"></script>
+
+	<script th:inline="javascript" layout:fragment="script">
+		/*<![CDATA[*/
+		/*]]>*/
+	</script>
+</body>
+</html>

@@ -92,102 +92,34 @@
 			JOIN VIEW_USER_BASE student ON student.CLS_ID = preschool.CLS_ID AND student.USER_TYPE = 'STU'
 			JOIN MAP_PARENT_CHILD parentRelation ON student.USER_ID = parentRelation.CHILD_ID 
 			JOIN VIEW_USER_BASE parent ON parentRelation.PARENT_ID = parent.USER_ID AND parent.USER_TYPE = 'PAR'
-			JOIN PRESCH_PUSH_ID push ON parent.CONTACT = push.CONTACT
+			LEFT JOIN PRESCH_PUSH_ID push ON parent.CONTACT = push.CONTACT
 		WHERE
 			teacher.CONTACT = #{contact}
 	</select>
 	
-
-<!-- 	<resultMap type="com.sktechx.musicmate.common.domain.PassCategoryVo" id="passCategory"> -->
-<!-- 		<constructor> -->
-<!-- 			<idArg column="pass_category_id" javaType="int"/> -->
-<!-- 		</constructor> -->
-<!-- 		<result property="passCategoryNm" column="pass_category_nm"/> -->
-<!-- 		<result property="passCategorySn" column="pass_category_sn"/> -->
-<!-- 		<collection property="passGroups" ofType="com.sktechx.musicmate.common.domain.PassGroupVo"> -->
-<!-- 			<constructor> -->
-<!-- 				<idArg column="pass_grp_sn" javaType="int"/> -->
-<!-- 			</constructor>		 -->
-<!-- 			<result property="passGrpNm" column="pass_grp_nm"/> -->
-<!-- 			<result property="passGrpId" column="pass_grp_id"/> -->
-<!-- 			<collection property="passItems" ofType="com.sktechx.musicmate.common.domain.PassItemVo"> -->
-<!-- 				<constructor> -->
-<!-- 					<idArg column="pass_id" javaType="long"/> -->
-<!-- 					<arg column="pass_normal_amount" javaType="int"/> -->
-<!-- 					<arg column="pass_dc_amount" javaType="int"/> -->
-<!-- 				</constructor> -->
-<!-- 				<result property="dispSn" column="disp_sn"/> -->
-<!-- 				<result property="passDispNm" column="pass_disp_nm"/> -->
-<!-- 				<collection property="goodsItems" ofType="com.sktechx.musicmate.common.domain.GoodsItemVo"> -->
-<!-- 					<constructor> -->
-<!-- 						<idArg column="goods_id" javaType="long"/> -->
-<!-- 						<arg column="normal_amount" javaType="int"/> -->
-<!-- 						<arg column="dc_amount" javaType="int"/> -->
-<!-- 						<arg column="alli_dc_amount" javaType="int"/> -->
-<!-- 						<arg column="goods_type" javaType="string"/> -->
-<!-- 						<arg column="auto_payment_yn" javaType="string"/> -->
-<!-- 						<arg column="alli_dc_yn" javaType="string"/> -->
-<!-- 						<arg column="goods_disp_nm" javaType="string"/> -->
-<!-- 					</constructor> -->
-<!-- 				</collection> -->
-<!-- 			</collection> -->
-<!-- 		</collection> -->
-<!-- 	</resultMap> -->
-
-<!-- 	<select id="selectPassList" resultMap="passCategory" parameterType="Long"> -->
-<!-- 	<![CDATA[ -->
-<!-- 		SELECT	/* 이용권 리스트 조회 */ -->
-<!-- 			a.pass_category_id -->
-<!-- 		    , a.pass_category_nm -->
-<!-- 		    , a.pass_category_sn -->
-<!-- 		    , b.pass_grp_id -->
-<!-- 		    , b.pass_grp_nm -->
-<!-- 		    , b.pass_grp_sn -->
-<!-- 		    , b.disp_sn -->
-<!-- 		    , c.pass_id -->
-<!-- 		    , c.pass_disp_nm -->
-<!-- 		    , c.pass_type -->
-<!-- 		    , c.normal_amount	as pass_normal_amount -->
-<!-- 		    , c.dc_amount		as pass_dc_amount -->
-<!-- 		    , c.disp_chnl -->
-<!-- 		    , c.disp_status_type -->
-<!-- 		    , d.goods_id -->
-<!-- 		    , d.goods_type -->
-<!-- 		    , d.auto_payment_yn -->
-<!-- 		    , d.alli_dc_yn -->
-<!-- 		    , d.normal_amount -->
-<!-- 		    , d.dc_amount -->
-<!-- 		    , d.alli_dc_amount -->
-<!-- 		    , d.goods_disp_nm -->
-<!-- 		FROM -->
-<!-- 			tb_pass_category a -->
-<!-- 		    INNER JOIN tb_pass_group b ON a.pass_category_id = b.pass_category_id -->
-<!-- 		    INNER JOIN tb_pass c ON b.pass_id = c.pass_id -->
-<!-- 		    INNER JOIN -->
-<!-- 				(SELECT  -->
-<!-- 					e.apply_sn,  -->
-<!-- 					e.pass_id,  -->
-<!-- 					f.goods_id, -->
-<!-- 					f.goods_type,  -->
-<!-- 					f.auto_payment_yn,  -->
-<!-- 					f.alli_dc_yn,  -->
-<!-- 				    f.normal_amount, -->
-<!-- 				    f.dc_amount, -->
-<!-- 				    f.alli_dc_amount, -->
-<!-- 				    f.goods_disp_nm -->
-<!-- 				FROM -->
-<!-- 					tb_map_pass_goods e  -->
-<!-- 					INNER JOIN tb_goods f ON e.goods_id = f.goods_id ORDER BY e.apply_sn -->
-<!-- 				) d ON c.pass_id = d.pass_id -->
-<!-- 		WHERE -->
-<!-- 			c.pass_type in ('STND', 'EVNT') -->
-<!-- 			AND c.disp_status_type = 'Y' -->
-<!-- 			AND c.sale_start_dt <= now() -->
-<!-- 			AND c.sale_end_dt >= now() -->
-<!-- 		ORDER BY -->
-<!-- 			a.pass_category_sn, b.pass_grp_sn, b.disp_sn -->
-<!-- 	]]> -->
-<!-- 	</select> -->
-
+	<select id="selectListStudentByBoardLineDetailId" parameterType="map" resultMap="StudentVo">
+		SELECT /* 학생 정보 조회 (라인 상세 정보, 탑승 예약 대기 제외) */
+			student.*
+			, parent.USER_ID	AS PARENT_USER_ID
+			, parent.USER_NM	AS PARENT_USER_NM
+			, parent.USER_TYPE	AS PARENT_USER_TYPE
+			, parent.CONTACT	AS PARENT_CONTACT
+			, parent.CLS_ID		AS PARENT_CLS_ID
+			, parent.EMAIL		AS PARENT_EMAIL
+			, parent.STTUS_CD	AS PARENT_STTUS_CD
+			, parent.IMG_SRC	AS PARENT_IMG_SRC
+			, push.CONTACT		AS PARENT_PUSH_CONTACT
+			, push.DEVICE_ID	AS PARENT_PUSH_DEVICE_ID
+			, push.OS_TYPE		AS PARENT_PUSH_OS_TYPE
+		FROM 
+			PRESCH_LINE_DTL lineDetail
+			JOIN MAP_LINE_STDU relLine ON lineDetail.LINE_DTL_ID = relLine.LINE_DTL_ID
+			JOIN MAP_PARENT_CHILD relParent ON relLine.STDU_ID = relParent.CHILD_ID
+			JOIN VIEW_USER_BASE student ON relParent.CHILD_ID = student.USER_ID
+			JOIN VIEW_USER_BASE parent ON relParent.PARENT_ID = parent.USER_ID
+			LEFT JOIN PRESCH_PUSH_ID push ON parent.CONTACT = push.CONTACT
+		WHERE 
+			lineDetail.LINE_DTL_ID = #{lineDetailId}
+	</select>
 
 </mapper>

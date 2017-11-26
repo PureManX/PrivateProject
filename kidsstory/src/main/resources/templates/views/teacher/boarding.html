@@ -6,6 +6,7 @@
 <head>
 	<link rel="stylesheet" th:href="@{/adminlte/dist/css/AdminLTE.min.css}"/>
 	<link rel="stylesheet" th:href="@{/adminlte/dist/css/skins/skin-red-light.min.css}"/>
+	<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet" />
 	<style>
 
 		div.bus-line-container {
@@ -28,15 +29,17 @@
 			margin-bottom: 0;
 		}
 		.timeline>li>.fa {
-			width: 60px;
-			height: 60px;
-			left : 0;
-			border : 2px solid #FFFFFF;
+			width: 30px;
+			height: 30px;
+			left: 15px;
+			border: 2px solid #FFFFFF;
 			z-index: 50;
+			background: #d6d6d6;
+			top: 15px;
+   		}
+		.timeline>li>.fa.board {
+			border : 2px solid #828282;
 		}
-		/*.timeline>li>.fa.board {*/
-			/*border : 2px solid #777777;*/
-		/*}*/
 		.timeline>li>.timeline-item {
 			margin-left: 70px;
 			margin-right: 0px;
@@ -146,12 +149,12 @@
 			margin-top: 4px;
 		}
 		.address>span {
-			margin-left: 10px;
-			font-size: 12px;
+			margin-top: 2px;
+			font-size: 13px;
 		}
 
 		.btn.btn-xs {
-			width: 13vw;
+			width: 18vw;
 		}
 
 		.unboard:before, .board:before {
@@ -162,7 +165,7 @@
 			background: #777777;
 			left: -43px;
 			margin: 0;
-			bottom: -15px;
+			bottom: -30px;
 		}
 		.bus-line-header:before {
 			content: '';
@@ -172,7 +175,7 @@
 			background: #777777;
 			left: 28px;
 			margin: 0;
-			bottom: -15px;
+			bottom: -30px;
 		}
 
 		@keyframes blink {
@@ -193,10 +196,10 @@
 			animation-timing-function: ease-in-out;
 			animation-iteration-count: infinite;
 			z-index: 100;
-			width: 25px;
+			width: 30px;
 			position: absolute;
-			left: 40px;
-			top: -21px;
+			left: 15px;
+			top: -3px;
 		}
 
 		.bus-line-footer {
@@ -216,7 +219,90 @@
 		.btn.btn-xs.board-service-button {
 			width: 20vw;
 		}
+		
+		
+		/* Bootstrap modal align vertical middle*/
+		.modal {
+			text-align: center;
+			padding: 0 !important;
+		}
+
+		.modal:before {
+			content: '';
+			display: inline-block;
+			height: 100%;
+			vertical-align: middle;
+			margin-right: -4px;
+		}
+
+		.modal-dialog {
+			display: inline-block;
+			text-align: left;
+			vertical-align: middle;
+		}
+		.modal-header {
+			/* 		background: #ffeccd; */
+			font-size: 1.2em;
+			font-weight: bold;
+		}
+		.modal-body {
+			text-align: center;
+			max-height: 100vw;
+			overflow-y: auto;
+		}
+		.modal-content {
+			border: none;
+			border-radius: 0;
+		}
+		.modal-lg {
+			width: 90%;
+		}
+		
+		.stdu-item {
+			text-align: left;
+			padding: 2vw 0;
+			border-bottom: 1px solid 1px solid #dadada;
+		}
+		.stdu-item:nth-last-child(1){
+			border-bottom: none
+		}
+		
+		.stdu-img {
+			width: 14vw;
+			height: 14vw;
+			display: inline-block;
+			float: left
+		}
+		.stdu-img img{
+			width: 100%;
+			height: 100%;
+			padding: 1px;
+			border: 1px solid #f3f3f3;
+		}
+		.stdu-wrap{
+			height: 14vw;
+			display: inline-block;
+			margin-left: 3vw;
+		}
+		.stdu-name {
+			font-size: 5vw;
+			line-height: 8vw;
+		}
+		.stdu-class{
+			font-size: 4vw;
+			line-height: 6vw;
+		}
+		.toggle{
+			float: right;
+			width: 21vw;
+			height: 10vw;
+			margin: 2vw;
+		}
+		.toggle-group label{
+			font-size: 4vw;
+		}
 	</style>
+	<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 </head>
 <body>
 <div id="content_wrap">
@@ -250,6 +336,28 @@
 				<!-- /.timeline-label -->
 			</ul>
 		</div>
+
+		<div class="modal" id="myModal" tabindex="-1" role="dialog"
+			 aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">학생 탑승</h4>
+					</div>
+					<div class="modal-body">
+						<ul class="stdu-list">
+						</ul>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+						<button type="button" class="btn btn-warning board-process">탑승 처리</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</section>
 </div>
 <script th:inline="javascript" layout:fragment="script">
@@ -274,9 +382,9 @@
 	var histDate =  curYear + "" + curMonth + "" + curDay;
 	var lineType;
 	
-	
 	var boardServiceStarted = false;
 	
+	var stationList = {};
 	$(document).ready(function(){
 		$(".bus-line-header").affix({
 			offset : {
@@ -314,7 +422,9 @@
 		$.get("/board/list/" + lineId + "/" + histDate, function(data, status) {
 			var curFlg = false;
 			for (var i = 0; i < data.length; i++) {
-				if (curFlg == false && data[i].boardDiv == null) {
+				stationList[data[i].lineDtlId] = data[i];
+				
+				if (curFlg == false && data[i].boardComplete == false) {
 					addList(data[i], true);
 					curFlg = true;
 				} else {
@@ -335,33 +445,23 @@
 	}
 
 	function addList(lineDtlData, curFlg) {
-		var liId = "stdu_" + lineDtlData.lineDtlId;
-		var completeText = (lineType == "ATT") ? "탑승": "하차";
-		var inCompleteText = (lineType == "ATT") ? "미탑승": "미하차";
+		var liId = "lineDtl_" + lineDtlData.lineDtlId;
+		var readyText = (loginUserType == "TCH") ? ((lineType == "ATT") ? "탑승": "하차") : "대기";
+		var completeText = (lineType == "ATT") ? "탑승완료": "하차완료";
 
-		var buttonOnHtml = '<span class="btn bg-green btn-xs">' + completeText + '</span>';
-		var buttonOffHtml = '<span class="btn bg-red btn-xs">' + inCompleteText + '</span>';
-		var blinkBusHtml = '<img class="blink-bus" src="/images/common/bus-icon-5.png" />';
+		var buttonReadyHtml = '<span class="btn bg-green btn-xs board-ready">' + readyText + '</span>';
+		var buttonCompleteHtml = '<span class="btn bg-green btn-xs board-complete">' + completeText + '</span>';
+		var blinkBusHtml = '<img class="blink-bus" src="/images/common/school-bus-icon.png" />';
 
 		var busLineItemHtml =
-			'<li id="{liId}" class="bus-line-item"><img class="fa fa-envelope img-rounded" src="{imgSrc}"/><div class="timeline-item">'
-			+ '<h3 class="timeline-header no-border no-current"><span class="headerName">{studentName}</span>'
-			+ ' <span class="headerClassName">{className}</span><div class="button-area"></div>'
-			+ '<div class="address"><span class="time">{boardTime}</span><span class="address">{boardAddress}</span></div></h3></div></li>'
+			'<li id="{liId}" class="bus-line-item"><img class="fa fa-envelope img-rounded" /><div class="timeline-item">'
+			+ '<h3 class="timeline-header no-border no-current"><span class="time">{boardTime}</span>'
+			+ '<div class="button-area"></div>'
+			+ '<div class="address"><span class="address">{boardAddress}</span></div></h3></div></li>'
 		;
-
-		var busLineItemHtmlReady =
-			'<li id="{liId}" class="bus-line-item"><img class="fa fa-envelope img-rounded" src="{imgSrc}"/><div class="timeline-item">'
-			+ '<h3 class="timeline-header"><span class="headerName">{studentName}</span>'
-			+ ' <span class="headerClassName">{className}</span><div class="button-area"></div></h3>'
-			+ '<div class="timeline-footer"><div class="address"><span class="time">{boardTime}</span><span>{boardAddress}</span></div></div>'
-		;
-
+		
 		var insertHtml = busLineItemHtml;
 
-		if (lineDtlData.boardDiv == null) {
-			insertHtml = busLineItemHtmlReady;
-		}
 		insertHtml = insertHtml.replace("{liId}", liId);
 		insertHtml = insertHtml.replace("{imgSrc}", "/file/data" + lineDtlData.imgSrc);
 		insertHtml = insertHtml.replace("{studentName}", lineDtlData.userNm);
@@ -371,55 +471,108 @@
 
 		$("ul.timeline").append(insertHtml);
 
-		if (lineDtlData.boardDiv == "C") {
-			$("#" + liId + " .button-area").append(buttonOnHtml)
-			$("#" + liId + " .timeline-item").addClass('board');
+		// 탑승,하차 완료 처리에 따른 운행 노선 레이아웃 변경 및 버튼 처리
+		if (lineDtlData.boardComplete) {
+			// 탑승 완료일 경우 버튼 css 처리 
 			$("#" + liId + " img.fa").addClass('board');
-		} else if (lineDtlData.boardDiv == "N") {
-			$("#" + liId + " .button-area").append(buttonOffHtml)
-			$("#" + liId + " .timeline-item").addClass('unboard');
-			$("#" + liId + " img.fa").addClass('unboard');
+			$("#" + liId + " .timeline-item").addClass('board');
+			$("#" + liId + " .button-area").append(buttonCompleteHtml);
 		} else {
-			if (loginUserType == "TCH") {
-				$("#" + liId + " .button-area").append(buttonOnHtml);
-			}
-			if (lineType == "ATT") {
-				$("#" + liId + " .button-area").append(" " + buttonOffHtml);
-			}
-			
-			$("#" + liId + " .button-area .btn").each(function(){
-				$(this).on("click", function(){
-					updateTest(this);
-				})
-			});
+			$("#" + liId + " .button-area").append(buttonReadyHtml);
 		}
 
+		// 버튼 이벤트 등록 
+		$("#" + liId + " .button-area .btn").each(function(){
+			$(this).on("click", function(){
+				openModal(lineDtlData.lineDtlId, lineType);
+			})
+		});
+		
+		// 현재 이동중인 정차역일 경우 버스 표시
 		if (curFlg) {
 			$("#" + liId).append(blinkBusHtml);
 		}
 
 	}
 
-	function updateTest(button) {
-		if (!boardServiceStarted) {
-			alert("아직 노선 운행을 시작하지 않았습니다\n운행 출발 버튼을 눌러주세요");
-			return false;		
+	// 탑승,하차 modal 창 open
+	function openModal(liId, lineType) {
+		
+		$("ul.stdu-list").empty();
+		
+		// 학생 리스트 데이터 구성
+		var studentList = stationList[liId].studentList;
+		
+		for (var i = 0; i < studentList.length; i++) {
+			var studentItem = studentList[i];
+
+			var stduHtml = '<li class="stdu-item" id="{stduId}">'
+				+ '<div class="stdu-img"><img src="{imgSrc}" class="img-circle" /></div>' 
+				+ '<div class="stdu-wrap"><span class="stdu-name">{name}</span><br/><span class="stdu-class">{clsNm}</span></div>' 
+				+ '<input type="checkbox" class="stdu_toogle" data-toggle="toggle" data-onstyle="success" data-on="탑승" data-off="미탑승" data-size="small" checked>'
+				+ '</li>'
+				;
+				
+			stduHtml = stduHtml.replace("{stduId}", studentItem.userId);
+			stduHtml = stduHtml.replace("{name}", studentItem.userNm);
+			stduHtml = stduHtml.replace("{clsNm}", studentItem.clsNm);
+			stduHtml = stduHtml.replace("{imgSrc}", studentItem.profileImageUri);
+			
+			$("ul.stdu-list").append(stduHtml);
 		}
 		
-		var btnType = $(button).text();
-
+		// 토글 버튼 적용 
+		$('.stdu_toogle').each(function(){
+			$(this).bootstrapToggle();
+		});
+		
+		// toggle 버튼 스타일 제거
+		$('.toggle').each(function(){
+			$(this).removeAttr('style')
+		})
+		
+		// modal 타이틀 역 이름으로 변경 
+		$(".modal-title").text(stationList[liId].boardLoc);
+		
+		// 탑승처리 이벤트 등록 
+		$(".board-process").unbind('click');
+		$(".board-process").click(function(){
+			boardProcess(liId)
+		});
+		// modal open
+		$('#myModal').modal('show');
+	}
+	
+	function boardProcess(liId) {
+		// 운행 시작 되었는지 체크 처리
+// 		if (!boardServiceStarted) {
+// 			alert("아직 노선 운행을 시작하지 않았습니다\n운행 출발 버튼을 눌러주세요");
+// 			return false;		
+// 		}
+		
 		var param = {};
 
-		if (btnType == "탑승" || btnType == "하차") {
-			param.boardDiv = "C";
-		} else if (btnType == "미탑승") {
-			param.boardDiv = "N";
-		}
-
 		param.lineId = lineId;
-		param.lineDtlId = $(button).closest("div.timeline-item").parent().attr("id").replace("stdu_", "");
+		param.lineDetailId = liId;
 		param.histDate = histDate;
 
+		stduArray = [];
+		
+		$("li.stdu-item").each(function(){
+			var stduItem = {};
+			
+			stduItem.userId = $(this).attr("id");
+			stduItem.lineDtlId = liId;
+			stduItem.histDate = histDate;
+			stduItem.boardDiv = $(this).find(".toggle").hasClass("off") ? "N" : "C";
+			
+			stduArray.push(stduItem);
+		});
+
+		param.processList = stduArray;
+		
+		console.log(param);
+		
 		$.ajax({
 			type : "POST",
 			url : "/rest/board/process",
@@ -429,6 +582,7 @@
 				'Content-Type': 'application/json'
 			},
 			success : function(){
+				$('#myModal').modal('hide');
 				refresh();
 			},
 			dataType : "JSON"
@@ -469,7 +623,7 @@
 	function deleteBoardService() {
 		$.ajax({
 			type : "DELETE",
-			url : "/rest/board/service/" + lineId,
+			url : "/rest/board/service/" + lineId + "/" + histDate,
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json'

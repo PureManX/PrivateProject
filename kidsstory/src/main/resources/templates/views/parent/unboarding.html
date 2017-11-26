@@ -101,6 +101,7 @@
 	/*[+
 	 var lineDetailId = [[${lineDetailId}]];
 	 var boardingType = [[${boardingType}]];
+	 var studendId = [[${studendId}]];
 	 var unboardReserveUri = [[@{/rest/board/unboard/reserve/}]];
 	 +]*/
 
@@ -130,11 +131,11 @@
 
 		$(".unboradListWrap table tbody").empty();
 
-		$.get(unboardReserveUri + lineDetailId, function(data, status) {
+		$.get(unboardReserveUri + lineDetailId + "/" + studendId, function(data, status) {
 			for (var i = 0; i < data.length; i++) {
-				var trItem = '<tr><td class="colDate">{histDate}</td><td>{unbReason}</td><td class="colFunc"><span class="glyphicon glyphicon-remove-circle" id="{lineHistId}"></span></td></tr>';
+				var trItem = '<tr><td class="colDate">{histDate}</td><td>{unbReason}</td><td class="colFunc"><span class="glyphicon glyphicon-remove-circle" id="{lineDtlStduHistId}"></span></td></tr>';
 
-				trItem = trItem.replace("{lineHistId}", data[i].lineHistId);
+				trItem = trItem.replace("{lineDtlStduHistId}", data[i].lineDtlStduHistId);
 				trItem = trItem.replace("{histDate}", data[i].histDate);
 				trItem = trItem.replace("{unbReason}", data[i].unbReason);
 				$(".unboradListWrap table tbody").append(trItem);
@@ -169,10 +170,11 @@
 	function regist() {
 		var param = {};
 
-		param.boardDiv = "N";
+		param.boardDiv = "R";
 		param.lineDtlId = lineDetailId
 		param.histDate = $("#datepicker").datepicker('getDate').yyyymmdd("");
 		param.unbReason = $("#unbReason").val();
+		param.userId = studendId;
 
 		console.log(JSON.stringify(param));
 

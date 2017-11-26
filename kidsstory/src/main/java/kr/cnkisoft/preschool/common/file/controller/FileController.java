@@ -1,15 +1,10 @@
 package kr.cnkisoft.preschool.common.file.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,14 +18,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.cnkisoft.preschool.common.constant.FileConstant;
+import kr.cnkisoft.preschool.common.domain.CommonResultVo;
 import kr.cnkisoft.preschool.common.file.domain.FileInfoDto;
 import kr.cnkisoft.preschool.common.file.mapper.FileMapper;
+import kr.cnkisoft.preschool.common.file.service.FileService;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
+@Slf4j
 public class FileController {
 
 	@Autowired
 	FileMapper fileMapper;
+	
+	@Autowired
+	FileService fileService;
 	
 	@RequestMapping("/file/view/single")
 	public String uploadView() {
@@ -39,38 +41,14 @@ public class FileController {
 	
 	@RequestMapping("/file/upload/single")
 	@ResponseBody
-	public Map<String, String> uploadSingle(
+	public CommonResultVo uploadSingle(
 			@RequestParam MultipartFile file
-			,@RequestParam(required=false) String filetype
+			, @RequestParam(required=false) String filetype
+			, @RequestParam(required=false) Integer classId
 			) {
-		Map<String, String> result = new HashMap<String, String>();
-		String homePath = FileConstant.getDataFolderPath(filetype.toUpperCase());
-		String oriFileNm = file.getOriginalFilename();
-		String ext = oriFileNm.substring(oriFileNm.lastIndexOf("."));
-		String fileName = UUID.randomUUID().toString().replace("-", "") + ext;
+		FileInfoDto uploadFileInfo = fileService.createFile(file, filetype, classId);
 		
-		FileInfoDto param = new FileInfoDto();
-		param.setFileNm(fileName);
-		param.setFileType(filetype.toUpperCase());
-		param.setCreatedBy(3);
-		
-		try {
-			fileMapper.insertFileInfo(param);
-			
-			FileUtils.forceMkdir(new File(homePath));
-			File dest = new File(homePath + "/" + fileName);
-			file.transferTo(dest);
-			result.put("result", "success");
-//			result.put("url", "http://cnkisoft.cafe24.com/preschool/images/" + file.getOriginalFilename());
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-			result.put("result", "error");
-		} catch (IOException e) {
-			e.printStackTrace();
-			result.put("result", "error");
-		}
-		
-		return result;
+		return new CommonResultVo(uploadFileInfo);
 	}
 	
 	@RequestMapping(value="/file/data/{type}/{filename:.+}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE})

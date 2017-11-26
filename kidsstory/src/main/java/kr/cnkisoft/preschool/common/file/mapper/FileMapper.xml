@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.cnkisoft.preschool.common.file.mapper.FileMapper">
+
+	<insert id="insertFileInfo" parameterType="kr.cnkisoft.preschool.common.file.domain.FileInfoDto" 
+		useGeneratedKeys="true" keyProperty="fileId">
+		INSERT INTO FILE_INFO 
+			(FILE_NM, FILE_TYPE, CLS_ID, CREATED_BY, CREATED_DT) 
+		VALUES
+			(#{fileNm}, #{fileType}, #{clsId}, #{createdBy}, now())
+	</insert>
+
+</mapper>

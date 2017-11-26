@@ -124,26 +124,17 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<StudentVo> getStudentListByTeacherContact(String contact) {
-//		List<UserDto> studentDtoList = userMapper.selectListStudentByTeacherContact(contact);
-//
-//		List<StudentVo> studentList = new ArrayList<>();
-//
-//		for (UserDto userDto : studentDtoList) {
-//			StudentVo studentVo = new StudentVo(userDto);
-//			studentList.add(studentVo);
-//
-//			ArrayList<ParentVo> parents = new ArrayList<>();
-//
-//			parents.add(getParent(userDto));
-//
-//			studentVo.setParents(parents);
-//		}
-		
 		List<StudentVo> studentList = userMapper.selectListStudentByTeacherContact(contact);
 
 		return studentList;
 	}
-
+	
+	@Override
+	public List<StudentVo> getStudentListByBoardLineDetailId(Integer lineDetailId) {
+		List<StudentVo> studentList = userMapper.selectListStudentByBoardLineDetailId(lineDetailId);
+		return studentList;
+	}
+	
 	@Override
 	public CommonResultVo createReqMedi(ReqMediDto param) {
 		userMapper.insertReqMediInfo(param);
@@ -152,7 +143,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<ReqMediVo> getListReqMediByTeacherId(int teacherId) {
+	public List<ReqMediVo> getListReqMediByTeacherId(Integer teacherId) {
 		return userMapper.selectListReqMediByTeacherId(teacherId);
 	}
 
@@ -229,4 +220,5 @@ public class UserServiceImpl implements UserService {
 	public List<FileInfoDto> getImageListOfClass(Integer classId) {
 		return fileService.getFileListByClass(classId);
 	}
+
 }

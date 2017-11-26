@@ -58,7 +58,8 @@ public class CookieAuthenticationFilter extends GenericFilterBean {
 				
 				log.info(((LoginUserDetails)userDetails).getLoginUser().getUser().toString());
 				
-				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, null);
+//				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, null);
+				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 				
 				SecurityContextHolder.getContext().setAuthentication(token);
 				

@@ -4,83 +4,13 @@
 	  layout:decorator="layout/mobileLayout">
 <head>
 	<style>
-		/* boot strap tab custom */
-		.nav-tabs>li {
-			float: left;
-			width: 50%;
-			text-align: center;
-		}
-		.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
-			color: #555;
-			cursor: default;
-			background-color: #fff;
-			border: none;
-			border-bottom-color: transparent;
-			background: #e1e1e1;
-			font-weight: bold
-		}
-		.nav-tabs>li>a {
-			border-radius: 0;
-			color: #777;
-		}
-
-		div.infoWrap {
-			height: 100vw;
-			background: #FFF;
-			padding: 2vw;
-		}
-		div.infoWrap div.tabWrap {
-			height: 100%;
-			width: 100%;
-			border: 1px solid #DDD;
-		}
-		div.infoWrap div.tabWrap div.tab-content{
-			overflow: auto;
-		}
-		div.infoWrap div.tabWrap div.tab-content div.tab-pane{
-			height: 80vw;
-		}
-		div.infoWrap div.mideListWrap {
-			width: 100%;
-			height: 100%;
-			background: #FFF;
-		}
-		div.infoWrap div.mideListWrap ul {
-			padding: 2vw;
-			text-align: right;
-		}
-		div.infoWrap div.mideListWrap ul li {
-			padding: 1vw 0;
-		}
-		div.infoWrap div.mideListWrap ul li img {
-			width: 12vw;
-			height: 12vw;
-			margin-right: 1vw;
-			border-radius: 6vw;
-			margin-bottom: 1vw;
-		}
-		div.infoWrap div.mideListWrap ul li span {
-			font-size: 1.1em;
-			display: inline-block;
-			margin-left: 2vw;
-			text-align: left;
-		}
-		span.mediName {
-			width: 15vw;
-		}
-		span.mediTime {
-			width: 30vw;
-		}
-		span.mediSymp {
-			width: 25vw;
-		}
 		.buttonWrap {
-			margin-top: 7vw;
+			margin-top: 10vw;
 			text-align: center;
 		}
 		.buttonWrap a{
 			display :inline-block;
-			margin: 0 3vw;
+			margin: 0 2vw;
 			width: 20vw;
 			height: 20vw;
 		}
@@ -88,40 +18,166 @@
 			width: 100%;
 			height: auto;
 		}
+		.profile-info-wrap{
+			margin-top: 8vw;
+		}
+		.profile-info-wrap a{
+			position:relative;
+			display :inline-block;
+			width: 18vw;
+			height: 18vw;
+		}
+		.profile-info-wrap a img.menuBtn {
+			width: 100%;
+			height: auto;
+		}
+		.profile-info-wrap .noti{
+			position: absolute;
+			right: 0;
+			top: 0;
+			background: #ffdf02;
+			width: 6vw;
+			height: 6vw;
+			text-align: center;
+			line-height: 6vw;
+			border-radius: 3vw;
+			color: #6d0c0e;
+		}
+		div.child-porfile-wrap {
+			background: #FFF;
+			padding: 3vw;
+		}
+		div.child-porfile-wrap article{
+			border: 2px solid #464b5e;
+			margin: 2vw;
+		}
+		div.child-porfile-wrap div.profile-image-wrap {
+			width: 40vw;
+		    height: 40vw;
+		    display: inline-block;
+		    position: relative;
+		    float: left;
+		}
+		div.child-porfile-wrap div.profile-text-wrap {
+			display: block;
+			height: 30vw;
+		}
+		
+		div.child-porfile-wrap div.profile-button-wrap {
+			display: block;
+			text-align: right;
+			width: 100%;
+			padding-right: 5vw;
+		}
+		div.child-porfile-wrap img{
+			width: 100%;
+			height: 100%;
+		}
+		.profile-wrap{
+		    display: inline-block;
+		    width: 100%;
+		    height: 100%;
+		    text-align: left;
+		    padding: 3vw;
+		    overflow: auto;
+		    border: 1px solid #cacaca;
+   		}
+
+		/* Bootstrap modal align vertical middle*/
+		.modal {
+			text-align: center;
+			padding: 0 !important;
+		}
+
+		.modal:before {
+			content: '';
+			display: inline-block;
+			height: 100%;
+			vertical-align: middle;
+			margin-right: -4px;
+		}
+
+		.modal-dialog {
+			display: inline-block;
+			text-align: left;
+			vertical-align: middle;
+		}
+		.modal-header {
+			/* 		background: #ffeccd; */
+			font-size: 1.2em;
+			font-weight: bold;
+		}
+		.modal-body {
+			text-align: center;
+		}
+		.modal-content {
+			border: none;
+			border-radius: 0;
+		}
 		.mContents {
 			background : #FFF;
 			height: 100%;
 		}
+		#profile-carousel .carousel-control {
+			background-image: none;
+			width: 10vw;
+		}
+		#profile-carousel .carousel-control span{
+			color: #e5cf39;
+		}
+		.carousel-indicators li, .carousel-indicators li.active {
+			background-color: #e5cf39;
+		}
+		.glyphicon-camera, .glyphicon-cloud-upload {
+			width: 10vw;
+			height: 10vw;
+			font-size: 7vw;
+			color: #ffdf00;
+			padding: 1vw;
+		}
+		input.file , .ui-input-text{
+			visibility: hidden;
+			position: absolute;
+		}
+		.profile-desc-wrap {
+			float: right;
+			width: 40vw;
+			text-align: left;
+		}
+		.carousel-indicators {
+			bottom: -8vw;
+		}
+		
 	</style>
 </head>
 <body>
 	<div id="content_wrap">
 		<section class="mContents" layout:fragment="content">
-			<div class="infoWrap">
-				<div class="tabWrap">
-					<!-- Nav tabs -->
-					<ul class="nav nav-tabs" role="tablist">
-						<li role="presentation" class="active">
-							<a href="#mediList" aria-controls="home" role="tab" data-toggle="tab">투약정보</a>
-						</li>
-						<li role="presentation">
-							<a href="#msgList" aria-controls="profile" role="tab" data-toggle="tab">수신메세지</a>
-						</li>
-					</ul>
-
-					<!-- Tab panes -->
-					<div class="tab-content">
-						<div role="tabpanel" class="tab-pane active" id="mediList">
-							<div class="mideListWrap">
-								<ul>
-									<!-- 						<li><img><span class="mediName">김신</span><span class="mediTime">오후 9시 30분</span><span class="mediSymp">가루약 1회</span></li>		 -->
-								</ul>
+			<div class="child-porfile-wrap">
+				<div class="item profile-wrap">
+					<div class="profile-image-wrap">
+						<img th:src="@{/file/data/{imgSrc}(imgSrc=${loginUser.user.imgSrc})}" class="img-circle" />
+					</div>
+					<div class="profile-desc-wrap">
+						<div class="profile-text-wrap">
+							<h5 class="profile-text-name fontsize_15e" th:text="${loginUser.user.userNm}"></h5>
+							<h5 class="profile-text-class fontsize_12e" th:text="${loginUser.userClass.clsNm} + 반"></h5>
+							<div class="profile-info-wrap">
+								<a href="#">
+									<img class="menuBtn" th:src="@{/images/menu/parents/btn_reqmedi.png}" />
+									<span class="noti circle">3</span>
+								</a>
+								<a href="#">
+									<img class="menuBtn" th:src="@{/images/menu/common/footer_msg.png}" />
+									<span class="noti circle">3</span>
+								</a>
 							</div>
+							
 						</div>
-						<div role="tabpanel" class="tab-pane" id="msgList"></div>
 					</div>
 				</div>
 			</div>
+			
 			<div class="buttonWrap">
 				<article>
 					<a th:href="@{/board/teacher/buslinelist/on}">
@@ -133,6 +189,16 @@
 					<a th:href="@{/test/teacher/childList}">
 						<img class="menuBtn" th:src="@{/images/menu/teacher/btn_children.png}" />
 					</a>
+					<br/>
+					<a th:href="@{/menu/today}">
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_menu.png}" />
+					</a>
+					<a onclick="moveToGallery()">
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_album.png}" />
+					</a>
+					<a th:href="@{/diary/list}">
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_diary.png}" />
+					</a>
 					<!--<a>-->
 						<!--<img class="menuBtn" th:src="@{/images/menu/teacher/btn_notice.png}" />-->
 					<!--</a>-->
@@ -142,32 +208,14 @@
 	</div>
 	<script th:inline="javascript" layout:fragment="script">
 		/*<![CDATA[*/
+		var clsId = [[${loginUser.user.clsId}]];
+		
 		$(document).ready(function() {
-			getMediInfo();
 		});
 
-		function getMediInfo() {
-			/*[+
-			 var uri = [[@{/user/reqmedi/list/}]] + [[${loginUser.user.userId}]];
-			 +]*/
-			$.get(uri, function(data, status) {
-				for (var i = 0; i < data.length; i++) {
-					addMediList(data[i]);
-				}
-			});
+		function moveToGallery() {
+			location.href = "/user/gallery/" + clsId;
 		}
-
-		function addMediList(mediItem) {
-			var listItem = '<li id="{mediId}"><img src="/file/data{imgSrc}"><span class="mediName">{userNm}</span><span class="mediTime">{adminTm}</span><span class="mediSymp">{symptom}</span></li>';
-			listItem = listItem.replace("{mediId}", mediItem.mediId);
-			listItem = listItem.replace("{imgSrc}", mediItem.imgSrc);
-			listItem = listItem.replace("{userNm}", mediItem.userNm);
-			listItem = listItem.replace("{adminTm}", mediItem.adminTm);
-			listItem = listItem.replace("{symptom}", mediItem.symptom);
-
-			$(".mideListWrap ul").append(listItem);
-		}
-		/*]]>*/
 	</script>
 </body>
 </html>

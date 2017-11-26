@@ -1,10 +1,11 @@
 package kr.cnkisoft.framework.security;
 
-import kr.cnkisoft.preschool.user.domain.LoginUserVo;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import kr.cnkisoft.preschool.user.domain.LoginUserVo;
 
 /**
  * Created by PureMaN on 2017-06-05.
@@ -15,9 +16,16 @@ public class AuthUtils {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-		if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
-			LoginUserDetails userDetails = (LoginUserDetails)(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-			loginUser = userDetails.getLoginUser();
+		if (authentication != null && authentication instanceof UsernamePasswordAuthenticationToken) {
+			UserDetails userDetails = (UserDetails)(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+			
+			if (userDetails instanceof AdminUserDetails) {
+				AdminUserDetails adminUserDetails = (AdminUserDetails)userDetails;
+				loginUser = adminUserDetails.getLoginUser();
+			} else if (userDetails instanceof LoginUserDetails) {
+				LoginUserDetails loginUserDetails = (LoginUserDetails)userDetails;
+				loginUser = loginUserDetails.getLoginUser();
+			}
 		}
 
 		return loginUser;

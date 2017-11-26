@@ -76,6 +76,9 @@
 				<li>
 					<a th:href="@{/?hpnum=01625709371}">둘러보기</a>
 				</li>
+				<li>
+					<a th:href="@{/setPhoneNumber}">번호설정</a>
+				</li>
 			</ul>
 			<ul class="side-menu" th:if="${loginUser.userType.code == 'PAR'}">
 				<li>
@@ -86,6 +89,9 @@
 				</li>
 				<li>
 					<a th:href="@{/test/parent/reqMedi}">투약 의뢰서</a>
+				</li>
+				<li>
+					<a th:href="@{/setPhoneNumber}">번호설정</a>
 				</li>
 			</ul>
 			<ul class="side-menu" th:if="${loginUser.userType.code == 'TCH'}">
@@ -98,10 +104,16 @@
 				<li>
 					<a th:href="@{/test/teacher/childList}">우리반아이들</a>
 				</li>
+				<li>
+					<a th:href="@{/setPhoneNumber}">번호설정</a>
+				</li>
 			</ul>
 		</nav>
 		<section class="mContents" layout:fragment="content">
 		</section>
+		<div class="overlay-back">
+			<span class="glyphicon glyphicon-menu-left" aria-hidden="true" onclick="historyBack()"></span>
+		</div>
 		<footer class="fixedFooter" layout:fragment="header" th:if="${loginUser.userType.code != 'GST'}">
 			<div class="footerContainer" th:if="${loginUser.userType.code == 'PAR'}">
 				<a href="tel:01055557777">
@@ -119,26 +131,128 @@
 				</a>
 			</div>
 			<div class="footerContainer" th:if="${loginUser.userType.code == 'TCH'}">
-				<a href="#">
+				<a th:href="@{/test/teacher/childList}">
 					<img alt="home icon" th:src="@{/images/menu/common/footer_msg.png}" />
 				</a>
-				<a href="#">
-					<img alt="home icon" th:src="@{/images/menu/common/footer_food_menu.png}" />
+				<a th:href="@{/notice/list}">
+					<img alt="home icon" th:src="@{/images/menu/common/footer_teacher_notice.png}" />
 				</a>
-				<a th:href="@{/board/linhist/delete/1}">
+				<a th:href="@{/setPhoneNumber}">
 					<img alt="home icon" th:src="@{/images/menu/common/footer_setting.png}" />
 				</a>
-				<a th:href="@{/board/linhist/delete/2}">
+				<a onclick="clickUploadImage()">
 					<img alt="home icon" th:src="@{/images/menu/common/footer_camera.png}" />
 				</a>
 			</div>
+			
+			<form th:action="@{/file/upload/single}" method="post" id="menu-form" enctype="multipart/form-data" data-ajax="false">
+				<input type="file" class="file" name="file" multiple />
+				<input type="hidden" name="filetype" value="menu"/>
+			</form>
+			<form th:action="@{/file/upload/single}" method="post" id="image-form" enctype="multipart/form-data" data-ajax="false">
+				<input type="file" class="file" name="file" multiple />
+				<input type="hidden" name="filetype" value="image"/>
+			</form>
 		</footer>
 	</div>
 	<script>
 		function toggleSideMenu() {
 			$("nav.side-menu-wrap").toggleClass("hidden");
 		}
-
+		
+		function historyBack() {
+			window.history.back();
+		}
+		
+		$(document).ready(function() {
+			var path = location.pathname;
+			
+			if (path == "/") {
+				$(".overlay-back").hide();
+			}
+		});
+		
+		function clickUploadMenu() {
+			var file = $("#menu-form input.file")
+			console.log(file.val());
+			file.val("");
+			file.trigger('click');
+		}
+		
+		$("#menu-form input.file").on("change", function(){
+			var result = confirm("이 파일을 업로드 하시겠습니까?");
+			if (result) {
+				var form = $("#menu-form")[0];
+				var file = $(this).prop('files')[0]
+				var formData = new FormData(form);
+				
+				$.ajax({
+					url : "/file/upload/single"
+					, enctype: "multipart/form-data"
+					, processData : false
+					, contentType : false
+					, cache: false
+					, data : formData
+					, type : "POST"
+					, method : "POST"
+					, success : function(result){
+						if (result.code == "0") {
+							console.log(result.data);
+							alert("성공적으로 업로드 하였습니다.");
+						} else {
+							alert("파일 업로드에 실패하였습니다.")
+						}
+					}
+					, timeout: 10000
+					
+				});
+			} else {
+				$(this).val("");
+			}
+		})
+		
+		function clickUploadImage() {
+			var file = $("#image-form input.file")
+			console.log(file.val());
+			file.val("");
+			file.trigger('click');
+		}
+		
+		$("#image-form input.file").on("change", function(){
+			var result = confirm("이 파일을 업로드 하시겠습니까?");
+			if (result) {
+				var form = $("#image-form")[0];
+				var file = $(this).prop('files')[0]
+				var formData = new FormData(form);
+				
+				$.ajax({
+					url : "/file/upload/single"
+					, enctype: "multipart/form-data"
+					, processData : false
+					, contentType : false
+					, cache: false
+					, data : formData
+					, type : "POST"
+					, method : "POST"
+					, success : function(result){
+						if (result.code == "0") {
+							console.log(result.data);
+							alert("성공적으로 업로드 하였습니다.");
+						} else {
+							alert("파일 업로드에 실패하였습니다.")
+						}
+					}
+					, timeout: 10000
+					
+				});
+			} else {
+				$(this).val("");
+			}
+		})
+		
+		function readyButton() {
+			alert("준비중입니다");
+		}
 	</script>
 	<script layout:fragment="script">
 

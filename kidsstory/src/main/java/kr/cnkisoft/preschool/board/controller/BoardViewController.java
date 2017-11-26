@@ -40,6 +40,7 @@ public class BoardViewController {
 		mav.setViewName(viewName);
 		mav.addObject("boardingType", type);
 		mav.addObject("lineDetailId", lineDetailId);
+		mav.addObject("studendId", studendId);
 		return mav;
 	}
 

@@ -241,21 +241,30 @@
 			$(".carousel").bcSwipe({ threshold: 50 });
 			//swipeCarousel();
 			
-// 			$(document).on('click', '.browse', function(){
-// 				var file = $(this).parent().parent().parent().find('.file');
-// 				file.trigger('click');
-// 			});
+			$(document).on('click', '.browse', function(){
+				var file = $(this).parent().parent().parent().find('.file');
+				file.trigger('click');
+			});
 			
 			$(".browse").each(function(){
 				$(this).click(function(){
 					var file = $(this).parent().find("input.file");
+					file.val("");
 					file.trigger('click');
 				})
 			})
 			
 			$(".file").each(function(){
-				console.log($(this).attr("id"));
+				$(this).on("change", function(){
+					var result = confirm("이 파일을 업로드 하시겠습니까?");
+					if (result) {
+						console.log($(this).attr("id"));
+					} else {
+						$(this).val("");
+					}
+				})
 			})
+		
 			
 // 			$(document).on('change', '.file', function(){
 // 				$(this).parent().find('.form-control').val($(this).val().replace(/C:\\fakepath\\/i, ''));

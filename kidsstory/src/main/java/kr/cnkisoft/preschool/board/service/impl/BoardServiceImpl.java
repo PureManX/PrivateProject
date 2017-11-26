@@ -7,11 +7,15 @@ import kr.cnkisoft.preschool.board.service.BoardService;
 import kr.cnkisoft.preschool.board.vo.*;
 import kr.cnkisoft.preschool.push.domain.PreSchoolPushIdDto;
 import kr.cnkisoft.preschool.push.service.PushService;
+import kr.cnkisoft.preschool.user.domain.ParentVo;
+import kr.cnkisoft.preschool.user.domain.StudentVo;
 import kr.cnkisoft.preschool.user.domain.UserVo;
 import kr.cnkisoft.preschool.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -36,45 +40,54 @@ public class BoardServiceImpl implements BoardService {
 	PushService pushService;
 
 	@Override
-	public void processBoarding(BoardLineHistDto baordLineHist) {
+	public void processBoarding(BoardProcessParamVo boardProcessParam) {
 		
 		String histDate = DateUtils.currentDateOfYear();
 
-		List<BoardLineDetailDto> boardLineDetailListbefore = boardMapper.selectListNonBoardingListByLineId(baordLineHist.getLineId(), histDate);
+		// 노선 대상 리스트 추출
+		List<BoardLineDetailDto> boardLineDetailListbefore = boardMapper.selectListNonBoardingListByLineId(boardProcessParam.getLineId(), histDate);
 
 		if (boardLineDetailListbefore.isEmpty()) {
 			// 에러 처리
 		}
 
 		// 남은 노선 첫번째 id와 요청한 id가 같지 않으면 미리 탑성/미탑승 처리
-		boolean reservedRequest = !(boardLineDetailListbefore.get(0).getLineDtlId().equals(baordLineHist.getLineDtlId()));
+//		boolean reservedRequest = !(boardLineDetailListbefore.get(0).getLineDtlId().equals(baordLineHist.getLineDtlId()));
 
-		baordLineHist.setCreatedBy(AuthUtils.getLoginUserId());
-		boardMapper.insertBoardHist(baordLineHist);
+		// 노선 운행 이력 생성
+		createBoardDeatilHist(boardProcessParam);
+		
+		// 학생 탑승,미탑승 처리
+		createBoardDetailStudentHist(boardProcessParam);
 
-		List<BoardLineDetailDto> boardLineDetailList = boardMapper.selectListNonBoardingListByLineId(baordLineHist.getLineId(), histDate);
+		List<BoardLineDetailDto> boardLineDetailList = boardMapper.selectListNonBoardingListByLineId(boardProcessParam.getLineId(), histDate);
 
 		if (boardLineDetailList.isEmpty()) {
 			// 더이상 운행할 노선이 남지 않았으므로 push를 보낼 필요가 없다
 			// 종료 버튼을 눌럿을대 전체 도착 푸시 메세지를 알릴 필요가 있는듯?
 		} else {
+			// 다음 정차역의 학생 대상 리스트 
 			BoardLineDetailDto nextLocation = boardLineDetailList.get(0);
-
-			// 미리 탑승/미탑승 처리 한 경우가 아닐때에만 다음 노선에 push를 발송한다
-			if (!reservedRequest) {
-				PreSchoolPushIdDto pushInfo = userService.getPushInfoByLineDetailId(nextLocation.getLineDtlId());
-
-				if (pushInfo != null) {
-					String message = PUSH_MESSAGE_START_FROM_PRVIOUS_LOCATION.replace("{location}", nextLocation.getBoardLoc());
-					pushService.sendPush(pushInfo.getDeviceId(), message, "http://cnkisoft.cafe24.com/board/parent/busline");
-				} else {
-					log.warn(" *** Cannot Find FCM Id of User Id: {}", boardLineDetailList.get(0).getStduId());
+			List<StudentVo> stationStudentList = userService.getStudentListByBoardLineDetailId(nextLocation.getLineDtlId());
+			
+			for (StudentVo student : stationStudentList) {
+				// 학생의 모든 부모에게 푸시 발송
+				
+				for (ParentVo parent : student.getParents()) {
+					PreSchoolPushIdDto pushInfo = parent.getPushInfo();
+					
+					if (pushInfo != null && !StringUtils.isEmpty(pushInfo.getDeviceId())) {
+						String message = PUSH_MESSAGE_START_FROM_PRVIOUS_LOCATION.replace("{location}", nextLocation.getBoardLoc());
+						log.info("푸시 발송 [학생 ID : {}, 학생 : {}, 부모 : {}, 전화번호 : {}]", student.getUserId(), student.getUserNm(), parent.getUserNm(), parent.getContact());
+						pushService.sendPush(pushInfo.getDeviceId(), message, "http://cnkisoft.cafe24.com/board/parent/busline");
+					} else {
+						log.warn("푸시 발송 정보 미존재 [학생 ID : {}, 학생 : {}, 부모 : {}, 전화번호 : {}]", student.getUserId(), student.getUserNm(), parent.getUserNm(), parent.getContact());
+					}
+					
 				}
 			}
 
 		}
-
-
 	}
 
 	@Override
@@ -84,15 +97,24 @@ public class BoardServiceImpl implements BoardService {
 		List<BoardLineDetailDto> boardLineDetailDtoList = boardMapper.selectListNonBoardingListByLineId(lineId, histDate);
 
 		for (BoardLineDetailDto boardLineDetail: boardLineDetailDtoList) {
-			PreSchoolPushIdDto pushInfo = userService.getPushInfoByLineDetailId(boardLineDetail.getLineDtlId());
+			List<StudentVo> stationStudentList = userService.getStudentListByBoardLineDetailId(boardLineDetail.getLineDtlId());
 
-			String message = PUSH_MESSAGE_BUS_START.replace("{lineName}", lineInfo.getLine().getLineNm());
-			message = message.replace("{bus}", lineInfo.getBus().getBusNum());
-			if (pushInfo != null) {
-				log.info("send push to parent : {}", pushInfo.getContact());
-				pushService.sendPush(pushInfo.getDeviceId(), message, "http://cnkisoft.cafe24.com/board/parent/busline");
-			} else {
-				log.warn(" *** Cannot Find FCM Id of User Id: {}", boardLineDetail.getStduId());
+			for (StudentVo student : stationStudentList) {
+				// 학생의 모든 부모에게 푸시 발송
+				
+				for (ParentVo parent : student.getParents()) {
+					PreSchoolPushIdDto pushInfo = parent.getPushInfo();
+					
+					if (pushInfo != null && !StringUtils.isEmpty(pushInfo.getDeviceId())) {
+						String message = PUSH_MESSAGE_BUS_START.replace("{lineName}", lineInfo.getLine().getLineNm());
+						message = message.replace("{bus}", lineInfo.getBus().getBusNum());
+						log.info("푸시 발송 [학생 ID : {}, 학생 : {}, 부모 : {}, 전화번호 : {}]", student.getUserId(), student.getUserNm(), parent.getUserNm(), parent.getContact());
+						pushService.sendPush(pushInfo.getDeviceId(), message, "http://cnkisoft.cafe24.com/board/parent/busline");
+					} else {
+						log.warn("푸시 발송 정보 미존재 [학생 ID : {}, 학생 : {}, 부모 : {}, 전화번호 : {}]", student.getUserId(), student.getUserNm(), parent.getUserNm(), parent.getContact());
+					}
+					
+				}
 			}
 		}
 	}
@@ -140,20 +162,44 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public void reserveUnboard(BoardLineHistDto boarDLineHist) {
+	public void reserveUnboard(BoardLineStudentHistDto boarDLineHist) {
 		boarDLineHist.setCreatedBy(AuthUtils.getLoginUserId());
 		
-		boardMapper.insertBoardHist(boarDLineHist);
+		boardMapper.insertBoardDetailStudentHist(boarDLineHist);
 		
 	}
 
 	@Override
-	public void cancelReserverUnboard(String lineHistId) {
+	public void cancelReserverUnboard(Integer lineHistId) {
 		boardMapper.deleteBoardHist(lineHistId);
 	}
 
 	@Override
 	public BoardLineServiceDto getBoardService(Integer lineId) {
 		return boardMapper.selectStartedBoardService(lineId);
+	}
+
+	@Override
+	public List<BoardLineDetailVo> getBoardLineDetailList(Integer lineId, String histDate) {
+		return boardMapper.selectListLineDetail(lineId, histDate);
+	}
+	
+	private void createBoardDeatilHist(BoardProcessParamVo boardProcessParam) {
+		BoardLineDetailHistDto param = new BoardLineDetailHistDto();
+		param.setCreatedBy(AuthUtils.getLoginUserId());
+		param.setLineDtlId(boardProcessParam.getLineDetailId());
+		param.setHistDate(boardProcessParam.getHistDate());
+		
+		boardMapper.insertBoardDetailHist(param);
+	}
+	
+	private void createBoardDetailStudentHist(BoardProcessParamVo boardProcessParam) {
+		List<BoardLineStudentHistDto> dtoList = boardProcessParam.getProcessList();
+		
+		for (BoardLineStudentHistDto boardLineStudentHist : dtoList) {
+			boardLineStudentHist.setCreatedBy(AuthUtils.getLoginUserId());
+			boardLineStudentHist.setUpdatedBy(AuthUtils.getLoginUserId());
+			boardMapper.insertBoardDetailStudentHist(boardLineStudentHist);
+		}
 	}
 }

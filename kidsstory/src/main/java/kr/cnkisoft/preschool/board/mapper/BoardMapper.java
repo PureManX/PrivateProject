@@ -9,10 +9,11 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import kr.cnkisoft.preschool.board.vo.BoardLineDetailDto;
+import kr.cnkisoft.preschool.board.vo.BoardLineDetailHistDto;
+import kr.cnkisoft.preschool.board.vo.BoardLineDetailVo;
 import kr.cnkisoft.preschool.board.vo.BoardLineDto;
-import kr.cnkisoft.preschool.board.vo.BoardLineHistDto;
+import kr.cnkisoft.preschool.board.vo.BoardLineStudentHistDto;
 import kr.cnkisoft.preschool.board.vo.BoardLineServiceDto;
-import kr.cnkisoft.preschool.board.vo.LineDetailVo;
 import kr.cnkisoft.preschool.board.vo.PreschoolBusDto;
 
 @Mapper
@@ -26,12 +27,12 @@ public interface BoardMapper {
 			+ ",USER_INFO g left join PRESCH_CLASS f on g.CLS_ID = f.CLS_ID "
 			+ "WHERE 1=1 AND b.LINE_ID = a.LINE_ID AND b.STDU_ID = d.USER_ID AND d.USER_ID = g.USER_ID AND a.LINE_ID = #{lineId} "
 			+ "ORDER BY b.BOARD_ORDER ASC";
+
+	public List<BoardLineDetailVo> selectListLineDetail(@Param("lineId")int lineId, @Param("histDate")String histDate);
 	
-	@Select(SELECT_LINE_DETAIL)
-	public List<LineDetailVo> selectListLineDetail(@Param("lineId")int lineId, @Param("histDate")String histDate);
+	public int insertBoardDetailHist(BoardLineDetailHistDto param);
 	
-	@Insert("INSERT INTO PRESCH_LINE_HIST (LINE_DTL_ID, HIST_DATE, BOARD_DIV, UNB_REASON, CREATED_DT, CREATED_BY) VALUES(#{lineDtlId}, #{histDate}, #{boardDiv}, #{unbReason}, now(), #{createdBy});")
-	public void insertBoardHist(BoardLineHistDto param);
+	public int insertBoardDetailStudentHist(BoardLineStudentHistDto param);
 	
 	@Select("SELECT a.*, b.BUS_NUM, c.USER_NM, CONCAT('/', LOWER(d.FILE_TYPE), '/', d.FILE_NM) AS IMG_SRC FROM PRESCH_LINE a, PRESCH_BUS b, USER_INFO c , FILE_INFO d "
 			+ "WHERE a.BUS_ID = b.BUS_ID AND a.TEACHER_ID = c.USER_ID AND c.PROF_IMG_ID = d.FILE_ID AND a.LINE_ID = #{lineId}")
@@ -46,18 +47,20 @@ public interface BoardMapper {
 	@Select("SELECT b.LINE_DTL_ID FROM PRESCH_LINE a JOIN PRESCH_LINE_DTL b ON a.LINE_ID = b.LINE_ID WHERE a.LINE_TYPE = #{lineType} AND b.STDU_ID = #{studentId}")
 	public Integer selectLineDetailIdByLoginParents(@Param("lineType")String lineType, @Param("studentId")int studentId);
 
-	@Select("SELECT * FROM PRESCH_LINE_HIST WHERE LINE_DTL_ID = #{lineDtlId} AND BOARD_DIV = 'N'")
-	public List<BoardLineHistDto> selectListLineHist(@Param("lineDtlId")int lineDtlId);
+	@Select("SELECT * FROM PRESCH_LINE_STDU_HIST WHERE LINE_DTL_ID = #{lineDtlId} AND BOARD_DIV = 'R' AND USER_ID = #{stduentId}")
+	public List<BoardLineStudentHistDto> selectListLineHist(@Param("lineDtlId")Integer lineDtlId, @Param("stduentId")Integer stduentId);
 	
-	@Delete("DELETE FROM PRESCH_LINE_HIST WHERE LINE_DTL_ID In (SELECT LINE_DTL_ID FROM PRESCH_LINE_DTL WHERE LINE_ID = #{lineId})")
-	public int deleteLineHistByLineId(@Param("lineId")int lineId);
+	@Delete("DELETE FROM PRESCH_LINE_DTL_HIST WHERE LINE_DTL_ID In (SELECT LINE_DTL_ID FROM PRESCH_LINE_DTL WHERE LINE_ID = #{lineId}) AND HIST_DATE = #{histDate}")
+	public int deleteLineDetailHistByLineId(@Param("lineId")Integer lineId, @Param("histDate")String histDate);
 
+	@Delete("DELETE FROM PRESCH_LINE_STDU_HIST WHERE LINE_DTL_ID In (SELECT LINE_DTL_ID FROM PRESCH_LINE_DTL WHERE LINE_ID = #{lineId}) AND HIST_DATE = #{histDate}")
+	public int deleteLineDetailStudentHistByLineId(@Param("lineId")Integer lineId, @Param("histDate")String histDate);
 
 	// 버스 노선의 현재 날짜 미탑승 리스트 추출
-	@Select("SELECT detail.* FROM PRESCH_LINE_DTL detail" +
-			" LEFT JOIN PRESCH_LINE_HIST hist ON detail.LINE_DTL_ID = hist.LINE_DTL_ID AND hist.HIST_DATE = #{histDate} " +
-			" WHERE detail.LINE_ID = #{lineId} AND hist.LINE_HIST_ID IS NULL" +
-			" ORDER BY BOARD_ORDER")
+//	@Select("SELECT detail.* FROM PRESCH_LINE_DTL detail" +
+//			" LEFT JOIN PRESCH_LINE_HIST hist ON detail.LINE_DTL_ID = hist.LINE_DTL_ID AND hist.HIST_DATE = #{histDate} " +
+//			" WHERE detail.LINE_ID = #{lineId} AND hist.LINE_HIST_ID IS NULL" +
+//			" ORDER BY BOARD_ORDER")
 	public List<BoardLineDetailDto> selectListNonBoardingListByLineId(@Param("lineId")Integer lineId, @Param("histDate")String histDate);
 
 
@@ -85,8 +88,8 @@ public interface BoardMapper {
 	public List<Integer> selectLineIdInBoardService(@Param("childId")Integer childId);
 	
 	// 운행 기록 정보 삭제 
-	@Delete("DELETE FROM PRESCH_LINE_HIST WHERE LINE_HIST_ID = #{lineHistId}")
-	public int deleteBoardHist(@Param("lineHistId")String lineHistId);
+	@Delete("DELETE FROM PRESCH_LINE_STDU_HIST WHERE LINE_DTL_STDU_HIST_ID = #{lineHistId}")
+	public int deleteBoardHist(@Param("lineHistId")Integer lineHistId);
 
 	
 	// 노선이 현재 운행중인지 조회
@@ -96,7 +99,7 @@ public interface BoardMapper {
 	public BoardLineServiceDto selectStartedBoardService(@Param("lineId")Integer lineId);
 	
 	
-	// 노선이 현재 운행중인지 조회
+	// 현재 운행중인 노선 취소 처리 
 	@Delete("DELETE FROM PRESCH_LINE_SERVICE WHERE LINE_ID = #{lineId} "
            + " AND SERVICE_START_DT >= CURRENT_DATE"
            + " AND SERVICE_START_DT < adddate(CURRENT_DATE, 1)")

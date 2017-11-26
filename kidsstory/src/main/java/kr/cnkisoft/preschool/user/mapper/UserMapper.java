@@ -42,7 +42,9 @@ public interface UserMapper {
 	@Insert("INSERT INTO USER_MSG (SRC_ID, DST_ID, MSG_CONTENT, RECV_FLG, CREATED_BY, CREATED_DT) VALUES(#{srcId},#{dstId},#{msgContent},'N',#{srcId},now())")
 	public int insertMsg(UserMsgDto param);
 	
+	// 학생 정보 조회
 	public List<StudentVo> selectListStudentByTeacherContact(@Param("contact")String contact);
+	public List<StudentVo> selectListStudentByBoardLineDetailId(@Param("lineDetailId")Integer lineDetailId);
 	
 	@Select("SELECT * FROM MEDI_REQ_INFO a, VIEW_USER_BASE b WHERE a.USER_ID = b.USER_ID"
 			+ " AND a.USER_ID in (SELECT USER_ID FROM USER_INFO WHERE USER_TYPE='STU' AND CLS_ID IN (SELECT CLS_ID FROM PRESCH_CLASS WHERE HR_TEACHER_ID = #{teacherId}))")

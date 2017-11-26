@@ -14,8 +14,11 @@ import java.util.List;
 @Mapper
 public interface PushMapper {
 
-	@Insert("INSERT INTO PRESCH_PUSH_ID (CONTACT, DEVICE_ID, OS_TYPE, CREATED_DT) VALUES (#{contact}, #{deviceId}, #{osType}, now())")
+	@Insert("INSERT INTO PRESCH_PUSH_ID (CONTACT, DEVICE_ID, OS_TYPE, CREATED_DT, CREATED_BY) VALUES (#{contact}, #{deviceId}, #{osType}, now(), 0)")
 	public int insertPushId(PreSchoolPushIdDto preSchoolPushId);
+
+	@Insert("DELETE FROM PRESCH_PUSH_ID WHERE CONTACT = #{contact}")
+	public int deletetPushId(@Param("contact")String contact);
 
 	@Select("SELECT * FROM PRESCH_PUSH_ID WHERE CONTACT = (SELECT CONTACT FROM USER_INFO WHERE USER_ID = #{userId})")
 	public List<PreSchoolPushIdDto> selectListPushInfoByUserId(@Param("userId")Integer userId);

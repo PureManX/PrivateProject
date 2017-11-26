@@ -22,7 +22,8 @@ body {
 	width: 100%;
 	font-size: 13px;
 	font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
-	background-color: #ececec;
+/* 	background-color: #ececec; */
+	background-color: #FFF;
 	height: 100%;
 }
 
@@ -152,7 +153,7 @@ nav .side-menu li a{
 }
 
 div#content_wrap {
-	height : 100%;
+	min-height : 100%;
 	position: relative;
 }
 
@@ -228,4 +229,20 @@ input[type=text] {
 .fontsize_11e {
 	font-size: 1.1em;
 	line-height: 1.1em;
+}
+
+/* back button overlay */
+.overlay-back {
+	position: fixed;
+	bottom: 25vw;
+	left: 5vw;
+	z-index: 1000;
+	width: 10vw;
+	height: 10vw;
+	background: rgba(255, 255, 255, 0.5);
+	border: 1px solid #DDD;
+	font-size: 6vw;
+	padding: 1vw;
+	text-align: center;
+	color: #979797;	
 }

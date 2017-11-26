@@ -14,8 +14,4 @@ public class PreschoolDto extends CommonDto {
 	protected String schCd;
 	protected String sttusCd;
 	protected String schName;
-//	private Integer clsId;
-//	private String clsNm;
-// 	private Integer hrTeacherId;
-// 	private String schSttusCd;
 }

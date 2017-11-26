@@ -67,8 +67,7 @@
 <div id="content_wrap">
 	<section class="mContents" layout:fragment="content">
 		<section class="contents-header">
-<!-- 			<h3 class="page-title">식단표</h3> -->
-			<h3 class="page-title" th:text="'식단 ' + ${menuList[0].formattedMenuDate}"></h3>
+			<h3 class="page-title" th:text="'식단 ' + ${menuDate}"></h3>
 		</section>
 		<section class="notice-list-wrap">
 			<article class="menu-item" th:each="menuItem : ${menuList}">

@@ -10,8 +10,9 @@ import kr.cnkisoft.preschool.user.domain.*;
 public interface UserService {
 	public LoginUserVo getLoginUser(String contact);
 	public List<StudentVo> getStudentListByTeacherContact(String contact);
+	public List<StudentVo> getStudentListByBoardLineDetailId(Integer lineDetailId); 
 	public CommonResultVo createReqMedi(ReqMediDto param);
-	public List<ReqMediVo> getListReqMediByTeacherId(int teacherId);
+	public List<ReqMediVo> getListReqMediByTeacherId(Integer teacherId);
 	public int createParent(UserDto parent);
 	public List<UserDto> getListParentInPreschool();
 	public UserVo getUser(Integer userId);

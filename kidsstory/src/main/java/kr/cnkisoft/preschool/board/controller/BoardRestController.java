@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.cnkisoft.preschool.board.mapper.BoardMapper;
 import kr.cnkisoft.preschool.board.service.BoardService;
+import kr.cnkisoft.preschool.board.vo.BoardLineDetailVo;
 import kr.cnkisoft.preschool.board.vo.BoardLineDto;
-import kr.cnkisoft.preschool.board.vo.BoardLineHistDto;
+import kr.cnkisoft.preschool.board.vo.BoardLineStudentHistDto;
+import kr.cnkisoft.preschool.board.vo.BoardProcessParamVo;
 import kr.cnkisoft.preschool.board.vo.BoardLineServiceDto;
-import kr.cnkisoft.preschool.board.vo.LineDetailVo;
 import kr.cnkisoft.preschool.common.domain.CommonResultVo;
 
 @Controller
@@ -29,9 +30,9 @@ public class BoardRestController {
 	
 	@RequestMapping(value="/board/list/{lineId}/{histDate}", method=RequestMethod.GET)
 	@ResponseBody
-	public List<LineDetailVo> boardList(@PathVariable int lineId, @PathVariable String histDate) {
+	public List<BoardLineDetailVo> boardList(@PathVariable int lineId, @PathVariable String histDate) {
 		// 서비스 추가 및 쿼리 변경 필요
-		return boardMapper.selectListLineDetail(lineId, histDate);
+		return boardService.getBoardLineDetailList(lineId, histDate);
 	}
 	
 	/**
@@ -41,7 +42,7 @@ public class BoardRestController {
 	 */
 	@RequestMapping(value="/rest/board/process", method=RequestMethod.POST)
 	@ResponseBody
-	public CommonResultVo boardProcess(@RequestBody BoardLineHistDto boardLineHist) {
+	public CommonResultVo boardProcess(@RequestBody BoardProcessParamVo boardLineHist) {
 		boardService.processBoarding(boardLineHist);
 		
 		return new CommonResultVo();
@@ -52,10 +53,10 @@ public class BoardRestController {
 	 * @param lineDtlId
 	 * @return
 	 */
-	@RequestMapping(value="/rest/board/unboard/reserve/{lineDtlId}", method=RequestMethod.GET)
+	@RequestMapping(value="/rest/board/unboard/reserve/{lineDtlId}/{stduentId}", method=RequestMethod.GET)
 	@ResponseBody
-	public List<BoardLineHistDto> unboardList(@PathVariable int lineDtlId) {
-		return boardMapper.selectListLineHist(lineDtlId);
+	public List<BoardLineStudentHistDto> unboardList(@PathVariable Integer lineDtlId, @PathVariable Integer stduentId) {
+		return boardMapper.selectListLineHist(lineDtlId ,stduentId);
 	}
 
 	
@@ -66,7 +67,7 @@ public class BoardRestController {
 	 */
 	@RequestMapping(value="/rest/board/unboard/reserve", method=RequestMethod.POST)
 	@ResponseBody
-	public CommonResultVo unboardReserve(@RequestBody BoardLineHistDto boardLineHist) {
+	public CommonResultVo unboardReserve(@RequestBody BoardLineStudentHistDto boardLineHist) {
 		boardService.reserveUnboard(boardLineHist);
 		
 		return new CommonResultVo();
@@ -79,7 +80,7 @@ public class BoardRestController {
 	 */
 	@RequestMapping(value="/rest/board/unboard/reserve/{lineHistId}", method=RequestMethod.DELETE)
 	@ResponseBody
-	public CommonResultVo unboardReserve(@PathVariable("lineHistId") String lineHistId) {
+	public CommonResultVo unboardReserve(@PathVariable("lineHistId")Integer lineHistId) {
 		boardService.cancelReserverUnboard(lineHistId);
 		
 		return new CommonResultVo();
@@ -99,9 +100,9 @@ public class BoardRestController {
 	 */
 	@RequestMapping(value="/rest/board/service/{lineId}", method=RequestMethod.POST)
 	@ResponseBody
-	public CommonResultVo<String> startBoardService(@PathVariable Integer lineId) {
+	public CommonResultVo startBoardService(@PathVariable Integer lineId) {
 		boardService.startBoardService(lineId);
-		return new CommonResultVo<String>();
+		return new CommonResultVo();
 	}
 	
 	/**
@@ -111,9 +112,9 @@ public class BoardRestController {
 	 */
 	@RequestMapping(value="/rest/board/service/{lineId}", method=RequestMethod.GET)
 	@ResponseBody
-	public CommonResultVo<BoardLineServiceDto> getBoardService(@PathVariable Integer lineId) {
+	public CommonResultVo getBoardService(@PathVariable Integer lineId) {
 		BoardLineServiceDto boardLineService = boardService.getBoardService(lineId);
-		CommonResultVo<BoardLineServiceDto> result = new CommonResultVo<BoardLineServiceDto>();
+		CommonResultVo result = new CommonResultVo();
 		result.setData(boardLineService);
 		return result;
 	}
@@ -123,11 +124,12 @@ public class BoardRestController {
 	 * @param lineId
 	 * @return
 	 */
-	@RequestMapping(value="/rest/board/service/{lineId}", method=RequestMethod.DELETE)
+	@RequestMapping(value="/rest/board/service/{lineId}/{histDate}", method=RequestMethod.DELETE)
 	@ResponseBody
-	public CommonResultVo<String> boardDeleteLineHist(@PathVariable int lineId) {
-		boardMapper.deleteLineHistByLineId(lineId);
+	public CommonResultVo boardDeleteLineHist(@PathVariable Integer lineId, @PathVariable String histDate) {
+		boardMapper.deleteLineDetailHistByLineId(lineId, histDate);
+		boardMapper.deleteLineDetailStudentHistByLineId(lineId, histDate);
 		boardMapper.deleteBoardService(lineId);
-		return new CommonResultVo<String>();
+		return new CommonResultVo();
 	}
 }

@@ -61,20 +61,20 @@ public class UserController {
 
 	@RequestMapping(value = "user/parent/create", method = RequestMethod.POST)
 	@ResponseBody
-	public CommonResultVo<String> createParent(@RequestBody UserDto parent) {
+	public CommonResultVo createParent(@RequestBody UserDto parent) {
 		userService.createParent(parent);
 
-		CommonResultVo<String> result = new CommonResultVo<>();
+		CommonResultVo result = new CommonResultVo();
 		result.setData("success");
 		return result;
 	}
 
 	@RequestMapping(value = "user/parent/list", method = RequestMethod.GET)
 	@ResponseBody
-	public CommonResultVo<List<UserDto>> createParent() {
+	public CommonResultVo createParent() {
 		List<UserDto> parentList = userService.getListParentInPreschool();
 
-		CommonResultVo<List<UserDto>> result = new CommonResultVo<>();
+		CommonResultVo result = new CommonResultVo();
 		result.setData(parentList);
 
 		return result;

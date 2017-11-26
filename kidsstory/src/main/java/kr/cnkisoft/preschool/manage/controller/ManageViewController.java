@@ -52,6 +52,7 @@ public class ManageViewController {
 
 		String viewName = "views/manage/menuDetail";
 		mav.setViewName(viewName);
+		mav.addObject("menuDate", DateUtils.currentDateOfYear());
 		mav.addObject("menuList", menuService.getDailyMenuListOfCurrentLoginUser(menuDate));
 		return mav;
 	}
@@ -68,6 +69,7 @@ public class ManageViewController {
 
 		String viewName = "views/manage/menuDetail";
 		mav.setViewName(viewName);
+		mav.addObject("menuDate", DateUtils.currentDateOfYear());
 		mav.addObject("menuList", menuService.getDailyMenuListOfCurrentLoginUser(menuDate));
 		return mav;
 	}

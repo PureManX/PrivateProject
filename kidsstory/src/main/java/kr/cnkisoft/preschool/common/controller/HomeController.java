@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -93,7 +94,7 @@ public class HomeController {
 		return mav;
 	}
 
-	@RequestMapping(value="/auth/regist")
+	@RequestMapping(value="/auth/regist", produces=MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	@ResponseBody
 	public String authRegist(
 			@RequestParam(value="deviceId", required = false) String deviceId
@@ -107,4 +108,12 @@ public class HomeController {
 		return "OK";
 	}
 
+	@RequestMapping(value="/setPhoneNumber")
+	public ModelAndView setPhoneNumber() {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("views/common/common");
+
+		return mav;
+	}
+	
 }

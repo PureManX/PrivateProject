@@ -63,6 +63,8 @@ public class FirebasePushServiceImpl implements PushService{
 
 	@Override
 	public void registPushId(String contact, String deviceId, String osType) {
+		pushMapper.deletetPushId(contact);
+		
 		PreSchoolPushIdDto preSchoolPushId = new PreSchoolPushIdDto();
 		preSchoolPushId.setContact(contact);
 		preSchoolPushId.setDeviceId(deviceId);

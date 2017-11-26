@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum LoginUserType implements CodeEnum{
 	PARENT(10, "PAR")
 	, TEACHER(20, "TCH")
+	, ADMIN(30, "ADM")
 	, GUEST(99, "GST")
 	;
 
@@ -38,6 +39,6 @@ public enum LoginUserType implements CodeEnum{
 			}
 		}
 		
-		return null;
+		return GUEST;
 	}
 }

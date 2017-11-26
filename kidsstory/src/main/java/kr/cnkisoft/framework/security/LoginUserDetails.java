@@ -1,8 +1,11 @@
 package kr.cnkisoft.framework.security;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import kr.cnkisoft.preschool.user.domain.LoginUserVo;
@@ -13,6 +16,8 @@ import kr.cnkisoft.preschool.user.domain.UserVo;
  */
 public class LoginUserDetails implements UserDetails{
 
+	private static final long serialVersionUID = 1L;
+	
 	LoginUserVo loginUser;
 
 	public LoginUserDetails(LoginUserVo loginUser) {
@@ -31,7 +36,11 @@ public class LoginUserDetails implements UserDetails{
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
+		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+		SimpleGrantedAuthority roleUser = new SimpleGrantedAuthority("USER");
+		authorities.add(roleUser);
+		
+		return authorities;
 	}
 
 	@Override

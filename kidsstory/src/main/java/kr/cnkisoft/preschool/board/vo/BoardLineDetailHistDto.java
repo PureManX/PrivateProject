@@ -10,12 +10,8 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @ToString(includeSuper = true)
 @NoArgsConstructor
-public class BoardLineHistDto extends CommonDto{
-	private Integer lineHistId;
+public class BoardLineDetailHistDto extends CommonDto{
+	private Integer lineDtlHistId;
 	private Integer lineDtlId;
 	private String histDate;
-	private String boardDiv;
-	private String unbReason;
-
-	private Integer lineId;
 }

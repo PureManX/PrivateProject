@@ -13,9 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Created by PureMaN on 2017-06-04.
  */
-@Service
+@Service("cookieUserDetailsService")
 @Slf4j
-public class AuthenticationServiceImpl implements UserDetailsService{
+public class CookieAuthenticationServiceImpl implements UserDetailsService {
 
 	@Autowired
 	UserService userService;
