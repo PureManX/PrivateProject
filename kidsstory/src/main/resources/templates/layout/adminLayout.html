@@ -69,8 +69,7 @@
 										<a href="#">
 											<div class="pull-left">
 												<!-- User Image -->
-												<img src="/adminlte/dist/img/user2-160x160.jpg" class="img-circle"
-													 alt="User Image" />
+												<img th:src="@{/file/data//prof/prof_4.png}" class="img-circle" alt="User Image" />
 											</div>
 											<!-- Message title and timestamp -->
 											<h4>
@@ -163,7 +162,7 @@
 						<ul class="dropdown-menu">
 							<!-- The user image in the menu -->
 							<li class="user-header">
-								<img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image" />
+								<img th:src="@{/file/data//prof/prof_4.png}" class="img-circle" alt="User Image" />
 
 								<p>
 									Alexander Pierce - Web Developer
@@ -188,10 +187,10 @@
 							<!-- Menu Footer-->
 							<li class="user-footer">
 								<div class="pull-left">
-									<a href="#" class="btn btn-default btn-flat">Profile</a>
+									<a href="#" class="btn btn-default btn-flat">프로필</a>
 								</div>
 								<div class="pull-right">
-									<a href="#" class="btn btn-default btn-flat">Sign out</a>
+									<a th:href="@{/admin/logout}" class="btn btn-default btn-flat">로그아웃</a>
 								</div>
 							</li>
 						</ul>
@@ -258,7 +257,7 @@
 						<li><a href="#">선생님</a></li>
 						<li><a href="#">알림장</a></li>
 						<li><a href="#">식단</a></li>
-						<li><a th:href="@{/admin/student}">공지사항</a></li>
+						<li><a th:href="@{/admin/notice}">공지사항</a></li>
 						<li><a href="#">학급</a></li>
 						<li><a href="#">버스노선</a></li>
 					</ul>
