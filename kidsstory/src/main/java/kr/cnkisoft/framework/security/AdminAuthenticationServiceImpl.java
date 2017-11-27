@@ -29,7 +29,7 @@ public class AdminAuthenticationServiceImpl implements UserDetailsService {
 		String userName = "admin";
 		String password = bCryptPasswordEncoder.encode("admin");
 
-		log.info(" == LOGIN USER :", username);
+		log.info(" == LOGIN USER : {}", username);
 		AdminUserDetails userDetails = new AdminUserDetails(userName, password);
 		
 		return userDetails;

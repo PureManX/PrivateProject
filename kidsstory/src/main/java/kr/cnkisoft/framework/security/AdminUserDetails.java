@@ -41,6 +41,8 @@ public class AdminUserDetails implements UserDetails {
 		preschool.setSchCd("TEST1");
 		preschool.setSchName("테스트유치원");
 		
+		user.setPreschool(preschool);
+		
 		loginUserVo = new LoginUserVo(user);
 	}
 
