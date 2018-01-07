@@ -3,10 +3,11 @@ package kr.cnkisoft.preschool.board.service;
 import java.util.List;
 
 import kr.cnkisoft.preschool.board.vo.BoardLineDetailVo;
-import kr.cnkisoft.preschool.board.vo.BoardLineStudentHistDto;
-import kr.cnkisoft.preschool.board.vo.BoardProcessParamVo;
+import kr.cnkisoft.preschool.board.vo.BoardLineIndivualInfoVo;
 import kr.cnkisoft.preschool.board.vo.BoardLineInfoVo;
 import kr.cnkisoft.preschool.board.vo.BoardLineServiceDto;
+import kr.cnkisoft.preschool.board.vo.BoardLineStudentHistDto;
+import kr.cnkisoft.preschool.board.vo.BoardProcessParamVo;
 
 /**
  * Created by PureMaN on 2017-08-27.
@@ -28,4 +29,11 @@ public interface BoardService {
 	 * @return
 	 */
 	public List<BoardLineDetailVo> getBoardLineDetailList(Integer lineId, String histDate);
+	
+	/**
+	 * 학생 id를 이용하여 상하차 노선 상세 정보 조회
+	 * @param studentId
+	 * @return
+	 */
+	public BoardLineIndivualInfoVo getBoardLineWithDetailByStudentId(Integer studentId);
 }

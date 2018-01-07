@@ -202,4 +202,16 @@ public class BoardServiceImpl implements BoardService {
 			boardMapper.insertBoardDetailStudentHist(boardLineStudentHist);
 		}
 	}
+
+	@Override
+	public BoardLineIndivualInfoVo getBoardLineWithDetailByStudentId(Integer studentId) {
+		BoardLineWithDetailVo attLineDetail = boardMapper.selectAttBoardLineDetailByStudentId(studentId);
+		BoardLineWithDetailVo comLineDetail = boardMapper.selectComBoardLineDetailByStudentId(studentId);
+		
+		return BoardLineIndivualInfoVo.builder()
+				.attDetail(attLineDetail)
+				.comDetail(comLineDetail)
+				.build()
+				;
+	}
 }

@@ -28,7 +28,7 @@ public class BoardRestController {
 	@Autowired
 	BoardService boardService;
 	
-	@RequestMapping(value="/board/list/{lineId}/{histDate}", method=RequestMethod.GET)
+	@RequestMapping(value="/rest/board/list/{lineId}/{histDate}", method=RequestMethod.GET)
 	@ResponseBody
 	public List<BoardLineDetailVo> boardList(@PathVariable int lineId, @PathVariable String histDate) {
 		// 서비스 추가 및 쿼리 변경 필요
@@ -131,5 +131,19 @@ public class BoardRestController {
 		boardMapper.deleteLineDetailStudentHistByLineId(lineId, histDate);
 		boardMapper.deleteBoardService(lineId);
 		return new CommonResultVo();
+	}
+
+
+	/**
+	 * 학생별 상하차 노선 정보 조회
+	 * @param lineId
+	 * @return
+	 */
+	@RequestMapping(value="/rest/board/line/detail/{studentId}", method=RequestMethod.GET)
+	@ResponseBody
+	public CommonResultVo boardLineDetail(@PathVariable("studentId") Integer studentId) {
+		CommonResultVo result = new CommonResultVo();
+		result.setData(boardService.getBoardLineWithDetailByStudentId(studentId));
+		return result;
 	}
 }

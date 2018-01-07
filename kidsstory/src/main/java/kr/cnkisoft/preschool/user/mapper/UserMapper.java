@@ -71,4 +71,6 @@ public interface UserMapper {
 
 	@Select("SELECT a.* FROM VIEW_USER_BASE a, MAP_PARENT_CHILD b WHERE a.USER_ID = b.PARENT_ID AND b.CHILD_ID = #{childId}")
 	public List<ParentVo> selectListParentsByChildId(@Param("childId")Integer childId);
+	
+	public int updateUserProfileImageId(UserDto user);
 }

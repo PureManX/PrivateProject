@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorator="layout/mobileLayout">
+<head>
+	<style>
+		.buttonWrap {
+			margin-top: 15vw;
+			text-align: center;
+		}
+
+		.buttonWrap a {
+			display: inline-block;
+			margin: 1vw;
+			width: 20vw;
+			height: 20vw;
+		}
+
+		.buttonWrap a img.menuBtn {
+			width: 100%;
+			height: auto;
+		}
+
+		div.mainBgWrapp {
+			margin-top: 10vw;
+			width: 100%;
+		}
+
+		.mainSchBg {
+			text-align: center;
+		}
+
+		.mainSchBg img {
+			width: 70vw;
+		}
+		.mContents {
+			background : #FFF;
+			height: 100%;
+		}
+
+		.modal {
+			text-align: center;
+			padding: 0!important;
+		}
+
+		.modal:before {
+			content: '';
+			display: inline-block;
+			height: 100%;
+			vertical-align: middle;
+			margin-right: -4px;
+		}
+
+		.modal-dialog {
+			display: inline-block;
+			text-align: left;
+			vertical-align: middle;
+		}
+		.modal-body h2 {
+			margin: 10px;
+			font-size: 16px;
+		}
+	</style>
+	<script>
+		function callNumber(num){
+			location.href = 'tel:' + num;
+		}
+	</script>
+</head>
+<body>
+	<div id="content_wrap">
+		<section class="mContents" layout:fragment="content">
+			<div class="buttonWrap">
+				<article>
+					<a href="http://cnkisoft.kr/kidsstory/intro.php">
+						<img class="menuBtn" th:src="@{/images/menu/guest/01.png}" />
+					</a>
+					<a href="http://cnkisoft.kr/kidsstory/preshow.php">
+						<img class="menuBtn" th:src="@{/images/menu/guest/02.png}" />
+					</a>
+					<a href="#" data-toggle="modal" data-target="#myModal">
+						<img class="menuBtn" th:src="@{/images/menu/guest/03.png}" />
+					</a>
+				</article>
+			</div>
+			<div class="mainBgWrapp">
+				<article class="mainSchBg">
+					<img th:src="@{/images/common/welcome.png}" />
+					<img th:src="@{/images/common/bg_defaultpresch.png}" />
+				</article>
+			</div>
+
+			<!-- Modal -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-body">
+							<h2>키즈스토리 상담원에게 연결 합니다.</h2>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary btn-sm" onclick="callNumber('010-5232-1976')">연결</button>
+							<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">닫기</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+</html>

@@ -5,14 +5,24 @@
 <head>
 	<style>
 		.buttonWrap {
-			margin-top: 10vw;
+			margin-top: 2vw;
 			text-align: center;
 		}
 		.buttonWrap a{
+			display :block;
+			margin: 0;
+			width: 25vw;
+			height: 25vw;
+			border: 1px solid #EEEEEE;
+			float: left;
+			padding: 2vw;
+		}
+		.button-wrap-menu {
 			display :inline-block;
-			margin: 0 2vw;
+			margin: 0;
 			width: 20vw;
 			height: 20vw;
+			border: 1px solid #EEEEEE;
 		}
 		.buttonWrap a img.menuBtn {
 			width: 100%;
@@ -20,6 +30,7 @@
 		}
 		.profile-info-wrap{
 			margin-top: 8vw;
+			text-align: center;
 		}
 		.profile-info-wrap a{
 			position:relative;
@@ -45,18 +56,19 @@
 		}
 		div.child-porfile-wrap {
 			background: #FFF;
-			padding: 3vw;
 		}
 		div.child-porfile-wrap article{
 			border: 2px solid #464b5e;
 			margin: 2vw;
 		}
 		div.child-porfile-wrap div.profile-image-wrap {
-			width: 40vw;
-		    height: 40vw;
+			width: 35vw;
+		    height: 35vw;
 		    display: inline-block;
 		    position: relative;
 		    float: left;
+			padding: 2px;
+			border: 2px solid #EEEEEE;
 		}
 		div.child-porfile-wrap div.profile-text-wrap {
 			display: block;
@@ -78,32 +90,12 @@
 		    width: 100%;
 		    height: 100%;
 		    text-align: left;
-		    padding: 3vw;
+		    padding: 6vw;
 		    overflow: auto;
-		    border: 1px solid #cacaca;
    		}
 
-		/* Bootstrap modal align vertical middle*/
-		.modal {
-			text-align: center;
-			padding: 0 !important;
-		}
-
-		.modal:before {
-			content: '';
-			display: inline-block;
-			height: 100%;
-			vertical-align: middle;
-			margin-right: -4px;
-		}
-
-		.modal-dialog {
-			display: inline-block;
-			text-align: left;
-			vertical-align: middle;
-		}
 		.modal-header {
-			/* 		background: #ffeccd; */
+			background: #faffd8;
 			font-size: 1.2em;
 			font-weight: bold;
 		}
@@ -113,6 +105,21 @@
 		.modal-content {
 			border: none;
 			border-radius: 0;
+		}
+		.vertical-alignment-helper {
+		    display:table;
+		    height: 100%;
+		    margin: 0 auto;
+		}
+		.vertical-align-center {
+		    /* To center vertically */
+		    display: table-cell;
+		    vertical-align: middle;
+		}
+		.modal-content {
+		    width:inherit;
+		    height:inherit;
+		    margin: 0 auto;
 		}
 		.mContents {
 			background : #FFF;
@@ -141,13 +148,75 @@
 		}
 		.profile-desc-wrap {
 			float: right;
-			width: 40vw;
-			text-align: left;
+			width: 50vw;
+			text-align: center;
 		}
 		.carousel-indicators {
 			bottom: -8vw;
 		}
-		
+		.inline-block {
+			display: inline-block;
+		}
+		/* 투약 modal */
+		.medi-item{
+			width: 100%;
+			text-align: left;
+			font-size: 4vw;
+			height: 10vw;
+			line-height: 8vw;
+			margin-bottom: 1vw;
+			padding: 1vw 2vw;
+			border: 1px solid #d6d4d4;
+			margin-right: 0;
+		}
+		.medi-name{
+			display: inline-block;
+			width: 18vw;
+		}
+		.medi-time{
+			display: inline-block;
+			width: 13vw;
+		}
+		.medi-desc{
+			display: inline-block;
+			width: 30vw;
+		}
+		.msg-item{
+			width: 100%;
+			text-align: left;
+			font-size: 4vw;
+			line-height: 8vw;
+			margin-bottom: 1vw;
+			padding: 1vw 2vw;
+			border: 1px solid #d6d4d4;
+			overflow: auto;
+		}
+		.msg-item img{
+	    	display: inline-block;
+    		width: 15vw;
+    		float: left;
+		}
+		.msg-wrap{
+			display: inline-block;
+			width: 60vw;
+			float: left;
+			padding-left: 1vw;
+		}
+		.msg-name{
+			display: inline-block;
+			font-weight: bold;
+		}
+		.msg-time{
+			display: inline-block;
+			float: right;;
+			font-size: 0.9em
+		}
+		.msg-desc{
+			display: block;
+			width: 100%;
+			line-height: 1.3;
+			font-size: 0.9em;
+		}
 	</style>
 </head>
 <body>
@@ -155,20 +224,20 @@
 		<section class="mContents" layout:fragment="content">
 			<div class="child-porfile-wrap">
 				<div class="item profile-wrap">
-					<div class="profile-image-wrap">
+					<div class="profile-image-wrap img-circle">
 						<img th:src="@{/file/data/{imgSrc}(imgSrc=${loginUser.user.imgSrc})}" class="img-circle" />
 					</div>
 					<div class="profile-desc-wrap">
 						<div class="profile-text-wrap">
-							<h5 class="profile-text-name fontsize_15e" th:text="${loginUser.user.userNm}"></h5>
-							<h5 class="profile-text-class fontsize_12e" th:text="${loginUser.userClass.clsNm} + 반"></h5>
+							<h5 class="profile-text-name fontsize_15e inline-block" th:text="${loginUser.user.userNm}"></h5>
+							<h5 class="profile-text-class fontsize_12e inline-block" th:text="${loginUser.userClass.clsNm} + 반"></h5>
 							<div class="profile-info-wrap">
-								<a href="#">
-									<img class="menuBtn" th:src="@{/images/menu/parents/btn_reqmedi.png}" />
+								<a data-toggle="modal" data-target="#medi-modal">
+									<img class="menuBtn" th:src="@{/images/common/profile_noti_medireq.png}" />
 									<span class="noti circle">3</span>
 								</a>
-								<a href="#">
-									<img class="menuBtn" th:src="@{/images/menu/common/footer_msg.png}" />
+								<a data-toggle="modal" data-target="#msg-modal">
+									<img class="menuBtn" th:src="@{/images/common/profile_noti_msg.png}" />
 									<span class="noti circle">3</span>
 								</a>
 							</div>
@@ -180,29 +249,107 @@
 			
 			<div class="buttonWrap">
 				<article>
+					<a href="http://cnkisoft.kr/kidsstory/intro.php">
+						<img class="menuBtn" th:src="@{/images/menu/guest/btn_schinfo.png}" />
+					</a>
+					<a th:href="@{/diary/list}">
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_diary.png}" />
+					</a>
+					<a onclick="moveToGallery()">
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_album.png}" />
+					</a>
+					<a onclick="readyButton()">
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_calendar.png}" />
+					</a>
+					<a th:href="@{/menu/today}">
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_menu.png}" />
+					</a>
 					<a th:href="@{/board/teacher/buslinelist/on}">
 						<img class="menuBtn" th:src="@{/images/menu/teacher/btn_mngattbus.png}" />
 					</a>
 					<a th:href="@{/board/teacher/buslinelist/off}">
 						<img class="menuBtn" th:src="@{/images/menu/teacher/btn_mngoutbus.png}" />
 					</a>
-					<a th:href="@{/test/teacher/childList}">
-						<img class="menuBtn" th:src="@{/images/menu/teacher/btn_children.png}" />
+<!-- 					<a th:href="@{/test/teacher/childList}"> -->
+<!-- 						<img class="menuBtn" th:src="@{/images/menu/teacher/btn_children.png}" /> -->
+<!-- 					</a> -->
+					<a th:href="@{/notice/list}">
+						<img class="menuBtn" th:src="@{/images/menu/parents/btn_school_notice.png}" />
 					</a>
-					<br/>
-					<a th:href="@{/menu/today}">
-						<img class="menuBtn" th:src="@{/images/menu/parents/btn_menu.png}" />
-					</a>
-					<a onclick="moveToGallery()">
-						<img class="menuBtn" th:src="@{/images/menu/parents/btn_album.png}" />
-					</a>
-					<a th:href="@{/diary/list}">
-						<img class="menuBtn" th:src="@{/images/menu/parents/btn_diary.png}" />
-					</a>
-					<!--<a>-->
-						<!--<img class="menuBtn" th:src="@{/images/menu/teacher/btn_notice.png}" />-->
-					<!--</a>-->
 				</article>
+			</div>
+				
+			<div class="modal modal-center" id="medi-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				<div class="vertical-alignment-helper">
+					<div class="modal-dialog vertical-align-center" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								<h4 class="modal-title" id="myModalLabel">금일 투약 리스트</h4>
+							</div>
+							<div class="modal-body">
+								<div class="medi-item">
+									<span class="medi-name">박한솔</span>
+									<span class="medi-time">09:20</span>
+									<span class="medi-desc">물약 1회</span>
+								</div>
+								<div class="medi-item">
+									<span class="medi-name">김하늘</span>
+									<span class="medi-time">식후</span>
+									<span class="medi-desc">알약 2개</span>
+								</div>
+								<div class="medi-item">
+									<span class="medi-name">김아람</span>
+									<span class="medi-time">15:10</span>
+									<span class="medi-desc">연고</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal modal-center" id="msg-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				<div class="vertical-alignment-helper">
+					<div class="modal-dialog vertical-align-center" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								<h4 class="modal-title" id="myModalLabel">메세지 수신 리스트</h4>
+							</div>
+							<div class="modal-body">
+								<div class="msg-item" onclick="moveToChat(1)">
+									<img th:src="@{/file/data//prof/prof_1.png}" class="img-circle" />
+									<div class="msg-wrap">
+										<span class="msg-name">김신 엄마</span>
+										<span class="msg-time">08:15</span>
+										<span class="msg-desc">오늘 집안행사로 유치원 쉽니다</span>
+									</div>
+								</div>
+								<div class="msg-item" onclick="moveToChat(2)">
+									<img th:src="@{/file/data//prof/prof_3.png}" class="img-circle" />
+									<div class="msg-wrap">
+										<span class="msg-name">왕여 엄마</span>
+										<span class="msg-time">09:15</span>
+										<span class="msg-desc">오늘 준비물을 못챙겼습니다. 유치원에서 부탁해요</span>
+									</div>
+								</div>
+								<div class="msg-item" onclick="moveToChat(5)">
+									<img th:src="@{/file/data//prof/prof_4.png}" class="img-circle" />
+									<div class="msg-wrap">
+										<span class="msg-name">써니 엄마</span>
+										<span class="msg-time">10:15</span>
+										<span class="msg-desc">오늘 하교시 직접 데리러 갑니다</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</section>
 	</div>
@@ -215,6 +362,10 @@
 
 		function moveToGallery() {
 			location.href = "/user/gallery/" + clsId;
+		}
+		
+		function moveToChat(parentId){
+			location.href = "/user/chat?targetId=" + parentId;
 		}
 	</script>
 </body>

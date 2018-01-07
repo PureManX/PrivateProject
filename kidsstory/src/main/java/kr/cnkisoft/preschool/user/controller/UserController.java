@@ -2,6 +2,8 @@ package kr.cnkisoft.preschool.user.controller;
 
 import kr.cnkisoft.framework.security.AuthUtils;
 import kr.cnkisoft.preschool.common.domain.CommonResultVo;
+import kr.cnkisoft.preschool.common.file.domain.FileInfoDto;
+import kr.cnkisoft.preschool.common.file.service.FileService;
 import kr.cnkisoft.preschool.user.domain.*;
 import kr.cnkisoft.preschool.user.mapper.UserMapper;
 import kr.cnkisoft.preschool.user.service.UserService;
@@ -9,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -105,9 +108,21 @@ public class UserController {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("views/common/gallery");
 		
-		mav.addObject("imageList", userService.getImageListOfClass(classId));
+		mav.addObject("imageList", userService.getDailyImageListOfClass(classId));
 
 		return mav;
+	}
+	
+	@RequestMapping(value = "/rest/user/profileImage", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResultVo updateProfileImage (
+			@RequestParam MultipartFile file
+			, @RequestParam(required=false) Integer studentId
+			) {
+		
+		FileInfoDto uploadFile = userService.updateStudentProfileImage(file, studentId);
+		
+		return new CommonResultVo(uploadFile);
 	}
 
 }

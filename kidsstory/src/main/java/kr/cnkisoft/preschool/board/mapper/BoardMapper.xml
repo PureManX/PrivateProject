@@ -63,6 +63,32 @@
 			BOARD_ORDER
 	</select>
 	
+	<select id="selectAttBoardLineDetailByStudentId" resultType="kr.cnkisoft.preschool.board.vo.BoardLineWithDetailVo"
+		parameterType="map">
+		SELECT	/* 탑승 노선 정보 조회 (학생 Id) */
+			*
+		FROM
+			PRESCH_LINE busLine 
+			JOIN PRESCH_LINE_DTL busLineDetail ON busLine.LINE_ID = busLineDetail.LINE_ID
+		WHERE
+			busLine.LINE_TYPE = 'ATT'
+			AND busLineDetail.STDU_ID = #{studentId}
+		LIMIT 1
+	</select>
+
+	<select id="selectComBoardLineDetailByStudentId" resultType="kr.cnkisoft.preschool.board.vo.BoardLineWithDetailVo"
+		parameterType="map">
+		SELECT	/* 하차 노선 정보 조회 (학생 Id) */
+			*
+		FROM
+			PRESCH_LINE busLine 
+			JOIN PRESCH_LINE_DTL busLineDetail ON busLine.LINE_ID = busLineDetail.LINE_ID
+		WHERE
+			busLine.LINE_TYPE = 'COM'
+			AND busLineDetail.STDU_ID = #{studentId}
+		LIMIT 1
+	</select>
+	
 	<insert id="insertBoardDetailHist" parameterType="kr.cnkisoft.preschool.board.vo.BoardLineDetailHistDto">
 		INSERT INTO PRESCH_LINE_DTL_HIST
 			(LINE_DTL_ID, HIST_DATE, CREATED_DT, CREATED_BY)

@@ -17,7 +17,7 @@ public class UserDto extends CommonDto {
 	protected Integer parUserId;
 	protected String contact;
 	protected String email;
-	protected String profImgId;
+	protected Integer profImgId;
 	protected String sttusCd;
 	protected String schCd;
 	protected Integer clsId;
@@ -26,7 +26,7 @@ public class UserDto extends CommonDto {
 	protected String imgSrc;
 	
 	protected UserDto(Integer userId, String userNm, String userType, Integer parUserId, String contact, String email,
-			String profImgId, String sttusCd, String schCd, Integer clsId, String fileNm, String fileType,
+			Integer profImgId, String sttusCd, String schCd, Integer clsId, String fileNm, String fileType,
 			String imgSrc) {
 		this.userId = userId;
 		this.userNm = userNm;

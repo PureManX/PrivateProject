@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import kr.cnkisoft.preschool.common.file.domain.DailyGalleryListVo;
 import kr.cnkisoft.preschool.common.file.domain.FileInfoDto;
 
 @Mapper
@@ -18,4 +19,6 @@ public interface FileMapper {
 	
 	@Select("SELECT a.*, CONCAT('/file/data/', LOWER(a.FILE_TYPE), '/', a.FILE_NM) AS IMG_SRC  FROM FILE_INFO a WHERE FILE_TYPE = 'IMAGE' AND CLS_ID = #{clsId}")
 	public List<FileInfoDto> selectListImageFileByClassId(@Param("clsId")Integer clsId);
+	
+	public List<DailyGalleryListVo> selectListDailyImageByClassId(@Param("clsId")Integer clsId);
 }

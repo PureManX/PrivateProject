@@ -93,6 +93,9 @@
 				<li>
 					<a th:href="@{/setPhoneNumber}">번호설정</a>
 				</li>
+				<li>
+					<a th:href="@{/?hpnum=01000000000}">게스트홈</a>
+				</li>
 			</ul>
 			<ul class="side-menu" th:if="${loginUser.userType.code == 'TCH'}">
 				<li>
@@ -106,6 +109,9 @@
 				</li>
 				<li>
 					<a th:href="@{/setPhoneNumber}">번호설정</a>
+				</li>
+				<li>
+					<a th:href="@{/?hpnum=01000000000}">게스트홈</a>
 				</li>
 			</ul>
 		</nav>
@@ -155,7 +161,18 @@
 			</form>
 		</footer>
 	</div>
-	<script>
+	<script th:inline="javascript">
+		var mode = null;
+	 	[# th:if="${param.mode != null}"]
+		mode = [[${param.mode[0]}]];
+	 	[/]
+	
+	 	function isGuestMode() {
+	 		return mode != null && mode == "GUEST";
+	 	}
+	 	
+		console.log("param mode = " + mode);
+		
 		function toggleSideMenu() {
 			$("nav.side-menu-wrap").toggleClass("hidden");
 		}
@@ -212,6 +229,11 @@
 		})
 		
 		function clickUploadImage() {
+			if (isGuestMode()) {
+				alert("체험하기 중엔 사용할 수 없는 기능입니다.");
+				return false;
+			}
+			
 			var file = $("#image-form input.file")
 			console.log(file.val());
 			file.val("");

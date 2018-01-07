@@ -5,10 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.cnkisoft.framework.enums.LoginUserType;
 import kr.cnkisoft.framework.security.AuthUtils;
 import kr.cnkisoft.preschool.common.domain.CommonResultVo;
+import kr.cnkisoft.preschool.common.file.domain.DailyGalleryListVo;
 import kr.cnkisoft.preschool.common.file.domain.FileInfoDto;
 import kr.cnkisoft.preschool.common.file.service.FileService;
 import kr.cnkisoft.preschool.push.domain.PreSchoolPushIdDto;
@@ -219,6 +221,24 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<FileInfoDto> getImageListOfClass(Integer classId) {
 		return fileService.getFileListByClass(classId);
+	}
+	
+	@Override
+	public List<DailyGalleryListVo> getDailyImageListOfClass(Integer classId) {
+		return fileService.getDailyGalleryListByClass(classId);
+	}
+
+	@Override
+	public FileInfoDto updateStudentProfileImage(MultipartFile file, Integer studentId) {
+		UserDto student = userMapper.selectUserbyUserId(studentId);
+		
+		FileInfoDto uploadFileInfo = fileService.createProfileImage(file);
+		
+		student.setProfImgId(uploadFileInfo.getFileId());
+		
+		userMapper.updateUserProfileImageId(student);
+		
+		return uploadFileInfo;
 	}
 
 }

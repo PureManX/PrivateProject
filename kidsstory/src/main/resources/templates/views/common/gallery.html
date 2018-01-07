@@ -15,11 +15,11 @@
 		section.contents-header .page-title {
 			padding: 3vw;
 			width: 100%;
-			background: #FFF;
+			background: #ffdf02;
 			font-size: 6vw;
 			font-weight: bold;
 			text-align: center;
-			border: 1px solid #d0d0d0;
+			color: #6b6a57;
 		}
 		.tz-gallery .row {
 			margin: 0;
@@ -31,15 +31,45 @@
 			column-count: 2;
 			column-gap: 1vw;
 		}
+		.image-list-wrap {
+			height: 30vw;
+			overflow-x: scroll;
+			width: auto;
+			white-space: nowrap;
+			margin-top: 2vw;
+		}
 		.image-item {
-			width: 100% !important;
-			height: auto !important;
-			margin-bottom: 1vw;
+			height: 30vw;
+			display: inline-block;
     	}
+    	#content_wrap{
+    		background: #FFF;
+    	}
+    	.lightbox img{
+    		height: 100%;
+    		border-radius: 0;
+    	}
+    	.dialy-image-wrap{
+    		margin-top: 5vw;
+    	}
+    	.dialy-image-wrap h3{
+			background: #e5e5e5;
+			padding: 1vw;
+    	}
+    	
+		/* modal 영역 */
+		.modal-body {
+			text-align: center;
+			padding: 3vw;
+		}
+		.modal-content {
+			border: none;
+			border-radius: 0;
+		}
 	</style>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.1/baguetteBox.min.css" />
-	<link rel="stylesheet" href="/css/lib/gallery-grid.css" />
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.1/baguetteBox.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.js.map"></script>
 </head>
 <body>
 <div id="content_wrap">
@@ -48,16 +78,14 @@
 			<h3 class="page-title">사진첩</h3>
 		</section>
 		<section class="gallery-list-wrap">
-			<div class="tz-gallery">
-				<div class="row">
-					<div th:each="imageItem : ${imageList}" class="image-item">
-						<a class="lightbox" th:href="${imageItem.imgSrc}">
-							<img th:src="${imageItem.imgSrc}" class="img-thumbnail" />
+			<div th:each="dailyItem : ${imageList}" class="dialy-image-wrap">
+				<h3 th:text="${dailyItem.date}"></h3>
+				<div class="image-list-wrap">
+					<div class="image-item" th:each="imageItem : ${dailyItem.images}">
+						<a class="lightbox" th:href="${imageItem.imgSrc}" data-toggle="lightbox" data-gallery="ex-gallery">
+							<img th:src="${imageItem.imgSrcThumbNail}" class="img-thumbnail" />
 						</a>
 					</div>
-<!-- 					<a th:href="${imageItem.imgSrc}" download=""> -->
-<!-- 						<span class="glyphicon glyphicon-download-alt"></span> -->
-<!-- 					</a> -->
 				</div>
 			</div>
 		</section>
@@ -66,11 +94,14 @@
 <script th:inline="javascript" layout:fragment="script">
 	/*<![CDATA[*/
 	$(document).ready(function() {
-		baguetteBox.run('.tz-gallery');
-		
 		$(".full-image").each(function(){
 			$(this).append("<a>download</a>");
 		});
+		
+		$(document).on('click', '[data-toggle="lightbox"]', function(event) {
+            event.preventDefault();
+            $(this).ekkoLightbox();
+        });
 	});
 	/*]]>*/
 </script>

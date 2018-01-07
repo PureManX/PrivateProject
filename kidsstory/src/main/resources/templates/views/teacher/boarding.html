@@ -419,7 +419,7 @@
 	function refresh() {
 		$("ul.timeline li.bus-line-item").remove();
 
-		$.get("/board/list/" + lineId + "/" + histDate, function(data, status) {
+		$.get("/rest/board/list/" + lineId + "/" + histDate, function(data, status) {
 			var curFlg = false;
 			for (var i = 0; i < data.length; i++) {
 				stationList[data[i].lineDtlId] = data[i];
@@ -635,6 +635,7 @@
 			dataType : "JSON"
 		});
 	}
+
 	/*]]>*/
 </script>
 </body>

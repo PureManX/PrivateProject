@@ -13,6 +13,7 @@ import kr.cnkisoft.preschool.board.vo.BoardLineDetailHistDto;
 import kr.cnkisoft.preschool.board.vo.BoardLineDetailVo;
 import kr.cnkisoft.preschool.board.vo.BoardLineDto;
 import kr.cnkisoft.preschool.board.vo.BoardLineStudentHistDto;
+import kr.cnkisoft.preschool.board.vo.BoardLineWithDetailVo;
 import kr.cnkisoft.preschool.board.vo.BoardLineServiceDto;
 import kr.cnkisoft.preschool.board.vo.PreschoolBusDto;
 
@@ -104,4 +105,7 @@ public interface BoardMapper {
            + " AND SERVICE_START_DT >= CURRENT_DATE"
            + " AND SERVICE_START_DT < adddate(CURRENT_DATE, 1)")
 	public int deleteBoardService(@Param("lineId")Integer lineId);
+	
+	public BoardLineWithDetailVo selectAttBoardLineDetailByStudentId(@Param("studentId")Integer studentId);
+	public BoardLineWithDetailVo selectComBoardLineDetailByStudentId(@Param("studentId")Integer studentId);
 }

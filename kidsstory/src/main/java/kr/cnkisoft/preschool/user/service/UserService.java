@@ -2,7 +2,10 @@ package kr.cnkisoft.preschool.user.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import kr.cnkisoft.preschool.common.domain.CommonResultVo;
+import kr.cnkisoft.preschool.common.file.domain.DailyGalleryListVo;
 import kr.cnkisoft.preschool.common.file.domain.FileInfoDto;
 import kr.cnkisoft.preschool.push.domain.PreSchoolPushIdDto;
 import kr.cnkisoft.preschool.user.domain.*;
@@ -18,4 +21,6 @@ public interface UserService {
 	public UserVo getUser(Integer userId);
 	public PreSchoolPushIdDto getPushInfoByLineDetailId(Integer lineDetailId);
 	public List<FileInfoDto> getImageListOfClass(Integer classId);
+	public List<DailyGalleryListVo> getDailyImageListOfClass(Integer classId);
+	public FileInfoDto updateStudentProfileImage(MultipartFile file, Integer studentId);
 }
