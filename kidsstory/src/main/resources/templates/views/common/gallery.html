@@ -66,6 +66,25 @@
 			border: none;
 			border-radius: 0;
 		}
+		
+		/* no-data 영역 */
+		.no-data {
+			width: 100%;
+			border: 1px solid #cecece;
+			padding: 10vw 3vw;
+			text-align: center;
+			vertical-align: middle;
+		}
+		.no-data span {
+			font-size: 25vw;
+			display: block;
+			color: #EEE;
+			margin-bottom: 10vw;
+		}
+		.no-data h2 {
+			font-size: 5vw;
+		}
+		
 	</style>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.js"></script>
@@ -78,16 +97,24 @@
 			<h3 class="page-title">사진첩</h3>
 		</section>
 		<section class="gallery-list-wrap">
-			<div th:each="dailyItem : ${imageList}" class="dialy-image-wrap">
-				<h3 th:text="${dailyItem.date}"></h3>
-				<div class="image-list-wrap">
-					<div class="image-item" th:each="imageItem : ${dailyItem.images}">
-						<a class="lightbox" th:href="${imageItem.imgSrc}" data-toggle="lightbox" data-gallery="ex-gallery">
-							<img th:src="${imageItem.imgSrcThumbNail}" class="img-thumbnail" />
-						</a>
+			<article th:if="${imageList == null || #lists.size(imageList) == 0}">
+				<div class="no-data">
+					<span class="glyphicon glyphicon-ban-circle"></span>
+					<h2>현재 등록된 사진이 없습니다.</h2>
+				</div>
+			</article>
+			<article th:if="${imageList != null}">
+				<div th:each="dailyItem : ${imageList}" class="dialy-image-wrap">
+					<h3 th:text="${dailyItem.date}"></h3>
+					<div class="image-list-wrap">
+						<div class="image-item" th:each="imageItem : ${dailyItem.images}">
+							<a class="lightbox" th:href="${imageItem.imgSrc}" data-toggle="lightbox" data-gallery="ex-gallery">
+								<img th:src="${imageItem.imgSrcThumbNail}" class="img-thumbnail" />
+							</a>
+						</div>
 					</div>
 				</div>
-			</div>
+			</article>
 		</section>
 	</section>
 </div>

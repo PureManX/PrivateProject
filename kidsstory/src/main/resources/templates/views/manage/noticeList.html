@@ -150,6 +150,24 @@
 		.modal textarea{
 			height: 60vw;
 		}
+		
+		/* no-data 영역 */
+		.no-data {
+			width: 100%;
+			border: 1px solid #cecece;
+			padding: 10vw 3vw;
+			text-align: center;
+			vertical-align: middle;
+		}
+		.no-data span {
+			font-size: 25vw;
+			display: block;
+			color: #EEE;
+			margin-bottom: 10vw;
+		}
+		.no-data h2 {
+			font-size: 5vw;
+		}
 	</style>
 </head>
 <body>
@@ -159,7 +177,13 @@
 			<h3 class="page-title">공지사항</h3>
 		</section>
 		<section class="notice-list-wrap">
-			<article class="notice-item" th:each="noticeItem : ${noticeList}">
+			<article th:if="${noticeList == null || #lists.size(noticeList) == 0}">
+				<div class="no-data">
+					<span class="glyphicon glyphicon-ban-circle"></span>
+					<h2>현재 등록된 공지사항이 없습니다.</h2>
+				</div>
+			</article>
+			<article class="notice-item" th:each="noticeItem : ${noticeList}" th:if="${noticeList != null}">
 				<h4 class="notice-title" th:text="${noticeItem.noticeTitle}"></h4>
 				<div class="notice-sub-tile">
 					<div class="panel-function" th:if="${loginUser.userType.code == 'TCH'}">

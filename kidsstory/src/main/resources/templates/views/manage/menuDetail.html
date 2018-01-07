@@ -61,6 +61,25 @@
 		.menu-content-list {
 			margin: 2vw;
 		}
+		
+		/* no-data 영역 */
+		.no-data {
+			width: 100%;
+			border: 1px solid #cecece;
+			padding: 10vw 3vw;
+			text-align: center;
+			vertical-align: middle;
+		}
+		.no-data span {
+			font-size: 25vw;
+			display: block;
+			color: #EEE;
+			margin-bottom: 10vw;
+		}
+		.no-data h2 {
+			font-size: 5vw;
+		}
+		
 	</style>
 </head>
 <body>
@@ -70,7 +89,13 @@
 			<h3 class="page-title" th:text="'식단 ' + ${menuDate}"></h3>
 		</section>
 		<section class="notice-list-wrap">
-			<article class="menu-item" th:each="menuItem : ${menuList}">
+			<article th:if="${menuItem == null}">
+				<div class="no-data">
+					<span class="glyphicon glyphicon-ban-circle"></span>
+					<h2>현재 등록된 식단이 없습니다.</h2>
+				</div>
+			</article>
+			<article class="menu-item" th:each="menuItem : ${menuList}" th:if="${menuItem != null}">
 				<div class="menu-image-wrap" th:each="menuDetailItem : ${menuItem.menuDetailList}">
 					<h5 class="menu-type" th:text="${menuDetailItem.menuType.name}">메뉴 유형</h5>
 					<img class="menu-image" th:src="@{/file/data{imgSrc}(imgSrc=${menuDetailItem.imgSrc})}"/>

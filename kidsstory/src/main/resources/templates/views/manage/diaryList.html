@@ -158,6 +158,24 @@
 		.modal textarea{
 			height: 60vw;
 		}
+		
+		/* no-data 영역 */
+		.no-data {
+			width: 100%;
+			border: 1px solid #cecece;
+			padding: 10vw 3vw;
+			text-align: center;
+			vertical-align: middle;
+		}
+		.no-data span {
+			font-size: 25vw;
+			display: block;
+			color: #EEE;
+			margin-bottom: 10vw;
+		}
+		.no-data h2 {
+			font-size: 5vw;
+		}
 	</style>
 </head>
 <body>
@@ -167,7 +185,13 @@
 			<h3 class="page-title">알림장</h3>
 		</section>
 		<section class="notice-list-wrap">
-			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+			<article th:if="${noticeList == null || #lists.size(noticeList) == 0}">
+				<div class="no-data">
+					<span class="glyphicon glyphicon-ban-circle"></span>
+					<h2>현재 등록된 알림장이 없습니다.</h2>
+				</div>
+			</article>
+			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"  th:if="${noticeList != null}">
 				<div class="panel panel-default" th:each="noticeItem, iterStat : ${noticeList}">
 					<div class="panel-heading" role="tab" th:id="heading_ + ${iterStat.index}">
 					 	<div>
