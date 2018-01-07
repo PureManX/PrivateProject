@@ -39,13 +39,14 @@
 		}
 	
 		.notice-create-date {
-			display: block;
+			display: inline-block;
 			height: 18px;
 			line-height: 18px;
 			font-size: 13px;
 			color: #808080;
 			margin: 3vw;
 			text-align: right;
+			float: right;
 		}
 		.notice-cotent {
 		    display:block; 
@@ -53,6 +54,21 @@
 	        margin:3vw;
 	        color:#808080;
 		}
+		.notice-sub-tile {
+			overflow: hidden;
+		}
+		
+		.panel-function {
+			display: inline-block;
+			font-size: 4vw;
+			text-align: left;
+			margin-left: 1vw;
+		}
+		.panel-function span{
+			line-height: 18px;
+			margin: 3vw 2vw;
+		}
+		
 		.regist-wrap {
 			position: fixed;
 			width: 10vw;
@@ -70,6 +86,70 @@
 			text-align: center;
 			line-height: 9vw;
 		}
+		
+		/* modal 영역 */
+		.modal-header {
+			background-color: #f8ffac;
+			font-size: 1.2em;
+			font-weight: bold;
+		}
+		.modal-body {
+		}
+		.modal-content {
+			border: none;
+			border-radius: 0;
+		}
+		.modal-content .close{
+			position: absolute;
+			right: 3vw;
+			top: 2.5vw;
+			font-size: 8vw;
+			z-index: 999;
+    	}
+		.vertical-alignment-helper {
+		    display:table;
+		    height: 100%;
+		    margin: 0 auto;
+		}
+		.vertical-align-center {
+		    /* To center vertically */
+		    display: table-cell;
+		    vertical-align: middle;
+		}
+		.modal-content {
+		    height:inherit;
+		    margin: 0 auto;
+		    width: 90vw;
+		}
+		.modal input, .modal textarea {
+			text-align: left;
+			border-radius: 0;
+		}
+		.modal-footer {
+			display: -webkit-flex;
+			display: flex;
+			-webkit-align-items: center;
+			align-items: center;
+			-webkit-justify-content: center;
+			justify-content: center;
+			padding: 0;
+		}
+		.modal-footer-btn {
+			width: 50%;
+			height: 12vw;
+			background-color: #FFF;
+			background-image: none;
+			border: 1px solid transparent;
+			font-size: 100%;
+			font-weight: bold;
+			color: #5d5d5d;
+		}
+		.modal-footer-btn+.modal-footer-btn{
+			border-left: 1px solid #e5e5e5;
+		}
+		.modal textarea{
+			height: 60vw;
+		}
 	</style>
 </head>
 <body>
@@ -81,17 +161,201 @@
 		<section class="notice-list-wrap">
 			<article class="notice-item" th:each="noticeItem : ${noticeList}">
 				<h4 class="notice-title" th:text="${noticeItem.noticeTitle}"></h4>
-				<h5 class="notice-create-date" th:text="${noticeItem.createdDate}"></h5>
+				<div class="notice-sub-tile">
+					<div class="panel-function" th:if="${loginUser.userType.code == 'TCH'}">
+						<span class="glyphicon glyphicon-pencil" th:onclick="'openUpdateFrom(' + ${noticeItem.noticeId} + ')'"></span>
+						<span class="glyphicon glyphicon-trash" th:onclick="'deleteNotice(' + ${noticeItem.noticeId} + ')'"></span>
+					</div>
+					<h5 class="notice-create-date" th:text="${noticeItem.createdDate}"></h5>
+				</div>
 				<p class="notice-cotent" th:utext="${noticeItem.noticeContent}"></p>
 			</article>
 		</section>
-		<div class="regist-wrap">
-			<span class="glyphicon glyphicon glyphicon-plus" onclick="clickUploadProfile()"></span>
+
+		<!-- Notice Regist button -->
+		<div class="regist-wrap" th:if="${loginUser.userType.code == 'TCH'}">
+			<span class="glyphicon glyphicon-plus" onclick="openRegistForm()"></span>
+		</div>
+		
+		<!-- Notice Modal Wrap -->
+		<div class="modal modal-center" id="regsit-form" tabindex="-1" role="dialog" th:if="${loginUser.userType.code == 'TCH'}">
+			<div class="vertical-alignment-helper">
+				<div class="modal-dialog vertical-align-center" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title">알림장 등록</h4>
+						</div>					
+						<div class="modal-body">
+							<form method="post" id="notice-item-form">
+								<div class="form-group">
+									<label>제목</label>
+									<input type="text" class="form-control" name="noticeTitle">
+								</div>
+								<div class="form-group">
+									<label>내용</label>
+									<textarea class="form-control" name="noticeContent"></textarea>
+								</div>
+								<input type="hidden" name="noticeType" />
+								<input type="hidden" name="noticeId" />
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="modal-footer-btn diary-save">저장</button>
+							<button type="button" class="modal-footer-btn" data-dismiss="modal">취소</button>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</section>
 </div>
 <script th:inline="javascript" layout:fragment="script">
 	/*<![CDATA[*/
+		
+	/*<![CDATA[*/
+	function openRegistForm(){
+		changeNoticeFormTitle("공지사항 등록");
+		resetNoticeFrom();
+		showNoticeFormModal();
+		changeSaveClickEvent(createNotice);
+	}
+	
+	function openUpdateFrom(noticeId){
+		
+		changeNoticeFormTitle("공지사항 편집");
+		resetNoticeFrom();
+		changeSaveClickEvent(updateNotice);
+		
+		var uri = "/rest/notice/" + noticeId;
+		$.get(uri, function(result, status) {
+			if (result.code == "0") {
+				var noticeContent = result.data.noticeContent.replace(/<br>/gi, "\n");
+				noticeContent = noticeContent.replace(/<br\/>/gi, "\n");
+				$("#notice-item-form input[name=noticeTitle]").val(result.data.noticeTitle);
+				$("#notice-item-form textarea[name=noticeContent]").val(noticeContent);
+				$("#notice-item-form input[name=noticeId]").val(result.data.noticeId);
+				$("#notice-item-form input[name=noticeType]").val(result.data.noticeType);
+				
+				showNoticeFormModal();
+			} else {
+				alert("조회에 실패하였습니다.");
+			}
+		});
+	}
+	
+	function resetNoticeFrom() {
+		$("#notice-item-form input[name=noticeTitle]").val();
+		$("#notice-item-form textarea[name=noticeContent]").val();
+		$("#notice-item-form input[name=noticeId]").val();
+		$("#notice-item-form input[name=noticeType]").val("NOTICE");
+	}
+	
+	function changeSaveClickEvent(eventListener) {
+		$(".diary-save").click(eventListener)	
+	}
+	
+	function changeNoticeFormTitle(title) {
+		$("#regsit-form .modal-title").text(title);
+	}
+	
+	function showNoticeFormModal() {
+		$('#regsit-form').modal('show');
+	}
+	
+	function hideNoticeFormModal() {
+		$('#regsit-form').modal('hide');
+	}
+	
+	function createNotice() {
+		var uri = "/rest/notice/create";
+		var diaryForm = $("#notice-item-form");
+		
+		$.ajax({
+			type : "POST"
+			, url : uri
+			, data : getJsonFormData(diaryForm)
+			, headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			}
+			, dataType : "JSON"
+			, success : function(){
+				console.log("success");
+				alert("성공적으로 저장되었습니다.")
+				hideNoticeFormModal();
+				window.location.reload(true);
+			}
+		});
+	}
+	
+	function updateNotice() {
+		var uri = "/rest/notice/update";
+		var diaryForm = $("#notice-item-form");
+		
+		$.ajax({
+			type : "PUT"
+			, url : uri
+			, data : getJsonFormData(diaryForm)
+			, headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			}
+			, dataType : "JSON"
+			, success : function(){
+				alert("성공적으로 저장되었습니다.")
+				console.log("success");
+				hideNoticeFormModal();
+				window.location.reload(true);
+			}
+		});
+	}
+	
+	function deleteNotice(noticeId) {
+		var result = confirm("이 공지사항 내용을 삭제하시겠습니까?");
+		
+		if (!result) {
+			return false;
+		}
+		
+		var uri = "/rest/notice/" + noticeId;
+		$.ajax({
+			type : "DELETE"
+			, url : uri
+			, headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			}
+			, dataType : "JSON"
+			, success : function(){
+				alert("선택한 알림장 내용이 삭제되었습니다.");
+				console.log("success");
+				window.location.reload(true);
+			}
+		});
+	}
+	
+	function getJsonFormData(form) {
+		return JSON.stringify($(form).serializeObject());
+	}
+
+	$.fn.serializeObject = function() {
+		var o = {};
+		var a = this.serializeArray();
+		$.each(a, function() {
+			if (o[this.name] !== undefined) {
+				if (!o[this.name].push) {
+					o[this.name] = [ o[this.name] ];
+				}
+				o[this.name].push(this.value || '');
+			} else {
+				o[this.name] = this.value || '';
+			}
+		});
+		return o;
+	};
 	/*]]>*/
 </script>
 </body>

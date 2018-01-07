@@ -70,7 +70,7 @@
 			width: 100%;
 		}
 		.panel-function span{
-			margin: 2vw 0;
+			margin: 0 1vw;
 		}
 		span.diary-date {
 			display: inline-block;
@@ -196,11 +196,12 @@
 			</div>
 		</section>
 		
+		<!-- Notice Regist button -->
 		<div class="regist-wrap" th:if="${loginUser.userType.code == 'TCH'}">
 			<span class="glyphicon glyphicon-plus" onclick="openRegistForm()"></span>
 		</div>
 		
-		<!-- Info Modal Wrap -->
+		<!-- Notice Modal Wrap -->
 		<div class="modal modal-center" id="regsit-form" tabindex="-1" role="dialog" th:if="${loginUser.userType.code == 'TCH'}">
 			<div class="vertical-alignment-helper">
 				<div class="modal-dialog vertical-align-center" role="document">
@@ -253,8 +254,11 @@
 		var uri = "/rest/diary/" + noticeId;
 		$.get(uri, function(result, status) {
 			if (result.code == "0") {
+				var noticeContent = result.data.noticeContent.replace(/<br>/gi, "\n");
+				noticeContent = noticeContent.replace(/<br\/>/gi, "\n");
+				
 				$("#diary-item-form input[name=noticeTitle]").val(result.data.noticeTitle);
-				$("#diary-item-form textarea[name=noticeContent]").val(result.data.noticeContent.replace(/<br>/gi, "\n"));
+				$("#diary-item-form textarea[name=noticeContent]").val(noticeContent);
 				$("#diary-item-form input[name=noticeId]").val(result.data.noticeId);
 				$("#diary-item-form input[name=noticeType]").val(result.data.noticeType);
 				
@@ -302,6 +306,7 @@
 			}
 			, dataType : "JSON"
 			, success : function(){
+				alert("성공적으로 저장되었습니다.")
 				console.log("success");
 				hideDiaryFormModal();
 				window.location.reload(true);
@@ -323,6 +328,7 @@
 			}
 			, dataType : "JSON"
 			, success : function(){
+				alert("성공적으로 저장되었습니다.")
 				console.log("success");
 				hideDiaryFormModal();
 				window.location.reload(true);
@@ -347,6 +353,7 @@
 			}
 			, dataType : "JSON"
 			, success : function(){
+				alert("선택한 공지사항 내용이 삭제되었습니다.");
 				console.log("success");
 				window.location.reload(true);
 			}

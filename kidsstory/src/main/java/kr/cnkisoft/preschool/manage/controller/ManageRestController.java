@@ -24,7 +24,7 @@ public class ManageRestController {
 	@Autowired
 	MenuService menuService;
 	
-	@GetMapping(value="/rest/diary/{diaryId}")
+	@GetMapping(value={"/rest/diary/{diaryId}", "/rest/notice/{diaryId}"})
 	public CommonResultVo getDairy(
 			@PathVariable("diaryId")Integer diaryId) {
 		CommonResultVo result = new CommonResultVo();
@@ -32,7 +32,7 @@ public class ManageRestController {
 		return result;
 	}
 	
-	@PostMapping(value="/rest/diary/create")
+	@PostMapping(value={"/rest/diary/create", "/rest/notice/create"})
 	public CommonResultVo createDairy(
 			@RequestBody PreschoolNoticeBoardDto noticeBoard) {
 		CommonResultVo result = new CommonResultVo();
@@ -41,7 +41,7 @@ public class ManageRestController {
 		return result;
 	}
 
-	@PutMapping(value="/rest/diary/update")
+	@PutMapping(value={"/rest/diary/update", "/rest/notice/update"})
 	public CommonResultVo noticeList(
 			@RequestBody PreschoolNoticeBoardDto noticeBoard) {
 		CommonResultVo result = new CommonResultVo();
@@ -50,7 +50,7 @@ public class ManageRestController {
 		return result;
 	}
 	
-	@DeleteMapping(value="/rest/diary/{diaryId}")
+	@DeleteMapping(value={"/rest/diary/{diaryId}", "/rest/notice/{diaryId}"})
 	public CommonResultVo deleteDairy(
 			@PathVariable("diaryId")Integer diaryId) {
 		CommonResultVo result = new CommonResultVo();

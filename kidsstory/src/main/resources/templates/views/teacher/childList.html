@@ -397,7 +397,7 @@
 				var form = $("#profile-form")[0];
 				var file = $(this).prop('files')[0]
 				var formData = new FormData(form);
-				
+
 				$.ajax({
 					url : "/rest/user/profileImage"
 					, enctype: "multipart/form-data"
