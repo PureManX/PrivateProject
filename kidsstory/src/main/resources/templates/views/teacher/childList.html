@@ -27,7 +27,7 @@
 			padding: 1vw 3vw;
 		}
 		div.childListWrap ul li div.childList {
-			width: 100vw;
+			width: 100%;
 			height: 20vw;
 		}
 		div.childListWrap ul li div.childList div.childImgWrap {
@@ -310,7 +310,7 @@
 			var innerHtml = "";
 			innerHtml += '<li id="child_{childId}"><div class="childList"><div class="childImgWrap pull-left"><img src="{imgSrc}" class="img-circle" onclick="showChildProfile({childId})"></div>';
 			innerHtml += '<div class="childTxtWrap pull-left"><h4 class="childName fontsize_15e">{childNm}</h4><h4 class="parentName fontsize_11e">학부모 : {parentNm}</h4></div>';
-			innerHtml += '<div class="funcWrap pull-left"><a href="tel:{parentTel}"><img alt="통화버튼" src="/images/button/btn_call.png"></a>';
+			innerHtml += '<div class="funcWrap pull-right"><a href="tel:{parentTel}"><img alt="통화버튼" src="/images/button/btn_call.png"></a>';
 			innerHtml += '<a href="/user/chat?targetId={childId}"><img alt="메세지" src="/images/button/btn_msg.png"></a></div></div></li>';
 
 			innerHtml = innerHtml.replace("{imgSrc}", "/file/data/" + childVo.imgSrc);
