@@ -28,21 +28,21 @@
 			, concat('/', lcase(file.FILE_TYPE), '/', file.FILE_NM) AS IMG_SRC
 		FROM
 			PRESCH_MENU menu
-			JOIN FILE_INFO file ON menu.MENU_IMG_ID = file.FILE_ID AND file.FILE_TYPE = 'MENU'
+			LEFT JOIN FILE_INFO file ON menu.MENU_IMG_ID = file.FILE_ID AND file.FILE_TYPE = 'MENU'
 		WHERE
 			SCH_CD = #{schCd}
 			AND MENU_DATE = #{menuDate}
 		ORDER BY
 			MENU_DATE, MENU_TYPE			
 	</select>
-	
+
 	<select id="selectListWeeklyMenu" resultMap="dailyMenu" parameterType="map">
 		SELECT
 			menu.*
 			, concat('/', lcase(file.FILE_TYPE), '/', file.FILE_NM) AS IMG_SRC
 		FROM
 			PRESCH_MENU menu
-			JOIN FILE_INFO file ON menu.MENU_IMG_ID = file.FILE_ID AND file.FILE_TYPE = 'MENU'
+			LEFT JOIN FILE_INFO file ON menu.MENU_IMG_ID = file.FILE_ID AND file.FILE_TYPE = 'MENU'
 		WHERE
 			SCH_CD = #{schCd}
 			AND MENU_DATE BETWEEN #{startDate} AND #{endDate} 
@@ -50,4 +50,18 @@
 			MENU_DATE, MENU_TYPE			
 	</select>
 	
+	<insert id="insertMenuItme" parameterType="kr.cnkisoft.preschool.manage.domain.PreschoolMenuDto">
+		INSERT INTO PRESCH_MENU
+			(SCH_CD, MENU_DATE, MENU_TYPE, MENU_IMG_ID, MENU_CONTENT, CREATED_DT, CREATED_BY, UPDATED_DT, UPDATED_BY)
+		VALUES
+			(#{schCd}, #{menuDate}, #{menuType}, #{menuImgId}, #{menuContent}, NOW(), #{createdBy}, NOW(), #{createdBy})
+	</insert>
+
+	<delete id="deleteMenuItem">
+		DELETE 
+		FROM 
+			PRESCH_MENU
+		WHERE 
+			MENU_ID=#{menuId}
+	</delete>
 </mapper>

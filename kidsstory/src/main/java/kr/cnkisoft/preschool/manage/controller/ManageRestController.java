@@ -1,7 +1,6 @@
 package kr.cnkisoft.preschool.manage.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.cnkisoft.preschool.common.domain.CommonResultVo;
+import kr.cnkisoft.preschool.manage.domain.PreschoolMenuDto;
 import kr.cnkisoft.preschool.manage.domain.PreschoolNoticeBoardDto;
 import kr.cnkisoft.preschool.manage.service.MenuService;
 import kr.cnkisoft.preschool.manage.service.NoticeService;
@@ -58,5 +58,23 @@ public class ManageRestController {
 		
 		return result;
 	}
+	
 
+	@PostMapping(value={"/rest/menu/create"})
+	public CommonResultVo createMenu(
+			@RequestBody PreschoolMenuDto preschoolMenu) {
+		CommonResultVo result = new CommonResultVo();
+		menuService.createMenuItem(preschoolMenu);
+		
+		return result;
+	}
+
+	@DeleteMapping(value={"/rest/menu/{menuId}"})
+	public CommonResultVo deleteMenu(
+			@PathVariable("menuId")Integer menuId) {
+		CommonResultVo result = new CommonResultVo();
+		menuService.removeMenuItem(menuId);
+		
+		return result;
+	}
 }
