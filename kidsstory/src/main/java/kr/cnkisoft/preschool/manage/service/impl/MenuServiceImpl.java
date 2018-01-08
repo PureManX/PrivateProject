@@ -4,9 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import kr.cnkisoft.framework.enums.MenuType;
 import kr.cnkisoft.framework.security.AuthUtils;
 import kr.cnkisoft.framework.utils.DateUtils;
+import kr.cnkisoft.preschool.common.file.domain.FileInfoDto;
+import kr.cnkisoft.preschool.common.file.service.FileService;
 import kr.cnkisoft.preschool.manage.domain.DailyMenuVo;
 import kr.cnkisoft.preschool.manage.domain.PreschoolMenuDto;
 import kr.cnkisoft.preschool.manage.mapper.MenuMapper;
@@ -18,6 +22,9 @@ public class MenuServiceImpl implements MenuService {
 
 	@Autowired
 	MenuMapper menuMapper;
+	
+	@Autowired
+	FileService fileService;
 	
 	@Override
 	public List<DailyMenuVo> getWekklyMenuListOfCurrentLoginUser() {
@@ -52,16 +59,23 @@ public class MenuServiceImpl implements MenuService {
 	}
 
 	@Override
-	public int createMenuItem(PreschoolMenuDto preschoolMenu) {
+	public int createMenuItem(String menuType, String menuContent, MultipartFile menuIamge) {
+		FileInfoDto menuUploadFile = fileService.createMenuImage(menuIamge);
+		
 		UserVo loginUser = AuthUtils.getLoginUser().getUser();
 		String preschoolCode = loginUser.getPreschool().getSchCd();
 		Integer loginUserId = loginUser.getUserId();
-		String convertedCrToComma = preschoolMenu.getMenuContent().replaceAll("\n", ",");
 		
+		String convertedCrToComma = menuContent.replaceAll("\n", ",");
+		
+		PreschoolMenuDto preschoolMenu = new PreschoolMenuDto();
+		
+		preschoolMenu.setMenuType(MenuType.fromCode(menuType));
 		preschoolMenu.setCreatedBy(loginUserId);
 		preschoolMenu.setSchCd(preschoolCode);
 		preschoolMenu.setMenuDate(DateUtils.currentDateOfYear());
 		preschoolMenu.setMenuContent(convertedCrToComma);
+		preschoolMenu.setMenuImgId(menuUploadFile.getFileId());
 		return menuMapper.insertMenuItme(preschoolMenu);
 	}
 

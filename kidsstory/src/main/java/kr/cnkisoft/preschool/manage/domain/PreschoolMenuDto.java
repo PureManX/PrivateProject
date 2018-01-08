@@ -3,8 +3,10 @@ package kr.cnkisoft.preschool.manage.domain;
 import java.util.Arrays;
 import java.util.List;
 
+import groovy.transform.builder.Builder;
 import kr.cnkisoft.framework.enums.MenuType;
 import kr.cnkisoft.preschool.common.domain.CommonDto;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@AllArgsConstructor
+@Builder
 public class PreschoolMenuDto extends CommonDto{
 	Integer menuId;
 	String schCd;

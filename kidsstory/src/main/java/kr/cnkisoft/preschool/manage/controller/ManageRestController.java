@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.cnkisoft.preschool.common.domain.CommonResultVo;
-import kr.cnkisoft.preschool.manage.domain.PreschoolMenuDto;
 import kr.cnkisoft.preschool.manage.domain.PreschoolNoticeBoardDto;
 import kr.cnkisoft.preschool.manage.service.MenuService;
 import kr.cnkisoft.preschool.manage.service.NoticeService;
@@ -62,9 +63,12 @@ public class ManageRestController {
 
 	@PostMapping(value={"/rest/menu/create"})
 	public CommonResultVo createMenu(
-			@RequestBody PreschoolMenuDto preschoolMenu) {
+			@RequestParam MultipartFile menuImage
+			, @RequestParam(required=false) String menuType
+			, @RequestParam(required=false) String menuContent
+			) {
 		CommonResultVo result = new CommonResultVo();
-		menuService.createMenuItem(preschoolMenu);
+		menuService.createMenuItem(menuType, menuContent, menuImage);
 		
 		return result;
 	}

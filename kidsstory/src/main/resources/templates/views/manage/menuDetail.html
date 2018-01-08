@@ -102,6 +102,8 @@
 			font-weight: bold;
 		}
 		.modal-body {
+			max-height: 130vw;
+			overflow: auto;
 		}
 		.modal-content {
 			border: none;
@@ -156,7 +158,11 @@
 			border-left: 1px solid #e5e5e5;
 		}
 		.modal textarea{
-			height: 60vw;
+			height: 25vw;
+		}
+		.modal img{
+			width: 100%;
+			min-height: 30vw;
 		}
 		
 		/* no-data 영역 */
@@ -174,6 +180,24 @@
 			margin-bottom: 10vw;
 		}
 		.no-data h2 {
+			font-size: 5vw;
+		}
+		
+		/* hide input file */		
+		input.file , .ui-input-text{
+			visibility: hidden;
+			position: absolute;
+		}
+		
+		.form-group label {
+			font-size: 4vw;
+			margin-bottom: 1vw;
+		}
+		
+		span.glyphicon.glyphicon-camera.browse {
+			line-height: 5vw;
+			display: inline-block;
+			float: right;
 			font-size: 5vw;
 		}
 	</style>
@@ -199,7 +223,7 @@
 							<span class="glyphicon glyphicon-pencil" onclick="readyButton()"></span>
 <!-- 							<span class="glyphicon glyphicon-trash" onclick="readyButton()"></span> -->
 <!-- 							<span class="glyphicon glyphicon-pencil" th:onclick="'openUpdateFrom(' + ${menuDetailItem.menuId} + ')'"></span> -->
-							<span class="glyphicon glyphicon-trash" th:onclick="'deleteNotice(' + ${menuDetailItem.menuId} + ')'"></span>
+							<span class="glyphicon glyphicon-trash" th:onclick="'deleteMenu(' + ${menuDetailItem.menuId} + ')'"></span>
 						</div>
 					</div>
 					<div class="no-data" th:if="${menuDetailItem.imgSrc == null}">
@@ -231,7 +255,7 @@
 							<h4 class="modal-title">알림장 등록</h4>
 						</div>
 						<div class="modal-body">
-							<form method="post" id="notice-item-form">
+							<form method="post" id="menu-item-form" enctype="multipart/form-data" data-ajax="false">
 								<div class="form-group">
 									<label>식단유형</label>
 									<select class="form-control" name="menuType">
@@ -243,6 +267,12 @@
 								<div class="form-group">
 									<label>내용</label>
 									<textarea class="form-control" name="menuContent"></textarea>
+								</div>
+								<div class="form-group">
+									<label>식단사진</label>
+									<span class="glyphicon glyphicon-camera browse" onclick="openFileUpload()"></span>
+									<img id="menu-upload-image" />
+									<input type="file" class="file" name="menuImage" accept="image/*" onchange="loadFile(event)"/>
 								</div>
 								<input type="hidden" name="menuId" />
 							</form>
@@ -264,23 +294,23 @@
 		changeNoticeFormTitle("식단 등록");
 		resetNoticeFrom();
 		showNoticeFormModal();
-		changeSaveClickEvent(createNotice);
+		changeSaveClickEvent(createMenu);
 	}
 	
 	function openUpdateFrom(noticeId){
 		
 		changeNoticeFormTitle("식단 편집");
 		resetNoticeFrom();
-		changeSaveClickEvent(updateNotice);
+		changeSaveClickEvent(updateMenu);
 		
 		var uri = "/rest/menu/" + noticeId;
 		$.get(uri, function(result, status) {
 			if (result.code == "0") {
 				var noticeContent = result.data.noticeContent.replace(/<br>/gi, "\n");
 				noticeContent = noticeContent.replace(/<br\/>/gi, "\n");
-				$("#notice-item-form select[name=menuType]").val(result.data.noticeTitle);
-				$("#notice-item-form textarea[name=menuContent]").val(noticeContent);
-				$("#notice-item-form input[name=menuId]").val(result.data.menuId);
+				$("#menu-item-form select[name=menuType]").val(result.data.noticeTitle);
+				$("#menu-item-form textarea[name=menuContent]").val(noticeContent);
+				$("#menu-item-form input[name=menuId]").val(result.data.menuId);
 				
 				showNoticeFormModal();
 			} else {
@@ -290,9 +320,9 @@
 	}
 	
 	function resetNoticeFrom() {
-		$("#notice-item-form select[name=menuType]").val(0);
-		$("#notice-item-form textarea[name=menuContent]").val("");
-		$("#notice-item-form input[name=menuId]").val("");
+		$("#menu-item-form select[name=menuType]").val(0);
+		$("#menu-item-form textarea[name=menuContent]").val("");
+		$("#menu-item-form input[name=menuId]").val("");
 	}
 	
 	function changeSaveClickEvent(eventListener) {
@@ -311,19 +341,31 @@
 		$('#regsit-form').modal('hide');
 	}
 	
-	function createNotice() {
+	function createMenu() {
 		var uri = "/rest/menu/create";
-		var diaryForm = $("#notice-item-form");
+
+		var menuType = $("#menu-item-form select[name=menuType]").val();
+		var menuContent = $("#menu-item-form textarea[name=menuContent]").val();
+		var meneImage = $("#menu-item-form input[name=menuId]").val("");
+		
+		var file = $("input[name=menuImage]").prop('files')[0]
+		var formData = new FormData();
+		formData.append("menuType", menuType);
+		formData.append("menuContent", menuContent);
+		formData.append("menuImage", file, file.name);
 		
 		$.ajax({
-			type : "POST"
-			, url : uri
-			, data : getJsonFormData(diaryForm)
+			url : uri
+			, enctype: "multipart/form-data"
+			, processData : false
+			, contentType : false
+			, cache: false
+			, data : formData
 			, headers: {
 				'Accept': 'application/json',
-				'Content-Type': 'application/json'
 			}
-			, dataType : "JSON"
+			, type : "POST"
+			, method : "POST"
 			, success : function(){
 				console.log("success");
 				alert("성공적으로 저장되었습니다.")
@@ -333,9 +375,9 @@
 		});
 	}
 	
-	function updateNotice() {
+	function updateMenu() {
 		var uri = "/rest/menu/update";
-		var diaryForm = $("#notice-item-form");
+		var diaryForm = $("#menu-item-form");
 		
 		$.ajax({
 			type : "PUT"
@@ -355,7 +397,7 @@
 		});
 	}
 	
-	function deleteNotice(noticeId) {
+	function deleteMenu(noticeId) {
 		var result = confirm("이 식단을 삭제하시겠습니까?");
 		
 		if (!result) {
@@ -377,6 +419,18 @@
 				window.location.reload(true);
 			}
 		});
+	}
+	
+	function openFileUpload() {
+		var file = $("input[name=menuImage]");
+
+		file.val("");
+		file.trigger('click');
+	}
+	
+	function loadFile(event) {
+	    var output = document.getElementById("menu-upload-image");
+	    output.src = URL.createObjectURL(event.target.files[0]);
 	}
 	
 	function getJsonFormData(form) {

@@ -124,6 +124,41 @@ public class FileServiceImpl implements FileService {
 	}
 	
 	@Override
+	public FileInfoDto createMenuImage(MultipartFile file) {
+		// 로그인 유저 정보 
+		LoginUserVo loginUser = AuthUtils.getLoginUser();
+		String filetype = "MENU";
+		FileInfoDto fileInfo = new FileInfoDto();
+		
+		try {
+			// 파일 Path 처리
+			String homePath = Paths.get(FileConstant.getDataFolderPath(filetype)).toString();
+			String oriFileNm = file.getOriginalFilename();
+			String fileName = UUID.randomUUID().toString().replace("-", "");
+			
+			fileInfo.setFileNm(fileName + ".PNG");
+			fileInfo.setFileType(filetype.toUpperCase());
+			fileInfo.setClsId(null);
+			fileInfo.setCreatedBy(loginUser.getLoginUserId());
+			
+			log.info("profile upload info = {}", fileInfo);
+			fileMapper.insertFileInfo(fileInfo);
+			FileUtils.forceMkdir(new File(homePath));
+			File dest = new File(homePath + "/" + fileName + ".PNG");
+			
+			makeThumbNailImage(file, dest);
+			
+			log.info("file upload Success : {}", oriFileNm);
+			fileInfo.setImgSrc(FileConstant.getFilePath(fileInfo));
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("파일 업로드에 실패했습니다.", e);
+		}
+		
+		return fileInfo;
+	}
+	
+	@Override
 	public List<DailyGalleryListVo> getDailyGalleryListByClass(Integer classId) {
 		int count = 5;
 		List<DailyGalleryListVo> resulList = new ArrayList<>();
@@ -172,5 +207,6 @@ public class FileServiceImpl implements FileService {
 		
 		return result;
 	}
+
 
 }

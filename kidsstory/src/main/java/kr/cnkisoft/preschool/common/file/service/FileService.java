@@ -13,4 +13,5 @@ public interface FileService {
 	public List<DailyGalleryListVo> getDailyGalleryListByClass(Integer classId);
 	public FileInfoDto createFile(MultipartFile file, String filetype, Integer classId);
 	public FileInfoDto createProfileImage(MultipartFile file);
+	public FileInfoDto createMenuImage(MultipartFile file);
 }
