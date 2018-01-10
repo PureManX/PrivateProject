@@ -104,6 +104,18 @@ public class BoardRestController {
 		boardService.startBoardService(lineId);
 		return new CommonResultVo();
 	}
+
+	/**
+	 * 선생님 : 노선 운행 종료
+	 * @param lineId
+	 * @return
+	 */
+	@RequestMapping(value="/rest/board/service/{lineId}", method=RequestMethod.PUT)
+	@ResponseBody
+	public CommonResultVo endBoardService(@PathVariable Integer lineId) {
+		boardService.endBoardService(lineId);
+		return new CommonResultVo();
+	}
 	
 	/**
 	 * 선생님 : 운행 정보 조회

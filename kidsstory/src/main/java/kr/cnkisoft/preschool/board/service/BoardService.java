@@ -18,6 +18,7 @@ public interface BoardService {
 	public void cancelReserverUnboard(Integer lineHistId);
 	public void sendPushToAllUsersInBusLine(Integer lineId, String histDate);
 	public void startBoardService(Integer lineId);
+	public void endBoardService(Integer lineId);
 	public Integer getCurrentUserBusLineId();
 	public BoardLineInfoVo getBoardLineInfo(Integer lineId);
 	public BoardLineServiceDto getBoardService(Integer lineId);

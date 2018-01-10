@@ -63,6 +63,9 @@ public interface BoardMapper {
 //			" WHERE detail.LINE_ID = #{lineId} AND hist.LINE_HIST_ID IS NULL" +
 //			" ORDER BY BOARD_ORDER")
 	public List<BoardLineDetailDto> selectListNonBoardingListByLineId(@Param("lineId")Integer lineId, @Param("histDate")String histDate);
+	
+	// 버스 노선 완료 대상 리스트 추출
+	public List<BoardLineDetailDto> selectListBoardingCompleteListByLineId(@Param("lineId")Integer lineId, @Param("histDate")String histDate);
 
 
 	@Insert("INSERT INTO PRESCH_LINE_SERVICE (LINE_ID, SERVICE_TEACHER_ID, SERVICE_START_DT, SERVICE_END_DT, CREATED_DT, CREATED_BY) " +
@@ -108,4 +111,10 @@ public interface BoardMapper {
 	
 	public BoardLineWithDetailVo selectAttBoardLineDetailByStudentId(@Param("studentId")Integer studentId);
 	public BoardLineWithDetailVo selectComBoardLineDetailByStudentId(@Param("studentId")Integer studentId);
+	
+	// 운행중인 버스 노선 조회
+	public BoardLineServiceDto seelctInProgressBoardServiceByLineId(@Param("lineId")Integer lineId);
+	
+	// 운행중인 버스 노선 종료 처리
+	public int updateBoardServiceEndDate(BoardLineServiceDto inProgressBoardLineService);
 }

@@ -62,7 +62,23 @@
 		ORDER BY
 			BOARD_ORDER
 	</select>
+
 	
+	<select id="selectListBoardingCompleteListByLineId" resultType="kr.cnkisoft.preschool.board.vo.BoardLineDetailDto"
+		parameterType="map">
+		SELECT 
+			detail.*
+		FROM
+			PRESCH_LINE_DTL detail
+			LEFT JOIN PRESCH_LINE_DTL_HIST hist ON detail.LINE_DTL_ID = hist.LINE_DTL_ID AND hist.HIST_DATE = #{histDate}
+			JOIN PRESCH_LINE_STDU_HIST stduHist ON hist.LINE_DTL_ID = stduHist.LINE_DTL_ID 
+		WHERE 
+			detail.LINE_ID = #{lineId}
+			AND stduHist.BOARD_DIV = 'C'
+		ORDER BY
+			BOARD_ORDER
+	</select>
+
 	<select id="selectAttBoardLineDetailByStudentId" resultType="kr.cnkisoft.preschool.board.vo.BoardLineWithDetailVo"
 		parameterType="map">
 		SELECT	/* 탑승 노선 정보 조회 (학생 Id) */
@@ -103,4 +119,22 @@
 			(#{lineDtlId}, #{userId}, #{histDate}, #{boardDiv}, #{unbReason}, NOW(), #{createdBy}, NOW(), #{createdBy})
 	</insert>
 	
+	<select id="seelctInProgressBoardServiceByLineId" parameterType="map"
+		resultType="kr.cnkisoft.preschool.board.vo.BoardLineServiceDto">
+		SELECT /* 운행중인 버스노선 조회(버스 노선 id)*/
+			*
+		FROM 
+			PRESCH_LINE_SERVICE
+		WHERE
+			LINE_SERVICE_ID = #{lineId}
+	</select>
+	
+	<update id="updateBoardServiceEndDate" parameterType="kr.cnkisoft.preschool.board.vo.BoardLineServiceDto">
+		UPDATE 
+			PRESCH_LINE_SERVICE
+		SET 
+			SERVICE_END_DT = NOW()
+		WHERE
+			LINE_SERVICE_ID = #{lineId}
+	</update>
 </mapper>

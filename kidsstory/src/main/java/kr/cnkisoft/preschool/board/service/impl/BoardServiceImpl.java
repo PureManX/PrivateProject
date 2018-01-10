@@ -13,6 +13,7 @@ import kr.cnkisoft.preschool.user.domain.UserVo;
 import kr.cnkisoft.preschool.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 
+import org.omg.CORBA.BAD_INV_ORDER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -28,6 +29,7 @@ import java.util.List;
 public class BoardServiceImpl implements BoardService {
 
 	static final String PUSH_MESSAGE_BUS_START = "<{lineName}>노선 <{bus}>버스가 유치원에서 출발하였습니다.";
+	static final String PUSH_MESSAGE_BUS_END = "<{lineName}>노선 <{bus}>버스가 유치원에 도착하였습니다.";
 	static final String PUSH_MESSAGE_START_FROM_PRVIOUS_LOCATION = "버스가 다음 목적지로<{location}> 출발하였습니다. 승차 준비해주세요.";
 
 	@Autowired
@@ -135,6 +137,45 @@ public class BoardServiceImpl implements BoardService {
 		// 대상 부모 전체에 푸시 메세지 전달
 
 		sendPushToAllUsersInBusLine(lineId, DateUtils.currentDateOfYear());
+	}
+
+	
+	@Override
+	public void endBoardService(Integer lineId) {
+		BoardLineServiceDto inProgressBoardLineService = boardMapper.seelctInProgressBoardServiceByLineId(lineId);
+		
+		boardMapper.updateBoardServiceEndDate(inProgressBoardLineService);
+		
+		sendPushToBoardCompleteUsersInBusLine(lineId, DateUtils.currentDateOfYear());
+	}
+	
+	
+	public void sendPushToBoardCompleteUsersInBusLine(Integer lineId, String histDate) {
+		BoardLineInfoVo lineInfo = getBoardLineInfo(lineId);
+
+		List<BoardLineDetailDto> boardLineDetailDtoList = boardMapper.selectListBoardingCompleteListByLineId(lineId, histDate);
+
+		for (BoardLineDetailDto boardLineDetail: boardLineDetailDtoList) {
+			List<StudentVo> stationStudentList = userService.getStudentListByBoardLineDetailId(boardLineDetail.getLineDtlId());
+
+			for (StudentVo student : stationStudentList) {
+				// 학생의 모든 부모에게 푸시 발송
+				
+				for (ParentVo parent : student.getParents()) {
+					PreSchoolPushIdDto pushInfo = parent.getPushInfo();
+					
+					if (pushInfo != null && !StringUtils.isEmpty(pushInfo.getDeviceId())) {
+						String message = PUSH_MESSAGE_BUS_END.replace("{lineName}", lineInfo.getLine().getLineNm());
+						message = message.replace("{bus}", lineInfo.getBus().getBusNum());
+						log.info("푸시 발송 [학생 ID : {}, 학생 : {}, 부모 : {}, 전화번호 : {}]", student.getUserId(), student.getUserNm(), parent.getUserNm(), parent.getContact());
+						pushService.sendPush(pushInfo.getDeviceId(), message, "http://cnkisoft.cafe24.com/board/parent/busline");
+					} else {
+						log.warn("푸시 발송 정보 미존재 [학생 ID : {}, 학생 : {}, 부모 : {}, 전화번호 : {}]", student.getUserId(), student.getUserNm(), parent.getUserNm(), parent.getContact());
+					}
+					
+				}
+			}
+		}
 	}
 
 	@Override

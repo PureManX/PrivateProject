@@ -438,10 +438,17 @@
 	}
 
 	function addLast() {
-		var busLineLastItemHtml = '<li class="bus-line-item"><div class="bus-line-footer">'+ 
-			'<button class="btn bg-red btn-xs board-service-button" onclick="deleteBoardService()">기록삭제</button></div></li>';
+		if (loginUserType == 'TCH') {
+			var busLineLastItemHtml = '<li class="bus-line-item"><div class="bus-line-footer">'+ 
+				'<button class="btn bg-red btn-xs board-service-button" onclick="deleteBoardService()">기록삭제</button>' +
+				'<button class="btn bg-red btn-xs board-service-button" onclick="endBoardService()">종료</button>' +
+				'</div></li>';
+		} else {
+			var busLineLastItemHtml = '<li class="bus-line-item"><div class="bus-line-footer">'+ 
+			'</div></li>';
+		}
+		
 		$("ul.timeline").append(busLineLastItemHtml);
-
 	}
 
 	function addList(lineDtlData, curFlg) {
@@ -545,10 +552,10 @@
 	
 	function boardProcess(liId) {
 		// 운행 시작 되었는지 체크 처리
-// 		if (!boardServiceStarted) {
-// 			alert("아직 노선 운행을 시작하지 않았습니다\n운행 출발 버튼을 눌러주세요");
-// 			return false;		
-// 		}
+		if (!boardServiceStarted) {
+			alert("아직 노선 운행을 시작하지 않았습니다\n운행 출발 버튼을 눌러주세요");
+			return false;		
+		}
 		
 		var param = {};
 
@@ -599,6 +606,22 @@
 			},
 			success : function(){
 				getBoardService();
+				console.log("success");
+			},
+			dataType : "JSON"
+		});
+	}
+	
+	function endBoardService() {
+		$.ajax({
+			type : "PUT",
+			url : "/rest/board/service/" + lineId,
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			success : function(){
+				alert("운행이 종료되었습니다.");
 				console.log("success");
 			},
 			dataType : "JSON"
