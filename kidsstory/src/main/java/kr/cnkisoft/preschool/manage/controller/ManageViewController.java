@@ -83,5 +83,13 @@ public class ManageViewController {
 		mav.addObject("noticeList", noticeService.getDiaryListOfCurrentLoginUser());
 		return mav;
 	}
+	
+	@RequestMapping(value="/schedule/list")
+	public ModelAndView scheduleList() {
+		ModelAndView mav = new ModelAndView();
 
+		String viewName = "views/manage/schedule_list";
+		mav.setViewName(viewName);
+		return mav;
+	}
 }
