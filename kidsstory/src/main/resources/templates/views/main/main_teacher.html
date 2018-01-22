@@ -70,6 +70,27 @@
 		    float: left;
 			padding: 2px;
 			border: 2px solid #EEEEEE;
+			overflow: hidden;
+			border-radius: 50%;
+		}
+		.profile-image-wrap .child-profile-image {
+			position: absolute;
+			left: -100%;
+			right: -100%;
+			top: -100%;
+			bottom: -100%;
+			margin: auto;
+			width: 60vw;
+			height: auto;
+		}
+		div.profile-image-wrap span.glyphicon-camera{
+			position: absolute;
+			font-size: 6vw;
+			display: block;
+			z-index: 999;
+			color: #FFF;
+			left: 13vw;
+			top: 25vw;
 		}
 		div.child-porfile-wrap div.profile-text-wrap {
 			display: block;
@@ -225,8 +246,14 @@
 		<section class="mContents" layout:fragment="content">
 			<div class="child-porfile-wrap">
 				<div class="item profile-wrap">
-					<div class="profile-image-wrap img-circle">
-						<img th:src="@{/file/data/{imgSrc}(imgSrc=${loginUser.user.imgSrc})}" class="img-circle" />
+					<div class="profile-image-wrap">
+						<img th:src="@{/file/data/{imgSrc}(imgSrc=${loginUser.user.imgSrc})}" class="teacher-profile-image img-circle" />
+						<form th:action="@{/rest/user/profileImage}" method="post" id="profile-form" enctype="multipart/form-data" data-ajax="false">
+							<input type="file" class="file" name="file" multiple />
+							<input type="hidden" name="userId" id="profile-form-teacher-id"
+								th:value="${loginUser.loginUserId}"/>
+						</form>
+						<span class="glyphicon glyphicon-camera browse" onclick="clickUploadProfile()"></span>
 					</div>
 					<div class="profile-desc-wrap">
 						<div class="profile-text-wrap">
@@ -259,7 +286,7 @@
 					<a onclick="moveToGallery()">
 						<img class="menuBtn" th:src="@{/images/menu/parents/btn_album.png}" />
 					</a>
-					<a onclick="readyButton()">
+					<a th:href="@{/schedule/list}">
 						<img class="menuBtn" th:src="@{/images/menu/parents/btn_calendar.png}" />
 					</a>
 					<a th:href="@{/menu/today}">
@@ -368,6 +395,50 @@
 		function moveToChat(parentId){
 			location.href = "/user/chat?targetId=" + parentId;
 		}
+		
+		function clickUploadProfile() {
+			var file = $("#profile-form input.file")
+			console.log(file.val());
+			file.val("");
+			file.trigger('click');
+		}
+
+		$("#profile-form input.file").on("change", function(){
+			var result = confirm("이 파일을 업로드 하시겠습니까?");
+			if (result) {
+				var form = $("#profile-form")[0];
+				var file = $(this).prop('files')[0]
+				var formData = new FormData(form);
+
+				$.ajax({
+					url : "/rest/user/profileImage"
+					, enctype: "multipart/form-data"
+					, processData : false
+					, contentType : false
+					, cache: false
+					, data : formData
+					, type : "POST"
+					, method : "POST"
+					, success : function(result){
+						if (result.code == "0") {
+							console.log(result.data);
+							var profileImgSrc = result.data.imgSrc; 
+							var studentId = $("#profile-form-teacher-id").val();
+							
+							$(".teacher-profile-image").attr("src", profileImgSrc);
+							
+							alert("성공적으로 업로드 하였습니다.");
+						} else {
+							alert("파일 업로드에 실패하였습니다.")
+						}
+					}
+					, timeout: 10000
+					
+				});
+			} else {
+				$(this).val("");
+			}
+		})
 	</script>
 </body>
 </html>

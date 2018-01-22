@@ -117,10 +117,10 @@ public class UserController {
 	@ResponseBody
 	public CommonResultVo updateProfileImage (
 			@RequestParam MultipartFile file
-			, @RequestParam(required=false) Integer studentId
+			, @RequestParam(required=false) Integer userId
 			) {
 		
-		FileInfoDto uploadFile = userService.updateStudentProfileImage(file, studentId);
+		FileInfoDto uploadFile = userService.updateStudentProfileImage(file, userId);
 		
 		return new CommonResultVo(uploadFile);
 	}
