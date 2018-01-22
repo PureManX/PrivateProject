@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	  layout:decorator="layout/mobileLayout">
+<head>
+	<style>
+		section.schedule-list-wrap {
+			width: 100vw;
+			padding: 0 3vw 3vw 3vw;
+		}
+		section.contents-header {
+			padding: 3vw;
+		}
+		section.contents-header .page-title {
+			padding: 3vw;
+			width: 100%;
+			background: #ffdf02;
+			font-size: 6vw;
+			font-weight: bold;
+			text-align: center;
+			color: #6b6a57;
+		}
+		.image-list-wrap {
+			height: 30vw;
+			overflow-x: scroll;
+			width: auto;
+			white-space: nowrap;
+			margin-top: 2vw;
+		}
+		.image-item {
+			height: 30vw;
+			display: inline-block;
+    	}
+    	#content_wrap{
+    		background: #FFF;
+    	}
+    	.lightbox img{
+    		height: 100%;
+    		border-radius: 0;
+    	}
+    	.monthly-schedule-wrap{
+    		margin-top: 1vw;
+    		overflow: auto;
+    	}
+    	.monthly-schedule-wrap h3{
+			background: #e5e5e5;
+			padding: 2vw;
+			font-size: 5vw;
+			font-weight: bold;
+    	}
+    	.schedule-item{
+    		overflow: auto;
+    	}
+    	.schedule-item-date{
+			width: 15vw;
+			display: block;
+			height: 15vw;
+			text-align: center;
+			line-height: 15vw;
+			font-size: 7vw;
+			font-weight: bold;
+			border-bottom: 1px solid #e6e5e5;
+			border-left: 1px solid #e6e5e5;
+			float: left;
+    	}
+    	.schedule-item-content{
+			display: block;
+			height: 15vw;
+			border-left: 1px solid #e6e5e5;
+			border-bottom: 1px solid #e6e5e5;
+			border-right: 1px solid #e6e5e5;
+			line-height: 13vw;
+			float: left;
+			width: 79vw;
+			padding: 1vw 2vw;
+			font-size: 4vw;  	
+    	}
+    	.daily-schedule-item img{
+    		width: 10vw;
+    		height: 10vw;
+    		display: inline-block;
+    	}
+		/* no-data 영역 */
+		.no-data {
+			width: 100%;
+			border: 1px solid #cecece;
+			padding: 10vw 3vw;
+			text-align: center;
+			vertical-align: middle;
+		}
+		.no-data span {
+			font-size: 25vw;
+			display: block;
+			color: #EEE;
+			margin-bottom: 10vw;
+		}
+		.no-data h2 {
+			font-size: 5vw;
+		}
+		
+	</style>
+</head>
+<body>
+<div id="content_wrap">
+	<section class="mContents" layout:fragment="content">
+		<section class="contents-header">
+			<h3 class="page-title">일정</h3>
+		</section>
+		<section class="schedule-list-wrap">
+<!-- 			<article th:if="${imageList == null || #lists.size(imageList) == 0}"> -->
+<!-- 				<div class="no-data"> -->
+<!-- 					<span class="glyphicon glyphicon-ban-circle"></span> -->
+<!-- 					<h2>등록된 일정이 없습니다.</h2> -->
+<!-- 				</div> -->
+<!-- 			</article> -->
+			<article>
+				<div class="monthly-schedule-wrap">
+					<h3>2018년 01월</h3>
+					<div class="daily-schedule-item">
+						<span class="schedule-item-date">01</span>
+						<span class="schedule-item-content">
+							<img src="/images/common/ico_cake.jpg" />
+							김신 생일
+						</span>
+					</div>
+					<div class="daily-schedule-item">
+						<span class="schedule-item-date">15</span>
+						<span class="schedule-item-content">
+							<img src="/images/common/ico_cake.jpg" />
+							왕여 생일
+						</span>
+					</div>
+					<div class="daily-schedule-item">
+						<span class="schedule-item-date">20</span>
+						<span class="schedule-item-content">방학 시작</span>
+					</div>
+				</div>
+				<div class="monthly-schedule-wrap">
+					<h3>2018년 02월</h3>
+					<div class="daily-schedule-item">
+						<span class="schedule-item-date">02</span>
+						<span class="schedule-item-content">현장 학습 (소방서 견학)</span>
+					</div>
+					<div class="daily-schedule-item">
+						<span class="schedule-item-date">20</span>
+						<span class="schedule-item-content">방학 종료 및 개강</span>
+					</div>
+					<div class="daily-schedule-item">
+						<span class="schedule-item-date">22</span>
+						<span class="schedule-item-content">
+							<img src="/images/common/ico_cake.jpg" />
+							써니 생일
+						</span>
+					</div>
+				</div>				
+			</article>
+		</section>
+	</section>
+</div>
+<script th:inline="javascript" layout:fragment="script">
+	/*<![CDATA[*/
+	$(document).ready(function() {
+	});
+	/*]]>*/
+</script>
+</body>
+</html>
