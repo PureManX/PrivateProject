@@ -31,6 +31,20 @@ ul li {
 	list-style: none;
 }
 
+/* loading */
+#full-popup-loading{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	z-index: 99999;
+	overflow: hidden;
+}
+#full-popup-loading .loader.is-active{
+	background-color: rgba(0,0,0,.35);	
+}
+
+/* header */
 header.topHead {
 	width: 100%;
 	height: 15vw;
