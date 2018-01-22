@@ -84,7 +84,8 @@ public class RequestLoggingFilter extends AbstractRequestLoggingFilter{
 	protected String createMessage(HttpServletRequest request, String prefix, String suffix) {
 		StringBuilder msg = new StringBuilder();
 		msg.append(prefix);
-		msg.append("uri=").append(request.getMethod()).append(" ").append(request.getRequestURI());
+		msg.append("uri=").append(request.getMethod())
+		.append(" ").append(request.getRequestURI());
 
 		if (isIncludeQueryString()) {
 			String queryString = request.getQueryString();

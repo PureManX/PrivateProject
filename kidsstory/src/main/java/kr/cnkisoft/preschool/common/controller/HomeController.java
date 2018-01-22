@@ -94,7 +94,7 @@ public class HomeController {
 		return mav;
 	}
 
-	@RequestMapping(value="/auth/regist", produces=MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	@RequestMapping(value="/auth/regist")
 	@ResponseBody
 	public String authRegist(
 			@RequestParam(value="deviceId", required = false) String deviceId

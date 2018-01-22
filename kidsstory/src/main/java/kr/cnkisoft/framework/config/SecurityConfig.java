@@ -20,7 +20,16 @@ import kr.cnkisoft.framework.utils.HttpSupportUtils;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
-	public static final String[] SECURITY_URL_PATTERNS = {"/css/**", "/images/**", "/file/**", "/adminlte/**",  "/js/**", "/admin/**", "/rest/admin/**"};
+	public static final String[] SECURITY_URL_PATTERNS = {
+			"/css/**"
+			, "/images/**" 
+			, "/file/**" 
+			, "/adminlte/**"  
+			, "/js/**" 
+			, "/admin/**" 
+			, "/rest/admin/**"
+			, "/auth/**"
+			};
 	
 	@Autowired
 	@Qualifier("cookieUserDetailsService")
