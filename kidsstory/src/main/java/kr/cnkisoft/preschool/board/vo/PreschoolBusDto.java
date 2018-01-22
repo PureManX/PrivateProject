@@ -1,7 +1,6 @@
 package kr.cnkisoft.preschool.board.vo;
 
 import kr.cnkisoft.preschool.common.domain.CommonDto;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

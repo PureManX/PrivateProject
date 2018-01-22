@@ -129,7 +129,7 @@
 			LINE_SERVICE_ID = #{lineId}
 	</select>
 	
-	<update id="updateBoardServiceEndDate" parameterType="kr.cnkisoft.preschool.board.vo.BoardLineServiceDto">
+	<update id="updateBoardServiceEndDate" parameterType="map">
 		UPDATE 
 			PRESCH_LINE_SERVICE
 		SET 

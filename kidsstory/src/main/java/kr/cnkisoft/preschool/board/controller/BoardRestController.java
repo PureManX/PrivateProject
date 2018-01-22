@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.cnkisoft.preschool.board.mapper.BoardMapper;
-import kr.cnkisoft.preschool.board.service.BoardService;
+import kr.cnkisoft.preschool.board.service.BoardLineDetailService;
+import kr.cnkisoft.preschool.board.service.BoardLineService;
 import kr.cnkisoft.preschool.board.vo.BoardLineDetailVo;
 import kr.cnkisoft.preschool.board.vo.BoardLineDto;
+import kr.cnkisoft.preschool.board.vo.BoardLineInfoVo;
 import kr.cnkisoft.preschool.board.vo.BoardLineStudentHistDto;
 import kr.cnkisoft.preschool.board.vo.BoardProcessParamVo;
 import kr.cnkisoft.preschool.board.vo.BoardLineServiceDto;
@@ -26,7 +28,11 @@ public class BoardRestController {
 	BoardMapper boardMapper;
 
 	@Autowired
-	BoardService boardService;
+	BoardLineService boardLineService;
+	
+	@Autowired
+	BoardLineDetailService boardService;
+	
 	
 	@RequestMapping(value="/rest/board/list/{lineId}/{histDate}", method=RequestMethod.GET)
 	@ResponseBody
@@ -89,8 +95,8 @@ public class BoardRestController {
 	
 	@RequestMapping(value="/rest/board/lineinfo/{lineId}")
 	@ResponseBody
-	public BoardLineDto boardLineInfo(@PathVariable int lineId) {
-		return boardMapper.selectBoardLineInfoByLineId(lineId);
+	public BoardLineInfoVo boardLineInfo(@PathVariable int lineId) {
+		return boardLineService.getInProgressBoardLineInfoByLineId(lineId);
 	}
 
 	/**
@@ -125,9 +131,9 @@ public class BoardRestController {
 	@RequestMapping(value="/rest/board/service/{lineId}", method=RequestMethod.GET)
 	@ResponseBody
 	public CommonResultVo getBoardService(@PathVariable Integer lineId) {
-		BoardLineServiceDto boardLineService = boardService.getBoardService(lineId);
+		BoardLineInfoVo boardLineInfoVo = boardLineService.getInProgressBoardLineInfoByLineId(lineId);
 		CommonResultVo result = new CommonResultVo();
-		result.setData(boardLineService);
+		result.setData(boardLineInfoVo);
 		return result;
 	}
 

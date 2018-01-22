@@ -318,15 +318,17 @@
 							<div class="widget-user-header">
 								<div class="bus-icon">
 									<img class="bus-image" src="/images/common/bus-icon-5.png" />
-									<span class="bus-num"></span>
+									<span class="bus-num" th:text="${boardLineInfo.bus.busNum}"></span>
 								</div>
 								<div class="widget-user-image">
-									<img class="img-circle teacher-image" src="" alt="User Avatar" />
-									<span class="teacher-name"></span>
+									<img class="img-circle teacher-image" alt="Teacher Image" 
+										th:src="@{/file/data{imgSrc}(imgSrc=${boardLineInfo.teacher.imgSrc})}" 
+										th:if="@{boardLineInfo.isBoardLineStarted}" />
+									<span class="teacher-name" th:text="${boardLineInfo.teacher.userNm}"></span>
 								</div>
 								<!-- /.widget-user-image -->
 								<div class="bus-line-area">
-									<span class="bus-line-name"></span>
+									<span class="bus-line-name" th:text="${boardLineInfo.lineNm}"></span>
 									<button class="btn bg-green btn-xs board-service-button" th:if="${loginUser.userType.code == 'TCH'}">출발</button>
 								</div>
 							</div>
@@ -364,9 +366,10 @@
 	/*<![CDATA[*/
 
 	/*[+
-	 var lineId = [[${lineId}]];
-	 var loginUserType = [[${loginUser.userType.code}]];
-	 +]*/
+	var lineId = [[${boardLineInfo.lineId}]];
+	var lineType = [[${boardLineInfo.lineType}]];;
+	var loginUserType = [[${loginUser.userType.code}]];
+	+]*/
 
 	console.log(lineId);
 	console.log(loginUserType);
@@ -380,11 +383,13 @@
 	curDay = curDay < 10 ? "0" + curDay : curDay;
 
 	var histDate =  curYear + "" + curMonth + "" + curDay;
-	var lineType;
+	
 	
 	var boardServiceStarted = false;
+	var boardServiceEnded = false;
 	
 	var stationList = {};
+	
 	$(document).ready(function(){
 		$(".bus-line-header").affix({
 			offset : {
@@ -398,7 +403,8 @@
 			return false;
 		}
 
-		initHeaderInfo();
+		//initHeaderInfo();
+		refresh();
 		getBoardService();
 	});
 
@@ -406,11 +412,11 @@
 		$.get("/rest/board/lineinfo/" + lineId, function(data, status) {
 			lineType = data.lineType;
 
-			console.log(lineType);
+			console.log(data);
 			$(".bus-line-name").text(data.lineNm);
-			$(".teacher-name").text(data.userNm + " 선생님");
-			$(".widget-user-image img").attr("src", "/file/data" + data.imgSrc);
-			$(".bus-num").text(data.busNum);
+			$(".teacher-name").text(data.teacher.userNm + " 선생님");
+			$(".widget-user-image img").attr("src", "/file/data" + data.teacher.imgSrc);
+			$(".bus-num").text(data.bus.busNum);
 
 			refresh();
 		});
@@ -490,9 +496,14 @@
 
 		// 버튼 이벤트 등록 
 		$("#" + liId + " .button-area .btn").each(function(){
-			$(this).on("click", function(){
-				openModal(lineDtlData.lineDtlId, lineType);
-			})
+			var isReadyState = $(this).hasClass("board-ready");
+			
+			if (isReadyState) {
+				$(this).on("click", function(){
+					openModal(lineDtlData.lineDtlId, lineType);
+				})
+			}
+			
 		});
 		
 		// 현재 이동중인 정차역일 경우 버스 표시
@@ -613,6 +624,11 @@
 	}
 	
 	function endBoardService() {
+		if (boardServiceEnded) {
+			alert("이미 노선 운행이 완료되었습니다.");
+			return false;
+		}
+		
 		$.ajax({
 			type : "PUT",
 			url : "/rest/board/service/" + lineId,
@@ -630,10 +646,17 @@
 	
 	function getBoardService() {
 		$.get("/rest/board/service/" + lineId, function(result, status) {
-			if (result.code == "0") {
-				$(".bus-line-area .board-service-button").text("출발완료");
+			if (result.code == "0" && result.data.boardLineStatus != "0") {
+				boardServiceEnded = result.data.boardLineEnded;
+				var status = result.data.boardLineStatus == "20" ? "도착완료" : "출발완료";
+				
+				$(".bus-line-area .board-service-button").text(status);
 				
 				boardServiceStarted = true;
+				
+				if (result.data.boardLineStatus == "20") {
+					boardServiceEnded = true;
+				}
 			} else {
 				$(".bus-line-area .board-service-button").text("출발");
 				$(".bus-line-area .board-service-button").click(startBoardService);

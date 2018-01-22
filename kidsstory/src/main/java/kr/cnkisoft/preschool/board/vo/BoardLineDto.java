@@ -1,20 +1,29 @@
 package kr.cnkisoft.preschool.board.vo;
 
 import kr.cnkisoft.preschool.common.domain.CommonDto;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@AllArgsConstructor
 public class BoardLineDto extends CommonDto{
-	private Integer lineId;
-	private String schCd;
-	private Integer busId;
-	private String lineNm;
-	private String lineType;
-	private String sttusCd;
-	private String teacherId;
-	private String busNum;
-	private String userNm;
-	private String imgSrc;
+	protected Integer lineId;
+	protected String schCd;
+	protected Integer busId;
+	protected String lineNm;
+	protected String lineType;
+	protected String sttusCd;
+	
+	public BoardLineDto(Integer lineId) {
+		super();
+		this.lineId = lineId;
+	}
+//	private String teacherId;
+//	private String busNum;
+//	private String userNm;
+//	private String imgSrc;
 }

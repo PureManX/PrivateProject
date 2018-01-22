@@ -34,16 +34,6 @@ public interface BoardMapper {
 	public int insertBoardDetailHist(BoardLineDetailHistDto param);
 	
 	public int insertBoardDetailStudentHist(BoardLineStudentHistDto param);
-	
-	@Select("SELECT a.*, b.BUS_NUM, c.USER_NM, CONCAT('/', LOWER(d.FILE_TYPE), '/', d.FILE_NM) AS IMG_SRC FROM PRESCH_LINE a, PRESCH_BUS b, USER_INFO c , FILE_INFO d "
-			+ "WHERE a.BUS_ID = b.BUS_ID AND a.TEACHER_ID = c.USER_ID AND c.PROF_IMG_ID = d.FILE_ID AND a.LINE_ID = #{lineId}")
-	public BoardLineDto selectBoardLineInfoByLineId(@Param("lineId")int lineId);
-
-
-	@Select("SELECT a.*, b.BUS_NUM, c.USER_NM, CONCAT('/', LOWER(d.FILE_TYPE), '/', d.FILE_NM) AS IMG_SRC FROM PRESCH_LINE a, PRESCH_BUS b, USER_INFO c , FILE_INFO d "
-			+ "WHERE a.BUS_ID = b.BUS_ID AND a.TEACHER_ID = c.USER_ID AND c.PROF_IMG_ID = d.FILE_ID AND a.LINE_TYPE = #{lineType} AND a.SCH_CD = #{schCd}")
-	public List<BoardLineDto> selectBoardLineListInfoByLineType(@Param("lineType")String lineType, @Param("schCd")String schCd);
-
 
 	@Select("SELECT b.LINE_DTL_ID FROM PRESCH_LINE a JOIN PRESCH_LINE_DTL b ON a.LINE_ID = b.LINE_ID WHERE a.LINE_TYPE = #{lineType} AND b.STDU_ID = #{studentId}")
 	public Integer selectLineDetailIdByLoginParents(@Param("lineType")String lineType, @Param("studentId")int studentId);
@@ -96,13 +86,6 @@ public interface BoardMapper {
 	public int deleteBoardHist(@Param("lineHistId")Integer lineHistId);
 
 	
-	// 노선이 현재 운행중인지 조회
-	@Select("SELECT * FROM PRESCH_LINE_SERVICE WHERE LINE_ID = #{lineId} AND SERVICE_END_DT IS NULL "
-           + " AND SERVICE_START_DT >= CURRENT_DATE"
-           + " AND SERVICE_START_DT < adddate(CURRENT_DATE, 1)")
-	public BoardLineServiceDto selectStartedBoardService(@Param("lineId")Integer lineId);
-	
-	
 	// 현재 운행중인 노선 취소 처리 
 	@Delete("DELETE FROM PRESCH_LINE_SERVICE WHERE LINE_ID = #{lineId} "
            + " AND SERVICE_START_DT >= CURRENT_DATE"
@@ -116,5 +99,5 @@ public interface BoardMapper {
 	public BoardLineServiceDto seelctInProgressBoardServiceByLineId(@Param("lineId")Integer lineId);
 	
 	// 운행중인 버스 노선 종료 처리
-	public int updateBoardServiceEndDate(BoardLineServiceDto inProgressBoardLineService);
+	public int updateBoardServiceEndDate(@Param("lineId")Integer lineId);
 }

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.cnkisoft.preschool.board.mapper.BoardLineMapper">
+
+	<resultMap type="kr.cnkisoft.preschool.board.vo.BoardLineInfoVo" id="BoardLineInfoVo" autoMapping="true">
+		<constructor>
+			<idArg column="LINE_ID" javaType="int"/>
+		</constructor>
+		<association property="service" javaType="kr.cnkisoft.preschool.board.vo.BoardLineServiceDto" autoMapping="true">
+			<id property="lineServiceId" column="LINE_SERVICE_ID"/>
+			<result property="lineId" column="LINE_ID"/>
+			<result property="serviceTeacherId" column="SERVICE_TEACHER_ID"/>
+			<result property="serviceStartDt" column="SERVICE_START_DT"/>
+			<result property="serviceEndDt" column="SERVICE_END_DT"/>
+		</association>
+		<association property="bus" javaType="kr.cnkisoft.preschool.board.vo.PreschoolBusDto" autoMapping="true">
+			<id property="busId" column="BUS_ID"/>
+			<result property="busNum" column="BUS_NUM"/>
+			<result property="driverName" column="DRIVER_NAME"/>
+			<result property="sttusCd" column="BUS_STTUS_CD"/>
+		</association>
+		<association property="teacher" javaType="kr.cnkisoft.preschool.user.domain.UserDto" autoMapping="true">
+			<id property="userId" column="USER_ID"/>
+			<result property="userNm" column="USER_NM"/>
+			<result property="userType" column="USER_TYPE"/>
+			<result property="profImgId" column="PROF_IMG_ID"/>
+			<result property="contact" column="CONTACT"/>
+			<result property="clsId" column="CLS_ID"/>
+			<result property="imgSrc" column="IMG_SRC"/>
+		</association>
+	</resultMap>
+
+	<select id="selectBoardLineInfoByLineId" resultMap="BoardLineInfoVo" parameterType="map">
+	<![CDATA[
+		SELECT	/* 현재 노선 기본 정보 조회 */
+			boardLine.*
+			, bus.BUS_NUM
+			, bus.DRIVER_NAME
+			, bus.STTUS_CD as BUS_STTUS_CD
+		FROM
+			PRESCH_LINE boardLine
+			JOIN PRESCH_BUS bus 
+				ON boardLine.BUS_ID = bus.BUS_ID
+		WHERE
+			boardLine.LINE_ID = #{lineId}
+	]]>
+	</select>
+	
+	<select id="selectInProgressBoardLineInfoByLineId" resultMap="BoardLineInfoVo" parameterType="map">
+	<![CDATA[
+		SELECT	/* 현재 운행중인 노선 정보 조회 */
+			boardLine.*
+			, bus.BUS_NUM
+			, bus.DRIVER_NAME
+			, bus.STTUS_CD as BUS_STTUS_CD
+			, boardLineServcie.LINE_SERVICE_ID
+			, boardLineServcie.SERVICE_TEACHER_ID
+			, boardLineServcie.SERVICE_START_DT
+			, boardLineServcie.SERVICE_END_DT
+			, teacher.USER_ID
+			, teacher.USER_NM
+			, teacher.USER_TYPE
+			, teacher.PROF_IMG_ID
+			, teacher.CONTACT
+			, teacher.CLS_ID
+			, CONCAT('/', LOWER(file.FILE_TYPE), '/', file.FILE_NM) AS IMG_SRC
+		FROM
+			PRESCH_LINE boardLine
+			JOIN PRESCH_BUS bus 
+				ON boardLine.BUS_ID = bus.BUS_ID
+			LEFT JOIN PRESCH_LINE_SERVICE boardLineServcie 
+				ON boardLine.LINE_ID = boardLineServcie.LINE_ID
+		 		AND SERVICE_START_DT >= CURRENT_DATE
+		 		AND SERVICE_START_DT < adddate(CURRENT_DATE, 1)
+			LEFT JOIN USER_INFO teacher 
+				ON boardLineServcie.SERVICE_TEACHER_ID = teacher.USER_ID
+			LEFT JOIN FILE_INFO file 
+				ON teacher.PROF_IMG_ID = file.FILE_ID
+		WHERE
+			boardLine.LINE_ID = #{lineId}
+	]]>
+	</select>
+
+	<select id="selectBoardLineListInfoByLineType" resultMap="BoardLineInfoVo" parameterType="map">
+	<![CDATA[
+		SELECT	/* 유치원 운행 노선 리스트 조회 */
+			boardLine.*
+			, bus.BUS_NUM
+			, bus.DRIVER_NAME
+			, bus.STTUS_CD as BUS_STTUS_CD
+			, boardLineServcie.LINE_SERVICE_ID
+			, boardLineServcie.SERVICE_TEACHER_ID
+			, boardLineServcie.SERVICE_START_DT
+			, boardLineServcie.SERVICE_END_DT
+			, teacher.USER_ID
+			, teacher.USER_NM
+			, teacher.USER_TYPE
+			, teacher.PROF_IMG_ID
+			, teacher.CONTACT
+			, teacher.CLS_ID
+			, CONCAT('/', LOWER(file.FILE_TYPE), '/', file.FILE_NM) AS IMG_SRC
+		FROM
+			PRESCH_LINE boardLine
+			JOIN PRESCH_BUS bus 
+				ON boardLine.BUS_ID = bus.BUS_ID
+			LEFT JOIN PRESCH_LINE_SERVICE boardLineServcie 
+				ON boardLine.LINE_ID = boardLineServcie.LINE_ID
+		 		AND SERVICE_START_DT >= CURRENT_DATE
+		 		AND SERVICE_START_DT < adddate(CURRENT_DATE, 1)
+			LEFT JOIN USER_INFO teacher 
+				ON boardLineServcie.SERVICE_TEACHER_ID = teacher.USER_ID
+			LEFT JOIN FILE_INFO file 
+				ON teacher.PROF_IMG_ID = file.FILE_ID
+		WHERE
+			boardLine.LINE_TYPE = #{lineType}
+			AND boardLine.SCH_CD = #{schCd}
+	]]>
+	</select>
+	
+</mapper>

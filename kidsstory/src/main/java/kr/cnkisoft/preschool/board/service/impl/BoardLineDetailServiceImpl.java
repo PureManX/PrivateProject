@@ -3,7 +3,8 @@ package kr.cnkisoft.preschool.board.service.impl;
 import kr.cnkisoft.framework.security.AuthUtils;
 import kr.cnkisoft.framework.utils.DateUtils;
 import kr.cnkisoft.preschool.board.mapper.BoardMapper;
-import kr.cnkisoft.preschool.board.service.BoardService;
+import kr.cnkisoft.preschool.board.service.BoardLineDetailService;
+import kr.cnkisoft.preschool.board.service.BoardLineService;
 import kr.cnkisoft.preschool.board.vo.*;
 import kr.cnkisoft.preschool.push.domain.PreSchoolPushIdDto;
 import kr.cnkisoft.preschool.push.service.PushService;
@@ -26,7 +27,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
-public class BoardServiceImpl implements BoardService {
+public class BoardLineDetailServiceImpl implements BoardLineDetailService {
 
 	static final String PUSH_MESSAGE_BUS_START = "<{lineName}>노선 <{bus}>버스가 유치원에서 출발하였습니다.";
 	static final String PUSH_MESSAGE_BUS_END = "<{lineName}>노선 <{bus}>버스가 유치원에 도착하였습니다.";
@@ -40,6 +41,9 @@ public class BoardServiceImpl implements BoardService {
 
 	@Autowired
 	PushService pushService;
+	
+	@Autowired
+	BoardLineService boardLineService;
 
 	@Override
 	public void processBoarding(BoardProcessParamVo boardProcessParam) {
@@ -94,7 +98,7 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public void sendPushToAllUsersInBusLine(Integer lineId, String histDate) {
-		BoardLineInfoVo lineInfo = getBoardLineInfo(lineId);
+		BoardLineInfoVo lineInfo = boardLineService.getBoardLineBasicInfo(lineId);
 
 		List<BoardLineDetailDto> boardLineDetailDtoList = boardMapper.selectListNonBoardingListByLineId(lineId, histDate);
 
@@ -108,7 +112,7 @@ public class BoardServiceImpl implements BoardService {
 					PreSchoolPushIdDto pushInfo = parent.getPushInfo();
 					
 					if (pushInfo != null && !StringUtils.isEmpty(pushInfo.getDeviceId())) {
-						String message = PUSH_MESSAGE_BUS_START.replace("{lineName}", lineInfo.getLine().getLineNm());
+						String message = PUSH_MESSAGE_BUS_START.replace("{lineName}", lineInfo.getLineNm());
 						message = message.replace("{bus}", lineInfo.getBus().getBusNum());
 						log.info("푸시 발송 [학생 ID : {}, 학생 : {}, 부모 : {}, 전화번호 : {}]", student.getUserId(), student.getUserNm(), parent.getUserNm(), parent.getContact());
 						pushService.sendPush(pushInfo.getDeviceId(), message, "http://cnkisoft.cafe24.com/board/parent/busline");
@@ -142,16 +146,23 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Override
 	public void endBoardService(Integer lineId) {
-		BoardLineServiceDto inProgressBoardLineService = boardMapper.seelctInProgressBoardServiceByLineId(lineId);
+//		BoardLineServiceDto inProgressBoardLineService = boardMapper.seelctInProgressBoardServiceByLineId(lineId);
+		BoardLineInfoVo boardLineInfo = boardLineService.getInProgressBoardLineInfoByLineId(lineId);
 		
-		boardMapper.updateBoardServiceEndDate(inProgressBoardLineService);
+		// validation 처리 
+		if (!boardLineInfo.isBoardLineStarted()) {
+			// 출발하지 않았을 경우
+		}
+		
+		// 출발 했으나 모두 도착하지 않았을때 만료 처리할 경우
+		boardMapper.updateBoardServiceEndDate(boardLineInfo.getService().getLineServiceId());
 		
 		sendPushToBoardCompleteUsersInBusLine(lineId, DateUtils.currentDateOfYear());
 	}
 	
 	
 	public void sendPushToBoardCompleteUsersInBusLine(Integer lineId, String histDate) {
-		BoardLineInfoVo lineInfo = getBoardLineInfo(lineId);
+		BoardLineInfoVo lineInfo = boardLineService.getBoardLineBasicInfo(lineId);
 
 		List<BoardLineDetailDto> boardLineDetailDtoList = boardMapper.selectListBoardingCompleteListByLineId(lineId, histDate);
 
@@ -165,7 +176,7 @@ public class BoardServiceImpl implements BoardService {
 					PreSchoolPushIdDto pushInfo = parent.getPushInfo();
 					
 					if (pushInfo != null && !StringUtils.isEmpty(pushInfo.getDeviceId())) {
-						String message = PUSH_MESSAGE_BUS_END.replace("{lineName}", lineInfo.getLine().getLineNm());
+						String message = PUSH_MESSAGE_BUS_END.replace("{lineName}", lineInfo.getLineNm());
 						message = message.replace("{bus}", lineInfo.getBus().getBusNum());
 						log.info("푸시 발송 [학생 ID : {}, 학생 : {}, 부모 : {}, 전화번호 : {}]", student.getUserId(), student.getUserNm(), parent.getUserNm(), parent.getContact());
 						pushService.sendPush(pushInfo.getDeviceId(), message, "http://cnkisoft.cafe24.com/board/parent/busline");
@@ -191,16 +202,7 @@ public class BoardServiceImpl implements BoardService {
 		}
 	}
 
-	@Override
-	public BoardLineInfoVo getBoardLineInfo(Integer lineId) {
-		// 노선 정보 조회
-		BoardLineDto line = boardMapper.selectBoardLine(lineId);
 
-		// 버스 정보 조회
-		PreschoolBusDto bus = boardMapper.selectPreschoolBus(line.getBusId());
-
-		return BoardLineInfoVo.builder().bus(bus).line(line).build();
-	}
 
 	@Override
 	public void reserveUnboard(BoardLineStudentHistDto boarDLineHist) {
@@ -213,11 +215,6 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public void cancelReserverUnboard(Integer lineHistId) {
 		boardMapper.deleteBoardHist(lineHistId);
-	}
-
-	@Override
-	public BoardLineServiceDto getBoardService(Integer lineId) {
-		return boardMapper.selectStartedBoardService(lineId);
 	}
 
 	@Override

@@ -27,24 +27,56 @@
 
 		div.info-box {
 			box-shadow: none;
+			min-height: 26vw;
+			color: #333;
 		}
 		.info-box-icon {
-			padding: 10px;
+			padding: 1vw;
 			border: none;
 			line-height: inherit;
 			box-shadow: none;
+			height: 26vw;
 		}
-
+		.info-box-icon>img {
+			max-width: 75%;
+		}
+		.bus-num{
+			font-size: 3.5vw;
+			line-height: 5vw;
+		}
 		.bus-line-name {
 			font-size: 18px;
 		}
-		.teacher-name {
+		.service-status {
+			display: inline-block;
+			float: left;
+			padding: 1vw 2vw;
+			font-size: 5vw;
+			background-color: #EEE;
+			margin-top: 4vw;		}
+		.servcie-teacher {
+			display: inline-block;
+			float : right;
 			margin-top: 8px;
 			font-size: 15px;
 		}
+		.servcie-teacher img{
+			width: 12vw;
+			height: 12vw;
+			border-radius: 50%;
+		}
+		.servcie-teacher span{
+		    display: inline-block;
+		    line-height: 12vw;
+		    height: 12vw;
+		    font-size: 5vw;
+		}
 		.info-box-content {
-			height: 90px;
+			height: 26vw;
 			border: 1px solid #d2d2d2;
+		}
+		.board-line-service-status{
+		
 		}
 	</style>
 </head>
@@ -52,6 +84,7 @@
 <div id="content_wrap">
 	<section class="mContents" layout:fragment="content">
 		<div class="busLineContainer">
+			<!-- header -->
 			<div class="bus-line-item list-header">
 				<div>
 					<h3 class="school-name" th:text="${loginUser.school.schName + ' 유치원'}"></h3>
@@ -60,28 +93,54 @@
 				</div>
 			</div>
 
-
-			<div class="bus-line-item" th:each="busLineItem : ${busLineList}">
-				<a th:href="@{'/board/teacher/busline/' + ${busLineItem.lineId}}">
+			<!-- list -->
+			<div class="bus-line-item" th:each="busLineItem : ${busLineList}" onclick="moveToLineDetailPage(this)">
+				<input type="hidden" id="line-id" th:value="${busLineItem.lineId}" />
+				<input type="hidden" id="service-teacher-id" th:value="${busLineItem.service.serviceTeacherId}" />
+				<input type="hidden" id="service-status" th:value="${busLineItem.boardLineStatus.code}" />
 				<div class="info-box">
 					<span class="info-box-icon">
 						<img th:src="@{/images/common/ico_school_bus_front.png}" />
+						<span class="info-box-text bus-num" th:text="${busLineItem.bus.busNum}"></span>
 					</span>
 
 					<div class="info-box-content">
 						<span class="info-box-text bus-line-name" th:text="${busLineItem.lineNm}"></span>
-						<span class="info-box-text bus-num" th:text="${busLineItem.busNum}"></span>
-						<span class="info-box-text teacher-name" th:text="${busLineItem.userNm + ' 선생님'}"></span>
+						<div class="board-line-service-status">
+							<span class="service-status" th:text="${busLineItem.boardLineStatus.value}"></span>
+							<div class="servcie-teacher">
+								<img th:src="@{/file/data{imgSrc}(imgSrc=${busLineItem.teacher.imgSrc})}" th:if="${busLineItem.boardLineStarted}"/>
+								<span th:text="${busLineItem.teacher.userNm}" th:if="${busLineItem.boardLineStarted}"></span>
+							</div>
+						</div>
 					</div>
 				</div>
-				</a>
 			</div>
 		</div>
 	</section>
 </div>
 <script th:inline="javascript" layout:fragment="script">
-	/*<![CDATA[*/
-	/*]]>*/
+/*<![CDATA[*/
+		
+	/*[+
+	var loginUserId = [[${loginUser.loginUserId}]];
+	+]*/
+	 
+	function moveToLineDetailPage(div) {
+		var selectedLineId = $(div).find("#line-id").val();
+		var selectedServiceTeacherId = $(div).find("#service-teacher-id").val();
+		var selectedServiceStatus = $(div).find("#service-status").val();
+		
+		// validation check
+		if (selectedServiceStatus == "10" && loginUserId != selectedServiceTeacherId) {
+			alert("노선은 다른 선생님이 운행중이므로 선택 할 수 없습니다.");
+			return false;
+		}
+		
+		location.href = "/board/teacher/busline/" + selectedLineId;
+	}
+	
+/*]]>*/
 </script>
 </body>
 </html>

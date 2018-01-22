@@ -12,7 +12,7 @@ import kr.cnkisoft.preschool.board.vo.BoardProcessParamVo;
 /**
  * Created by PureMaN on 2017-08-27.
  */
-public interface BoardService {
+public interface BoardLineDetailService {
 	public void processBoarding(BoardProcessParamVo boardProcessParam);
 	public void reserveUnboard(BoardLineStudentHistDto baordLineHist);
 	public void cancelReserverUnboard(Integer lineHistId);
@@ -20,8 +20,6 @@ public interface BoardService {
 	public void startBoardService(Integer lineId);
 	public void endBoardService(Integer lineId);
 	public Integer getCurrentUserBusLineId();
-	public BoardLineInfoVo getBoardLineInfo(Integer lineId);
-	public BoardLineServiceDto getBoardService(Integer lineId);
 	
 	/**
 	 * 운행 노선 id를 이용하여 운행 상세 정보(노선 및 탑승 아이들 정보)를 조회
