@@ -8,8 +8,6 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import kr.cnkisoft.kidsstory.user.domain.ParentVo;
-import kr.cnkisoft.kidsstory.user.domain.PreschoolClassDto;
-import kr.cnkisoft.kidsstory.user.domain.PreschoolVo;
 import kr.cnkisoft.kidsstory.user.domain.ReqMediDto;
 import kr.cnkisoft.kidsstory.user.domain.ReqMediVo;
 import kr.cnkisoft.kidsstory.user.domain.StudentVo;
@@ -24,11 +22,6 @@ public interface UserMapper {
 //	@Select("SELECT a.*, b.FILE_TYPE, b.FILE_NM FROM USER_INFO a left join FILE_INFO b on a.PROF_IMG_ID = b.FILE_ID WHERE a.CONTACT = #{contact}")
 	public UserVo selectUserbyContact(@Param("contact")String contact);
 
-	@Select("SELECT sch.* FROM PRESCH_CLASS cls JOIN PRESCH_INFO sch ON cls.SCH_CD = sch.SCH_CD WHERE cls.CLS_ID = #{clsId}")
-	public PreschoolVo selectPreschoolbyClsId(@Param("clsId")Integer clsId);
-
-	@Select("SELECT * FROM PRESCH_CLASS WHERE SCH_CD = #{schCd}")
-	public List<PreschoolClassDto> selectListPreschoolClassbyPreshcoolCode(@Param("schCd")String schCd);
 
 	// 학생 정보 조회
 	public List<StudentVo> selectListStudentByParentId(@Param("parentId")Integer parentId);

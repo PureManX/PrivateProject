@@ -1,6 +1,8 @@
 package kr.cnkisoft.kidsstory.user.domain;
 
 import kr.cnkisoft.framework.enums.LoginUserType;
+import kr.cnkisoft.kidsstory.preschool.domain.PreschoolClassDto;
+import kr.cnkisoft.kidsstory.preschool.domain.PreschoolVo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

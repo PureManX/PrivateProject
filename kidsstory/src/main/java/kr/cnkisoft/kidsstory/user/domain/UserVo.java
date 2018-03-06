@@ -1,5 +1,6 @@
 package kr.cnkisoft.kidsstory.user.domain;
 
+import kr.cnkisoft.kidsstory.preschool.domain.PreschoolVo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

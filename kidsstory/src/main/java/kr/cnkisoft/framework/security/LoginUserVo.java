@@ -2,7 +2,7 @@ package kr.cnkisoft.framework.security;
 
 import java.util.List;
 
-import kr.cnkisoft.kidsstory.user.domain.PreschoolClassDto;
+import kr.cnkisoft.kidsstory.preschool.domain.PreschoolClassDto;
 import kr.cnkisoft.kidsstory.user.domain.StudentVo;
 import kr.cnkisoft.kidsstory.user.domain.UserVo;
 

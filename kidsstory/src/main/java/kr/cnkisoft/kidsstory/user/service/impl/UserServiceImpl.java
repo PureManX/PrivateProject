@@ -13,12 +13,13 @@ import kr.cnkisoft.kidsstory.common.domain.CommonResultVo;
 import kr.cnkisoft.kidsstory.common.file.domain.DailyGalleryListVo;
 import kr.cnkisoft.kidsstory.common.file.domain.FileInfoDto;
 import kr.cnkisoft.kidsstory.common.file.service.FileService;
+import kr.cnkisoft.kidsstory.preschool.domain.PreschoolClassDto;
+import kr.cnkisoft.kidsstory.preschool.domain.PreschoolVo;
+import kr.cnkisoft.kidsstory.preschool.mapper.PreschoolMapper;
 import kr.cnkisoft.kidsstory.push.domain.PreSchoolPushIdDto;
 import kr.cnkisoft.kidsstory.push.mapper.PushMapper;
 import kr.cnkisoft.kidsstory.user.domain.LoginUserVo;
 import kr.cnkisoft.kidsstory.user.domain.ParentVo;
-import kr.cnkisoft.kidsstory.user.domain.PreschoolClassDto;
-import kr.cnkisoft.kidsstory.user.domain.PreschoolVo;
 import kr.cnkisoft.kidsstory.user.domain.ReqMediDto;
 import kr.cnkisoft.kidsstory.user.domain.ReqMediVo;
 import kr.cnkisoft.kidsstory.user.domain.StudentVo;
@@ -33,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserMapper userMapper;
+	
+	@Autowired
+	PreschoolMapper preschoolMapper;
 
 	@Autowired
 	PushMapper pushMapper;
@@ -69,8 +73,8 @@ public class UserServiceImpl implements UserService {
 		PreschoolVo preschool = null;
 
 		if (user != null && user.getClsId() != null) {
-			preschool = userMapper.selectPreschoolbyClsId(user.getClsId());
-			List<PreschoolClassDto> preschoolClassList = userMapper.selectListPreschoolClassbyPreshcoolCode(preschool.getSchCd());
+			preschool = preschoolMapper.selectPreschoolbyClsId(user.getClsId());
+			List<PreschoolClassDto> preschoolClassList = preschoolMapper.selectListPreschoolClassbyPreshcoolCode(preschool.getSchCd());
 
 			preschool.setClasses(preschoolClassList);
 
