@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.cnkisoft.kidsstory.manage.mapper.MenuMapper">
+
+	<resultMap type="kr.cnkisoft.kidsstory.manage.domain.DailyMenuVo" id="dailyMenu">
+		<constructor>
+			<idArg column="MENU_DATE" javaType="String"/>
+		</constructor>
+		<result property="schCd" column="SCH_CD" />
+		<collection property="menuDetailList" javaType="ArrayList" 
+			ofType="kr.cnkisoft.kidsstory.manage.domain.PreschoolMenuDto">
+			<constructor>
+				<idArg column="MENU_ID" javaType="int"/>
+			</constructor>
+			<result property="schCd" column="SCH_CD"/>
+			<result property="menuDate" column="MENU_DATE"/>
+			<result property="menuType" column="MENU_TYPE"/>
+			<result property="menuImgId" column="MENU_IMG_ID"/>
+			<result property="menuContent" column="MENU_CONTENT"/>
+			<result property="imgSrc" column="IMG_SRC"/>
+			
+		</collection>
+	</resultMap>
+	
+	<select id="selectListDailyMenu" resultMap="dailyMenu" parameterType="map">
+		SELECT
+			menu.*
+			, concat('/', lcase(file.FILE_TYPE), '/', file.FILE_NM) AS IMG_SRC
+		FROM
+			PRESCH_MENU menu
+			LEFT JOIN FILE_INFO file ON menu.MENU_IMG_ID = file.FILE_ID AND file.FILE_TYPE = 'MENU'
+		WHERE
+			SCH_CD = #{schCd}
+			AND MENU_DATE = #{menuDate}
+		ORDER BY
+			MENU_DATE, MENU_TYPE			
+	</select>
+
+	<select id="selectListWeeklyMenu" resultMap="dailyMenu" parameterType="map">
+		SELECT
+			menu.*
+			, concat('/', lcase(file.FILE_TYPE), '/', file.FILE_NM) AS IMG_SRC
+		FROM
+			PRESCH_MENU menu
+			LEFT JOIN FILE_INFO file ON menu.MENU_IMG_ID = file.FILE_ID AND file.FILE_TYPE = 'MENU'
+		WHERE
+			SCH_CD = #{schCd}
+			AND MENU_DATE BETWEEN #{startDate} AND #{endDate} 
+		ORDER BY
+			MENU_DATE, MENU_TYPE			
+	</select>
+	
+	<insert id="insertMenuItme" parameterType="kr.cnkisoft.kidsstory.manage.domain.PreschoolMenuDto">
+		INSERT INTO PRESCH_MENU
+			(SCH_CD, MENU_DATE, MENU_TYPE, MENU_IMG_ID, MENU_CONTENT, CREATED_DT, CREATED_BY, UPDATED_DT, UPDATED_BY)
+		VALUES
+			(#{schCd}, #{menuDate}, #{menuType}, #{menuImgId}, #{menuContent}, NOW(), #{createdBy}, NOW(), #{createdBy})
+	</insert>
+
+	<delete id="deleteMenuItem">
+		DELETE 
+		FROM 
+			PRESCH_MENU
+		WHERE 
+			MENU_ID=#{menuId}
+	</delete>
+</mapper>

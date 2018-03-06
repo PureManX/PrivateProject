@@ -6,8 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import kr.cnkisoft.preschool.user.domain.LoginUserVo;
-import kr.cnkisoft.preschool.user.service.UserService;
+import kr.cnkisoft.kidsstory.user.domain.LoginUserVo;
+import kr.cnkisoft.kidsstory.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 
 /**

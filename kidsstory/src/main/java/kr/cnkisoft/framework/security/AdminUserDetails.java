@@ -9,9 +9,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import kr.cnkisoft.framework.enums.LoginUserType;
-import kr.cnkisoft.preschool.user.domain.LoginUserVo;
-import kr.cnkisoft.preschool.user.domain.PreschoolVo;
-import kr.cnkisoft.preschool.user.domain.UserVo;
+import kr.cnkisoft.kidsstory.user.domain.LoginUserVo;
+import kr.cnkisoft.kidsstory.user.domain.PreschoolVo;
+import kr.cnkisoft.kidsstory.user.domain.UserVo;
 
 public class AdminUserDetails implements UserDetails {
 	

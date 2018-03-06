@@ -8,8 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import kr.cnkisoft.preschool.user.domain.LoginUserVo;
-import kr.cnkisoft.preschool.user.domain.UserVo;
+import kr.cnkisoft.kidsstory.user.domain.LoginUserVo;
+import kr.cnkisoft.kidsstory.user.domain.UserVo;
 
 /**
  * Created by PureMaN on 2017-06-04.

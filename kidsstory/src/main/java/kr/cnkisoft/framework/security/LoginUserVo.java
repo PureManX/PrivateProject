@@ -2,9 +2,9 @@ package kr.cnkisoft.framework.security;
 
 import java.util.List;
 
-import kr.cnkisoft.preschool.user.domain.PreschoolClassDto;
-import kr.cnkisoft.preschool.user.domain.StudentVo;
-import kr.cnkisoft.preschool.user.domain.UserVo;
+import kr.cnkisoft.kidsstory.user.domain.PreschoolClassDto;
+import kr.cnkisoft.kidsstory.user.domain.StudentVo;
+import kr.cnkisoft.kidsstory.user.domain.UserVo;
 
 public interface LoginUserVo {
 	

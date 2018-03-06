@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.cnkisoft.kidsstory.board.mapper.BoardMapper">
+
+	<resultMap type="kr.cnkisoft.kidsstory.board.vo.BoardLineDetailVo" id="LineDetailVo" autoMapping="false">
+		<constructor>
+			<idArg column="LINE_DTL_ID" javaType="int"/>
+		</constructor>
+		<result property="boardTm" column="BOARD_TM"/>
+		<result property="boardLoc" column="BOARD_LOC"/>
+		<result property="boardOrder" column="BOARD_ORDER"/>
+		<result property="boardHistDate" column="BOARD_HIST_DATE"/>
+		<collection property="studentList" ofType="kr.cnkisoft.kidsstory.board.vo.BoardStudentVo" javaType="ArrayList">
+			<constructor>
+				<idArg column="USER_ID" javaType="int"/>
+			</constructor>
+			<result property="userNm" column="USER_NM"/>
+			<result property="imgSrc" column="IMG_SRC"/>
+			<result property="clsNm" column="CLS_NM"/>
+			<result property="unbReason" column="UNB_REASON"/>
+			<result property="boardDiv" column="BOARD_DIV"/>
+		</collection>
+	</resultMap>
+
+	<select id="selectListLineDetail" resultMap="LineDetailVo" parameterType="map">
+		SELECT
+			busLineDetail.LINE_DTL_ID
+			, busLineDetail.BOARD_TM
+			, busLineDetail.BOARD_LOC
+			, busLineDetail.BOARD_ORDER
+			, busLineDetailHist.HIST_DATE as BOARD_HIST_DATE
+			, stdu.USER_ID
+			, stdu.USER_NM
+			, stdu.IMG_SRC
+			, cls.CLS_NM
+			, busLineStudenHist.UNB_REASON
+			, busLineStudenHist.BOARD_DIV
+		FROM 
+			PRESCH_LINE busLine
+			JOIN PRESCH_LINE_DTL busLineDetail ON busLine.LINE_ID = busLineDetail.LINE_ID
+			JOIN MAP_LINE_STDU rel ON busLineDetail.LINE_DTL_ID = rel.LINE_DTL_ID
+			JOIN VIEW_USER_BASE stdu ON rel.STDU_ID = stdu.USER_ID
+			JOIN PRESCH_CLASS cls ON stdu.CLS_ID = cls.CLS_ID
+			LEFT JOIN (SELECT * FROM PRESCH_LINE_DTL_HIST WHERE HIST_DATE = #{histDate}) busLineDetailHist
+				ON rel.LINE_DTL_ID = busLineDetailHist.LINE_DTL_ID
+			LEFT JOIN (SELECT * FROM PRESCH_LINE_STDU_HIST WHERE HIST_DATE = #{histDate}) busLineStudenHist 
+				ON rel.LINE_DTL_ID = busLineStudenHist.LINE_DTL_ID AND rel.STDU_ID = busLineStudenHist.USER_ID
+		WHERE
+			busLine.LINE_ID = #{lineId}
+	</select>
+	
+	<select id="selectListNonBoardingListByLineId" resultType="kr.cnkisoft.kidsstory.board.vo.BoardLineDetailDto"
+		parameterType="map">
+		SELECT 
+			detail.* 
+		FROM
+			PRESCH_LINE_DTL detail
+			LEFT JOIN PRESCH_LINE_DTL_HIST hist ON detail.LINE_DTL_ID = hist.LINE_DTL_ID AND hist.HIST_DATE = #{histDate}
+		WHERE 
+			detail.LINE_ID = #{lineId}
+			AND hist.LINE_DTL_HIST_ID IS NULL
+		ORDER BY
+			BOARD_ORDER
+	</select>
+
+	
+	<select id="selectListBoardingCompleteListByLineId" resultType="kr.cnkisoft.kidsstory.board.vo.BoardLineDetailDto"
+		parameterType="map">
+		SELECT 
+			detail.*
+		FROM
+			PRESCH_LINE_DTL detail
+			LEFT JOIN PRESCH_LINE_DTL_HIST hist ON detail.LINE_DTL_ID = hist.LINE_DTL_ID AND hist.HIST_DATE = #{histDate}
+			JOIN PRESCH_LINE_STDU_HIST stduHist ON hist.LINE_DTL_ID = stduHist.LINE_DTL_ID 
+		WHERE 
+			detail.LINE_ID = #{lineId}
+			AND stduHist.BOARD_DIV = 'C'
+		ORDER BY
+			BOARD_ORDER
+	</select>
+
+	<select id="selectAttBoardLineDetailByStudentId" resultType="kr.cnkisoft.kidsstory.board.vo.BoardLineWithDetailVo"
+		parameterType="map">
+		SELECT	/* 탑승 노선 정보 조회 (학생 Id) */
+			*
+		FROM
+			PRESCH_LINE busLine 
+			JOIN PRESCH_LINE_DTL busLineDetail ON busLine.LINE_ID = busLineDetail.LINE_ID
+		WHERE
+			busLine.LINE_TYPE = 'ATT'
+			AND busLineDetail.STDU_ID = #{studentId}
+		LIMIT 1
+	</select>
+
+	<select id="selectComBoardLineDetailByStudentId" resultType="kr.cnkisoft.kidsstory.board.vo.BoardLineWithDetailVo"
+		parameterType="map">
+		SELECT	/* 하차 노선 정보 조회 (학생 Id) */
+			*
+		FROM
+			PRESCH_LINE busLine 
+			JOIN PRESCH_LINE_DTL busLineDetail ON busLine.LINE_ID = busLineDetail.LINE_ID
+		WHERE
+			busLine.LINE_TYPE = 'COM'
+			AND busLineDetail.STDU_ID = #{studentId}
+		LIMIT 1
+	</select>
+	
+	<insert id="insertBoardDetailHist" parameterType="kr.cnkisoft.kidsstory.board.vo.BoardLineDetailHistDto">
+		INSERT INTO PRESCH_LINE_DTL_HIST
+			(LINE_DTL_ID, HIST_DATE, CREATED_DT, CREATED_BY)
+		VALUES
+			(#{lineDtlId}, #{histDate}, NOW(), #{createdBy});
+	</insert>
+
+	<insert id="insertBoardDetailStudentHist" parameterType="kr.cnkisoft.kidsstory.board.vo.BoardLineStudentHistDto">
+		INSERT INTO PRESCH_LINE_STDU_HIST
+			(LINE_DTL_ID, USER_ID, HIST_DATE, BOARD_DIV, UNB_REASON, CREATED_DT, CREATED_BY, UPDATED_DT, UPDATED_BY)
+		VALUES
+			(#{lineDtlId}, #{userId}, #{histDate}, #{boardDiv}, #{unbReason}, NOW(), #{createdBy}, NOW(), #{createdBy})
+	</insert>
+	
+	<select id="seelctInProgressBoardServiceByLineId" parameterType="map"
+		resultType="kr.cnkisoft.kidsstory.board.vo.BoardLineServiceDto">
+		SELECT /* 운행중인 버스노선 조회(버스 노선 id)*/
+			*
+		FROM 
+			PRESCH_LINE_SERVICE
+		WHERE
+			LINE_SERVICE_ID = #{lineId}
+	</select>
+	
+	<update id="updateBoardServiceEndDate" parameterType="map">
+		UPDATE 
+			PRESCH_LINE_SERVICE
+		SET 
+			SERVICE_END_DT = NOW()
+		WHERE
+			LINE_SERVICE_ID = #{lineId}
+	</update>
+</mapper>

@@ -1,7 +1,8 @@
 package kr.cnkisoft.framework.common;
 
 import kr.cnkisoft.framework.security.AuthUtils;
-import kr.cnkisoft.preschool.user.domain.LoginUserVo;
+import kr.cnkisoft.kidsstory.user.domain.LoginUserVo;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;

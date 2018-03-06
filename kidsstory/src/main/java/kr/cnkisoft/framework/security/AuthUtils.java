@@ -5,7 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import kr.cnkisoft.preschool.user.domain.LoginUserVo;
+import kr.cnkisoft.kidsstory.user.domain.LoginUserVo;
 
 /**
  * Created by PureMaN on 2017-06-05.

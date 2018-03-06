@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import kr.cnkisoft.preschool.user.service.UserService;
+import kr.cnkisoft.kidsstory.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 
 /**
