@@ -20,5 +20,5 @@ public interface BoardLineMapper {
 	public BoardLineInfoVo selectBoardLineInfoByLineId(@Param("lineId")int lineId);
 	public BoardLineInfoVo selectInProgressBoardLineInfoByLineId(@Param("lineId")int lineId);
 	public List<BoardLineInfoVo> selectBoardLineListInfoByLineType(@Param("lineType")String lineType, @Param("schCd")String schCd);
-
+	public List<BoardLineInfoVo> selectListBoardLineInfoByPreschoolCode(@Param("schCd")String schCd);
 }

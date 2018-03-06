@@ -35,4 +35,13 @@ public interface BoardLineService {
 	 * @return
 	 */
 	public List<BoardLineInfoVo> getBoardLineList(String lineType);
+	
+	/**
+	 * 로그인 한 유저(선생님)의 유치원 코드로 노선 정보 조회
+	 * 
+	 * @param lineType
+	 * @return
+	 */
+	public List<BoardLineInfoVo> getBoardLineListByCurretLoginPreshcoolCode();
+
 }

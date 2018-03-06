@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,9 +15,7 @@ import kr.cnkisoft.kidsstory.board.mapper.BoardMapper;
 import kr.cnkisoft.kidsstory.board.service.BoardLineDetailService;
 import kr.cnkisoft.kidsstory.board.service.BoardLineService;
 import kr.cnkisoft.kidsstory.board.vo.BoardLineDetailVo;
-import kr.cnkisoft.kidsstory.board.vo.BoardLineDto;
 import kr.cnkisoft.kidsstory.board.vo.BoardLineInfoVo;
-import kr.cnkisoft.kidsstory.board.vo.BoardLineServiceDto;
 import kr.cnkisoft.kidsstory.board.vo.BoardLineStudentHistDto;
 import kr.cnkisoft.kidsstory.board.vo.BoardProcessParamVo;
 import kr.cnkisoft.kidsstory.common.domain.CommonResultVo;
@@ -162,6 +161,17 @@ public class BoardRestController {
 	public CommonResultVo boardLineDetail(@PathVariable("studentId") Integer studentId) {
 		CommonResultVo result = new CommonResultVo();
 		result.setData(boardService.getBoardLineWithDetailByStudentId(studentId));
+		return result;
+	}
+	
+	@GetMapping(value="/rest/admin/board/line/list")
+	@ResponseBody
+	public CommonResultVo adminBoardLineList() {
+		List<BoardLineInfoVo> boardLineList = boardLineService.getBoardLineListByCurretLoginPreshcoolCode();
+		
+		CommonResultVo result = new CommonResultVo();
+		result.setData(boardLineList);
+		
 		return result;
 	}
 }

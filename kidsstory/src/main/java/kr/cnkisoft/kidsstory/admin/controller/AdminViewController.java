@@ -68,4 +68,13 @@ public class AdminViewController {
 
 		return mav;
 	}
+
+	// 학급 관리 페이지
+	@RequestMapping(value= "/admin/board/line", method = RequestMethod.GET)
+	public ModelAndView adminBoardLine() {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("views/admin/board_line");
+
+		return mav;
+	}
 }

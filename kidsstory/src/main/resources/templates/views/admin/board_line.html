@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	  layout:decorator="layout/adminLayout">
+<head>
+	<style>
+		.modal-header {
+			background: #e3e3e3;
+			font-size: 1.2em;
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-red-light sidebar-mini">
+	<div class="wrapper">
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper" layout:fragment="content">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<h1>
+					버스 노선 관리
+					<small>유치원 버스 노선 관리 화면입니다</small>
+				</h1>
+				<ol class="breadcrumb">
+					<li>
+						<a href="#">
+							<i class="fa fa-dashboard"></i>Home
+						</a>
+					</li>
+					<li class="active">유치원 관리</li>
+					<li class="active">버스 노선 관리</li>
+				</ol>
+			</section>
+
+			<!-- Main content -->
+			<section class="content">
+				<div class="box box-solid box-default">
+
+					<div class="box-header with-border">
+						<h3 class="box-title">버스 노선 목록</h3>
+					</div>
+					<!-- /.box-header -->
+					<!-- form start -->
+					<div class="box-body">
+						<table id="main-table" class="table table-bordered table-striped dataTable" role="grid" data-height="460">
+							<thead>
+								<tr>
+									<th data-field="lineId">번호</th>
+									<th data-field="lineNm">노선명</th>
+									<th data-field="lineType">노선유형</th>
+									<th data-field="bus">버스 정보</th>
+									<th data-field="schSttusCd">상태</th>
+									<th data-field="userParents">기능</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<!-- /.box-body -->
+					<div class="box-footer">
+						<span class="btn btn-info pull-right data-new">신규등록</span>
+					</div>
+					<!-- /.box-footer -->
+				</div>
+				<!-- Your Page Content Here -->
+
+			</section>
+			<!-- /.content -->	
+			
+			<!-- Modal -->
+			<div class="modal" id="main-modal" tabindex="-1" role="dialog" aria-labelledby="main-modalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">노선 등록</h4>
+					</div>					
+					<div class="modal-content">
+						<div class="modal-body">
+							<form class="form-horizontal" id="main-info-form">
+								<input type="hidden" name="lineId" />
+								<div class="box-body">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">노선명</label>
+		
+										<div class="col-sm-10">
+											<input type="text" class="form-control" placeholder="노선명" name="lineNm"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">노선명</label>
+		
+										<div class="col-sm-10">
+											<select class="form-control" name="lineType">
+												<option value="ATT">등교</option>
+												<option value="COM">하교</option>
+											</select>
+										</div>
+									</div>
+									
+								</div>
+							</form>					
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary btn-sm data-save" >저장</button>
+							<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">취소</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+		<!-- /.content-wrapper -->
+	</div>
+	<script th:inline="javascript" layout:fragment="script">
+		/*<![CDATA[*/
+
+		$(document).ready(function () {
+			
+			addEventOnMainModalShow();
+			addClickEventInNewButton();
+			
+			getMainDataList();
+		});
+
+		function getMainDataList() {
+			$.ajax({
+				url : "/rest/admin/board/line/list",
+				type : "GET",
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+				dataType : "JSON",
+				success : function (result) {
+					var dataTable = $("#main-table").DataTable(
+						{
+							data : result.data
+							, destroy : true
+							, columns : [
+								{ data : "lineId" }
+								, { data : "lineNm" }
+								, { data : "lineType" 
+									, render : function(data, type, row, meta) {
+										return data == "ATT" ? "등교" : "하교";
+									}	
+								}
+								, { data : "bus"
+									, render : function(data, type, row, meta) {
+										return data.busNum;
+									}	
+								}
+								, { data : "sttusCd" }
+							    , {
+									"data": null,
+									"defaultContent": "<button type='button' class='btn btn-primary btn-xs data-edit' style='margin-right:16px;'><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></button><button type='button' class='btn btn-danger btn-xs data-delete'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>"
+								}
+							]
+							, paging: false
+							, scrollY: "70vh"
+							, scrollCollapse: true
+							, lengthChange: false
+							, searching: true
+							, ordering: true
+							, info: false
+							, autoWidth: false
+							, buttons: [ 'copy', 'csv', 'excel' ]
+						}
+					);
+					
+					dataTable.off("click");
+					dataTable.on( 'click', 'tr .data-edit', function () {
+						var trNode = $(this).closest("tr");
+						var currntRowData = dataTable.row(trNode).data();
+						
+						showMainModalForm("edit");
+						
+						changeMainModalFormValue(currntRowData);
+					});
+				}
+			});			
+		}
+		
+		function addEventOnMainModalShow() {
+			$("#main-modal").on("shown.bs.modal", function (e) {
+				resetMainModalForm();
+			})
+		}
+		
+		function resetMainModalForm() {
+			$("#main-info-form input[name='lineId']").val("");
+			$("#main-info-form input[name='lineNm']").val("");
+		}
+		
+		function addClickEventInNewButton() {
+			$(".data-new").click(function(){
+				showMainModalForm("new");
+			});
+		}
+		
+		function showMainModalForm(mode) {
+			$("#main-modal .data-save").unbind("click");			
+			if (mode == "new") {
+				$("#main-modal .modal-title").text("버스 노선 등록");
+				$("#main-modal .data-save").click(createMainData);
+			} else {
+				$("#main-modal .modal-title").text("버스 노선 수정");
+				$("#main-modal .data-save").click(updateMainData);
+			}
+			
+			$("#main-modal").modal("show");
+		}
+		
+		function hideMainModalForm() {
+			$("#main-modal").modal("hide");
+		}
+		
+		function createMainData() {
+			var mainInfoForm = $("#main-info-form");
+			
+			$.ajax({
+				type : "POST"
+				, url : "/rest/admin/board/line"
+				, data : getJsonFormData(mainInfoForm)
+				, headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				}
+				, dataType : "JSON"
+				, success : function(){
+					alert("성공적으로 저장되었습니다.")
+					getMainDataList();
+					hideMainModalForm();
+				}
+			});
+		};
+
+		function updateMainData() {
+			var mainInfoForm = $("#main-info-form");
+
+			$.ajax({
+				type : "PUT"
+				, url : "/rest/admin/board/line"
+				, data : getJsonFormData(mainInfoForm)
+				, headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				}
+				, dataType : "JSON"
+				, success : function(){
+					alert("성공적으로 저장되었습니다.")
+					getMainDataList();
+					hideMainModalForm();
+				}
+			});
+		};
+		
+		function changeMainModalFormValue(mainDataItem) {
+			$("#main-info-form input[name='lineId']").val(mainDataItem.lineId);
+			$("#main-info-form input[name='lineNm']").val(mainDataItem.lineNm);
+			$("#main-info-form select[name='lineType']").val(mainDataItem.lineType);
+		}
+		
+		function getJsonFormData(form) {
+			return JSON.stringify($(form).serializeObject());
+		}
+		/*]]>*/
+	</script>
+</body>
+</html>
