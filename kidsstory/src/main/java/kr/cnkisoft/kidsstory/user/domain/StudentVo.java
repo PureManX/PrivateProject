@@ -14,7 +14,7 @@ import java.util.List;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentVo extends UserVo{
+public class StudentVo extends UserVo {
 
 	private List<ParentVo> parents;
 

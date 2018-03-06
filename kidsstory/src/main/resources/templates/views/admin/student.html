@@ -8,7 +8,18 @@
 		.popover {
 			min-width: 500px;
 		}
-
+		.student-profile-image {
+			width: auto;
+			height: 64px;
+		}
+		.parent-list span.glyphicon-remove {
+			float: right;
+		}
+		.modal-header {
+			background: #e3e3e3;
+			font-size: 1.2em;
+			font-weight: bold;
+		}
 	</style>
 </head>
 <body class="hold-transition skin-red-light sidebar-mini">
@@ -37,29 +48,28 @@
 				<div class="box box-solid box-default">
 
 					<div class="box-header with-border">
-						<h3 class="box-title">공지사항 목록</h3>
+						<h3 class="box-title">유치원생 목록</h3>
 					</div>
 					<!-- /.box-header -->
 					<!-- form start -->
 					<div class="box-body">
-						<table id="notice-table" class="table table-bordered table-striped dataTable" role="grid" data-height="460">
+						<table id="student-table" class="table table-bordered table-striped dataTable" role="grid" data-height="460">
 							<thead>
 								<tr>
-									<th data-field="userId">사용자번호</th>
+									<th data-field="userId">번호</th>
 									<th data-field="userName">이름</th>
 									<th data-field="className">학급</th>
 									<th data-field="userPorfileImage">이미지</th>
 									<th data-field="userStatus">상태</th>
 									<th data-field="userParents">부모님 정보</th>
+									<th data-field="userParents">기능</th>
 								</tr>
 							</thead>
 						</table>
 					</div>
 					<!-- /.box-body -->
 					<div class="box-footer">
-						<a href="#" data-toggle="modal" data-target="#myModal">
-							<span class="btn btn-info pull-right">신규등록</span>
-						</a>
+						<span class="btn btn-info pull-right data-new">신규등록</span>
 					</div>
 					<!-- /.box-footer -->
 				</div>
@@ -67,97 +77,90 @@
 
 			</section>
 			<!-- /.content -->		
+			
+			<!-- Modal -->
+			<div class="modal" id="studentModal" tabindex="-1" role="dialog" aria-labelledby="studentModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">학생 등록</h4>
+					</div>					
+					<div class="modal-content">
+						<div class="modal-body">
+							<form class="form-horizontal" id="student-info-form">
+								<input type="hidden" name="userId" />
+								<div class="box-body">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">이름</label>
 		
+										<div class="col-sm-10">
+											<input type="text" class="form-control" placeholder="이름" name="userNm"/>
+										</div>
+									</div>
+		
+									<div class="form-group">
+										<label class="col-sm-2 control-label">학급</label>
+										<div class="col-sm-10">
+											<select class="form-control" name="clsId">
+											</select>
+										</div>
+									</div>
 
-			<!-- Main content -->
-			<section class="content">
-				<div class="box box-solid box-default">
-
-					<div class="box-header with-border">
-						<h3 class="box-title">유치원생 등록</h3>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">학부형</label>
+		
+										<div class="col-sm-10">
+											<span class="input-group-btn" id="search-btn-parent-group">
+												<button type="button" id="search-btn-parent" class="btn btn-flat">
+													<i class="fa fa-search"></i>
+												</button>
+							  				</span>
+											<ul class="list-group parent-list">
+												<li class="list-group-item">test1</li>
+												<li class="list-group-item">test2</li>
+											</ul>
+										</div>
+									</div>
+									
+								</div>
+							</form>					
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary btn-sm data-save" >저장</button>
+							<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">취소</button>
+						</div>
 					</div>
-					<!-- /.box-header -->
-					<!-- form start -->
-					<form class="form-horizontal">
-						<div class="box-body">
-							<div class="form-group">
-								<label class="col-sm-2 control-label">이름</label>
-
-								<div class="col-sm-10">
-									<input type="text" class="form-control" placeholder="이름" />
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-sm-2 control-label">학부형</label>
-
-								<div class="col-sm-10">
-									<div class="input-group" id="test1">
-										<input type="text" name="q" class="form-control" placeholder="학부형" />
-										<span class="input-group-btn" id="search-btn-parent-group">
-											<button type="button" name="search" id="search-btn-parent" class="btn btn-flat">
-												<i class="fa fa-search"></i>
-											</button>
-						  				</span>
-									</div>
-
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-sm-2 control-label">학급</label>
-								<div class="col-sm-10">
-									<select class="form-control">
-										<option selected="selected">개나리</option>
-										<option>진달래</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="inputPassword3" class="col-sm-2 control-label">Password</label>
-
-								<div class="col-sm-10">
-									<input type="password" class="form-control" id="inputPassword3" placeholder="Password" />
-								</div>
-							</div>
-							<div class="form-group">
-								<div class="col-sm-offset-2 col-sm-10">
-									<div class="checkbox">
-										<label>
-											<input type="checkbox" /> Remember me
-										</label>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- /.box-body -->
-						<div class="box-footer">
-							<button type="submit" class="btn btn-default">취소</button>
-							<button type="submit" class="btn btn-info pull-right">저장</button>
-						</div>
-						<!-- /.box-footer -->
-					</form>
-
 				</div>
-				<!-- Your Page Content Here -->
-
-			</section>
-			<!-- /.content -->
+			</div>
 		</div>
 		<!-- /.content-wrapper -->
 	</div>
 
 	<script th:inline="javascript" layout:fragment="script">
 		/*<![CDATA[*/
+		var classList;
+			
 		$(document).ready(function() {
-			$("#search-btn-parent").popover({
+
+			addClickEventInParentSearchButton();
+			addEventOnStudentModalShow();
+			addClickEventInNewStudentButton();
+			
+			getPreschoolClassList();
+			getStudentList();
+		});
+		
+		function addClickEventInParentSearchButton() {
+			var parentPopover = $("#search-btn-parent").popover({
 				trigger : "click"
 				,title : "학부형을 선택해주세요"
 				,placement : "bottom"
 				,content : '<table id="popover-table" class="table table-bordered table-striped dataTable" role="grid" data-height="460"><thead><tr>' +
 						'<th data-field="userNm">학부형 이름</th>' +
 						'<th data-field="contact">전화번호</th>' +
-						'</tr></thead></table>'
+						'</tr></thead><tfoot><tr><th></th><th></th></tr></tfoot></table>'
 				,viewport : "#test1"
 				,html : true
 			});
@@ -166,7 +169,7 @@
 				var popoverId = $(this).attr("aria-describedby");
 
 				$.ajax({
-					url : "/rest/admin/parent/list",
+					url : "/rest/admin/user/parent/list",
 					type : "GET",
 					headers: {
 						'Accept': 'application/json',
@@ -174,6 +177,11 @@
 					},
 					dataType : "JSON",
 					success : function (result) {
+					    $('#popover-table tfoot th').each( function () {
+					        var title = $(this).text();
+					        $(this).html( '<input type="text" placeholder="Search '+title+'" /><br/>' );
+					    });
+						
 						var dataTable = $("#" + popoverId).find("#popover-table").DataTable(
 							{
 								data : result.data
@@ -181,23 +189,279 @@
 									{ data : "userNm" }
 									, { data : "contact" }
 								]
-								, paging: true
+								, paging: false
+								, scrollY: "40vh"
+								, scrollCollapse: true
 								, lengthChange: false
-								, searching: true
+								, searching: false
 								, ordering: true
 								, info: false
 								, autoWidth: false
 							}
 						);
+						
+						dataTable.on( 'click', 'tr', function () {
+							var currntRowData = dataTable.row( this ).data();
+							console.log(currntRowData);
+							addParentList(currntRowData)
+							parentPopover.popover('hide')
+						});
+						
 
-						dataTable.on("selectItems", function( e, dt, items) {
-							console.log(items);
-						})
+					    // Apply the search
+					    dataTable.columns().every( function () {
+					        var that = this;
+					 		
+					        console.log(that);
+					        $( 'input', this.footer() ).on( 'keyup change', function () {
+					            if ( that.search() !== this.value ) {
+					                that
+					                    .search( this.value )
+					                    .draw();
+					            }
+					        } );
+					    } );
 					}
 				});
 
 			});
-		});
+		}
+		
+		function getPreschoolClassList() {
+			$.ajax({
+				url : "/rest/admin/preschool/class/list",
+				type : "GET",
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+				dataType : "JSON",
+				success : function (result) {
+					classList = result.data;
+					createClassListComboBox();
+				}
+			});		
+		}
+		
+		function getStudentList() {
+			$.ajax({
+				url : "/rest/admin/user/student/list",
+				type : "GET",
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+				dataType : "JSON",
+				success : function (result) {
+					var dataTable = $("#student-table").DataTable(
+						{
+							data : result.data
+							, destroy : true
+							, columns : [
+								{ data : "userId" }
+								, { data : "userNm" }
+								, { data : "clsId"
+									, render : function(data, type, row, meta) {
+										return classList.filter(function(item){
+												return item.clsId == data
+											})[0].clsNm;
+										}
+									}
+								, { data : "imgSrc"
+									, render : function(data, type, row, meta) {
+										return "<img class='student-profile-image' src='/file/data/" + data + "' />";
+									}
+								}
+								, { data : "sttusCd" }
+								, { data : "parents"
+									, render : function(data, type, row, meta) {
+										var parentsHtml = "";
+										
+										data.forEach(function(v, i) {
+											if (i > 0) {
+												parentsHtml += ",";
+											}
+											parentsHtml += "<span>" + v.userNm +  "</span>";
+										})
+										
+										return parentsHtml;
+										}
+									}
+							    , {
+									"data": null,
+									"defaultContent": "<button type='button' class='btn btn-primary btn-xs data-edit' style='margin-right:16px;'><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></button><button type='button' class='btn btn-danger btn-xs data-delete'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>"
+								}
+							]
+							, paging: false
+							, scrollY: "70vh"
+							, scrollCollapse: true
+							, lengthChange: false
+							, searching: true
+							, ordering: true
+							, info: false
+							, autoWidth: false
+							, buttons: [ 'copy', 'csv', 'excel' ]
+						}
+					);
+					
+					dataTable.off("click");
+					dataTable.on( 'click', 'tr .data-edit', function () {
+						var trNode = $(this).closest("tr");
+						var currntRowData = dataTable.row(trNode).data();
+						
+						showStudentModalForm("edit");
+						
+						changeStudentModalFormValue(currntRowData);
+					});
+				}
+			});			
+		}
+		
+		function createClassListComboBox() {
+			var selectObject = $("select[name='clsId']")
+			
+			selectObject.empty();
+			
+			classList.forEach(function(v, i){
+				selectObject.append($('<option>', {value:v.clsId, text:v.clsNm}))
+			})
+		}
+		
+		function changeStudentModalFormValue(studentItem) {
+			$("#student-info-form input[name='userId']").val(studentItem.userId);
+			$("#student-info-form input[name='userNm']").val(studentItem.userNm);
+			
+			studentItem.parents.forEach(function(v, i){
+				addParentList(v);
+			});
+			
+			$("#student-info-form select[name='clsId']").val(studentItem.clsId);
+		}
+		
+		function addParentList(parentItem) {
+			var appedObject = $(".parent-list").append("<li class='list-group-item' id='parent-item-" + parentItem.userId + "'><span>" + parentItem.userNm + "</span><span> "
+					+ parentItem.contact + "</span><span class='glyphicon glyphicon-remove' aria-hidden='true'>"
+					+ "<input type='hidden' name='parents' value='" + parentItem.userId + "'/></span></li>");
+			
+			$("#parent-item-" + parentItem.userId + " .glyphicon-remove").click(function(){
+				$("#parent-item-" + parentItem.userId).remove();
+			});
+		}
+		
+		function addEventOnStudentModalShow() {
+			$("#studentModal").on("shown.bs.modal", function (e) {
+				resetStudentModalForm();
+			})
+		}
+		
+		function resetStudentModalForm() {
+			$(".parent-list").empty();
+			$("#student-info-form input[name='userId']").val("");
+			$("#student-info-form input[name='userNm']").val("");
+		}
+		
+		function showStudentModalForm(mode) {
+			$("#studentModal .data-save").unbind("click");			
+			if (mode == "new") {
+				$("#studentModal .modal-title").text("학생 등록");
+				$("#studentModal .data-save").click(createStudent);
+			} else {
+				$("#studentModal .modal-title").text("학생 수정");
+				$("#studentModal .data-save").click(updateStudent);
+			}
+			
+			$("#studentModal").modal("show");
+		}
+		
+		function addClickEventInNewStudentButton() {
+			$(".data-new").click(function(){
+				showStudentModalForm("new");
+			});
+		}
+		
+		function createStudent() {
+			var studentInfoForm = $("#student-info-form");
+			var jsonData = studentInfoForm.serializeObject();
+			
+			var convertedParnetsObject = [];
+			
+			$("input[name='parents']").each(function(){
+				convertedParnetsObject.push({"userId":$(this).val()});
+			});
+			
+			console.log(convertedParnetsObject);
+			
+			jsonData.parents = convertedParnetsObject;
+			
+			console.log(jsonData);
+			$.ajax({
+				type : "POST"
+				, url : "/rest/admin/user/student/"
+				, data : JSON.stringify(jsonData)
+				, headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				}
+				, dataType : "JSON"
+				, success : function(){
+					alert("성공적으로 저장되었습니다.")
+					getStudentList();
+					$("#studentModal").modal("hide");
+				}
+			});
+		};
+
+		function updateStudent() {
+			var studentInfoForm = $("#student-info-form");
+			var jsonData = studentInfoForm.serializeObject();
+			
+			var convertedParnetsObject = [];
+			
+			$("input[name='parents']").each(function(){
+				convertedParnetsObject.push({"userId":$(this).val()});
+			});
+			
+			console.log(convertedParnetsObject);
+			
+			jsonData.parents = convertedParnetsObject;
+			
+			console.log(jsonData);
+			$.ajax({
+				type : "PUT"
+				, url : "/rest/admin/user/student/"
+				, data : JSON.stringify(jsonData)
+				, headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				}
+				, dataType : "JSON"
+				, success : function(){
+					alert("성공적으로 저장되었습니다.")
+					getStudentList();
+					$("#studentModal").modal("hide");
+				}
+			});
+		};
+		
+		function getJsonFormData(form) {
+			return JSON.stringify($(form).serializeObject());
+		}
+
+		$.fn.serializeObject = function() {
+			var o = {};
+			var a = this.serializeArray();
+			$.each(a, function() {
+				if (o[this.name] !== undefined) {
+					if (!o[this.name].push) {
+						o[this.name] = [ o[this.name] ];
+					}
+					o[this.name].push(this.value || '');
+				} else {
+					o[this.name] = this.value || '';
+				}
+			});
+			return o;
+		};
 		/*]]>*/
 	</script>
 </body>

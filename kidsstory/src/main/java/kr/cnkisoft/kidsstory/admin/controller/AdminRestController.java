@@ -30,28 +30,6 @@ public class AdminRestController {
 	@Autowired
 	NoticeService noticeService;
 	
-	// 학부모 데이터 생성
-	@RequestMapping(value = "/rest/admin/parent/create", method = RequestMethod.POST)
-	@ResponseBody
-	public CommonResultVo createParent(@RequestBody UserDto parent) {
-		userService.createParent(parent);
-
-		CommonResultVo result = new CommonResultVo();
-		result.setData("success");
-		return result;
-	}
-	
-	// 학부모 리스트 호출
-	@RequestMapping(value = "/rest/admin/parent/list", method = RequestMethod.GET)
-	@ResponseBody
-	public CommonResultVo parentList() {
-		List<UserDto> parentList = userService.getListParentInPreschool();
-
-		CommonResultVo result = new CommonResultVo();
-		result.setData(parentList);
-
-		return result;
-	}
 	
 	// 공지사항 리스트 조회
 	@RequestMapping(value = "/rest/admin/notice/list", method = RequestMethod.GET)

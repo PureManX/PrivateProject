@@ -2,23 +2,19 @@
  * Created by PureMaN on 2017-06-08.
  */
 jQuery.fn.serializeObject = function() {
-	var obj = null;
-	try {
-		if (this[0].tagName && this[0].tagName.toUpperCase() == "FORM") {
-			var arr = this.serializeArray();
-			if (arr) {
-				obj = {};
-				jQuery.each(arr, function() {
-					obj[this.name] = this.value;
-				});
-			}//if ( arr ) {
+	var o = {};
+	var a = this.serializeArray();
+	$.each(a, function() {
+		if (o[this.name] !== undefined) {
+			if (!o[this.name].push) {
+				o[this.name] = [ o[this.name] ];
+			}
+			o[this.name].push(this.value || '');
+		} else {
+			o[this.name] = this.value || '';
 		}
-	} catch (e) {
-		alert(e.message);
-	} finally {
-	}
-
-	return obj;
+	});
+	return o;
 };
 
 var WebbrowserUtils = {

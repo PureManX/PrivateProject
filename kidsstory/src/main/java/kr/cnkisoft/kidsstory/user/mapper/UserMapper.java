@@ -48,11 +48,7 @@ public interface UserMapper {
 			+ " VALUES (#{userId}, #{symptom}, #{adminDt}, #{adminTm}, #{adminCapa}, #{adminType}, #{adminCnt}, #{sympDesc}, #{keepType}, 0, now() )")
 	public int insertReqMediInfo(ReqMediDto param);
 
-
-	@Insert("INSERT INTO USER_INFO (USER_NM, USER_TYPE, PAR_USER_ID, CONTACT, EMAIL, PROF_IMG_ID, STTUS_CD, SCH_CD, CLS_ID, CREATED_DT, CREATED_BY)" +
-			" VALUES (#{userNm}, #{userType}, #{parUserId}, #{contact}, #{email}, #{profImgId}, #{sttusCd}, #{schCd}, #{clsId}, NOW(), #{createdBy})")
 	public int insertUser(UserDto user);
-
 
 	@Select("SELECT * FROM USER_INFO WHERE SCH_CD = #{schCd} AND USER_TYPE = 'PAR'")
 	public List<UserDto> selectListParentInPreschool(@Param("schCd")String preschoolCode);
@@ -67,4 +63,10 @@ public interface UserMapper {
 	public List<ParentVo> selectListParentsByChildId(@Param("childId")Integer childId);
 	
 	public int updateUserProfileImageId(UserDto user);
+	
+	public int insertMapParentChild(@Param("parentId")Integer parentId, @Param("childId")Integer childId, @Param("createdBy")Integer createdBy);
+	public int updateStudent(UserDto user);
+	public int deleteMapParentChildByChildId(@Param("childId")Integer childId);
+	public int updateParent(UserDto user);
+	
 }

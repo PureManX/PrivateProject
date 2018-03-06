@@ -1,10 +1,13 @@
 package kr.cnkisoft.kidsstory.user.service.impl;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.cnkisoft.framework.enums.LoginUserType;
@@ -117,13 +120,6 @@ public class UserServiceImpl implements UserService {
 
 	private List<StudentVo> getChildrenByParentId(Integer parentId) {
 		List<StudentVo> studentList = userMapper.selectListStudentByParentId(parentId);
-
-//		List<StudentVo> studentList = new ArrayList<>();
-//
-//		for (UserDto userDto : studentDtoList) {
-//			StudentVo studentVo = new StudentVo(userDto);
-//			studentList.add(studentVo);
-//		}
 
 		return studentList;
 	}
@@ -245,4 +241,70 @@ public class UserServiceImpl implements UserService {
 		return uploadFileInfo;
 	}
 
+	@Override
+	public List<StudentVo> getStudentListByCurrentLoginPreshcoolCode() {
+		LoginUserVo loginUser =  AuthUtils.getLoginUser();
+		
+		if (loginUser == null) {
+			throw new RuntimeException("로그인 정보가 존재하지 않습니다.");
+		}
+		
+		return getStudentListByPreshcoolCode(loginUser.getSchool().getSchCd());
+	}
+
+	@Override
+	public List<StudentVo> getStudentListByPreshcoolCode(String schCd) {
+		if (StringUtils.isEmpty(schCd)) {
+			throw new RuntimeException("유치원 코드가 올바르지 않습니다.");
+		}
+		return userMapper.selectListStudentByPreschoolCode(schCd);
+	}
+
+	@Override
+	public void createStudent(StudentVo student) {
+		LoginUserVo loginUser =  AuthUtils.getLoginUser();
+		
+		student.setCreatedBy(loginUser.getLoginUserId());
+		student.setUserType("STU");
+		student.setSttusCd("A");
+		student.setSchCd(loginUser.getSchool().getSchCd());
+		userMapper.insertUser(student);
+		
+		createMapParentChild(student);
+	}
+
+	@Override
+	public void modifyStudent(StudentVo student) {
+		LoginUserVo loginUser =  AuthUtils.getLoginUser();
+		
+		student.setUpdatedBy(loginUser.getLoginUserId());
+		
+		userMapper.updateStudent(student);
+		
+		// 기존 부모 자식 관계 삭제 후 새로 생성
+		removeMapParentChildByChildId(student.getUserId());
+		
+		createMapParentChild(student);
+	}
+
+	private void createMapParentChild(StudentVo student) {
+		LoginUserVo loginUser =  AuthUtils.getLoginUser();
+		
+		for (ParentVo parent : student.getParents()) {
+			userMapper.insertMapParentChild(parent.getUserId(), student.getUserId(), loginUser.getLoginUserId());
+		}	
+	}
+	
+	public void removeMapParentChildByChildId(Integer childId) {
+		userMapper.deleteMapParentChildByChildId(childId);
+	}
+
+	@Override
+	public void modifyParnet(UserDto parent) {
+		LoginUserVo loginUser =  AuthUtils.getLoginUser();
+		
+		parent.setUpdatedBy(loginUser.getLoginUserId());
+		
+		userMapper.updateParent(parent);
+	}
 }

@@ -149,4 +149,53 @@
 		WHERE
 			USER_ID = #{userId}
 	</update>
+	
+	<insert id="insertMapParentChild" parameterType="map">
+		INSERT INTO MAP_PARENT_CHILD /* 부모 자식 관계 생성 */
+			(PARENT_ID, CHILD_ID, CREATED_DT, CREATED_BY)
+		VALUES
+			(#{parentId}, #{childId}, NOW(), #{createdBy})
+	</insert>
+	
+	<insert id="insertUser" parameterType="kr.cnkisoft.kidsstory.user.domain.UserDto"
+		useGeneratedKeys="true" keyProperty="userId">
+		INSERT INTO USER_INFO /* 사용자 생성 */
+			(USER_NM, USER_TYPE, PAR_USER_ID, CONTACT, EMAIL, PROF_IMG_ID, STTUS_CD, SCH_CD, CLS_ID, CREATED_DT, CREATED_BY)
+		VALUES
+			(#{userNm}, #{userType}, #{parUserId}, #{contact}, #{email}, #{profImgId}, #{sttusCd}, #{schCd}, #{clsId}, NOW(), #{createdBy})
+	</insert>
+	
+	<update id="updateStudent" parameterType="kr.cnkisoft.kidsstory.user.domain.UserDto">
+		UPDATE 
+			USER_INFO
+		SET 
+			USER_NM = #{userNm}
+			, CLS_ID = #{clsId}
+			, UPDATED_DT = NOW()
+			, UPDATED_BY = #{updatedBy}
+		WHERE
+			USER_ID = #{userId}
+	</update>
+	
+	<delete id="deleteMapParentChildByChildId" parameterType="map">
+		DELETE /* 부모 자식 관계 삭제 (자식 ID) */
+		FROM 
+			MAP_PARENT_CHILD
+		WHERE
+			CHILD_ID = #{childId}
+	</delete>
+	
+	<update id="updateParent" parameterType="kr.cnkisoft.kidsstory.user.domain.UserDto">
+		UPDATE 
+			USER_INFO
+		SET 
+			USER_NM = #{userNm}
+			, CONTACT = #{contact}
+			, EMAIL = #{email}
+			, UPDATED_DT = NOW()
+			, UPDATED_BY = #{updatedBy}
+		WHERE
+			USER_ID = #{userId}
+	</update>
+	
 </mapper>
