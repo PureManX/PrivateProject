@@ -18,4 +18,7 @@ public interface PreschoolMapper {
 	// 유치원 학급 정보 조회 
 	@Select("SELECT sch.* FROM PRESCH_CLASS cls JOIN PRESCH_INFO sch ON cls.SCH_CD = sch.SCH_CD WHERE cls.CLS_ID = #{clsId}")
 	public PreschoolVo selectPreschoolbyClsId(@Param("clsId")Integer clsId);
+	
+	public int insertPreschoolClass(PreschoolClassDto preschoolClass);
+	public int updatePreschoolClass(PreschoolClassDto preschoolClass);
 }

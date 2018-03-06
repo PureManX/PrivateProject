@@ -59,4 +59,13 @@ public class AdminViewController {
 
 		return mav;
 	}
+	
+	// 학급 관리 페이지
+	@RequestMapping(value= "/admin/preschool/class", method = RequestMethod.GET)
+	public ModelAndView adminPreschoolClass() {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("views/admin/preschool_class");
+
+		return mav;
+	}
 }

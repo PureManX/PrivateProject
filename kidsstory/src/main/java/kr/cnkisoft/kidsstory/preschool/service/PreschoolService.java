@@ -7,4 +7,6 @@ import kr.cnkisoft.kidsstory.preschool.domain.PreschoolClassDto;
 public interface PreschoolService {
 	public List<PreschoolClassDto> getClassListByCurrentLoginPreshcoolCode();
 	public List<PreschoolClassDto> getClassListByPreshcoolCode(String schCd);
+	public void createPreschoolClass(PreschoolClassDto preschoolClass);
+	public void modifyPreschoolClass(PreschoolClassDto preschoolClass);
 }

@@ -38,4 +38,33 @@ public class PreschoolServiceImpl implements PreschoolService {
 		return preschoolMapper.selectListPreschoolClassbyPreshcoolCode(schCd);
 	}
 
+	@Override
+	public void createPreschoolClass(PreschoolClassDto preschoolClass) {
+		LoginUserVo loginUser =  AuthUtils.getLoginUser();
+		
+		if (loginUser == null) {
+			throw new RuntimeException("로그인 정보가 존재하지 않습니다.");
+		}
+		
+		preschoolClass.setCreatedBy(loginUser.getLoginUserId());
+		preschoolClass.setSchCd(loginUser.getSchool().getSchCd());
+		preschoolClass.setSchSttusCd("A");
+
+		preschoolMapper.insertPreschoolClass(preschoolClass);
+		
+	}
+
+	@Override
+	public void modifyPreschoolClass(PreschoolClassDto preschoolClass) {
+		LoginUserVo loginUser =  AuthUtils.getLoginUser();
+		
+		if (loginUser == null) {
+			throw new RuntimeException("로그인 정보가 존재하지 않습니다.");
+		}
+
+		preschoolClass.setUpdatedBy(loginUser.getLoginUserId());
+		
+		preschoolMapper.updatePreschoolClass(preschoolClass);
+	}
+
 }

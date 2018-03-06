@@ -14,6 +14,7 @@ import lombok.ToString;
 public class PreschoolClassDto extends CommonDto {
 	private Integer clsId;
 	private String clsNm;
+	private String schCd;
  	private Integer hrTeacherId;
  	private String schSttusCd;
 }
