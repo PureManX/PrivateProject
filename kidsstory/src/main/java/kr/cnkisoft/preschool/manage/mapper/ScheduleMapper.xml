@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.cnkisoft.preschool.manage.mapper.ScheduleMapper">
+
+	
+	<select id="selectListScheduleByPreschoolCode" resultType="kr.cnkisoft.preschool.manage.domain.MonthlyScheduleVo" parameterType="map">
+		SELECT
+			*
+		FROM
+			PRESCH_SCHEDULE
+		WHERE
+			SCH_CD = #{schCd}
+		ORDER BY
+			CREATED_DT DESC
+	</select>
+	
+	<insert id="insertSchedule" parameterType="kr.cnkisoft.preschool.manage.domain.PreschoolScheduleDto">
+		INSERT INTO PRESCH_SCHEDULE
+			(SCH_CD, SCHEDULE_TYPE, SCHEDULE_DATE, SCHEDULE_CONTENT, CREATED_DT, CREATED_BY)
+		VALUES
+			(#{schCd}, #{scheduleType}, #{scheduleDate}, #{scheduleContent}, NOW(), #{createdBy})
+	</insert>
+	
+	<delete id="deleteScheduleByScheduleId" parameterType="map">
+		DELETE 
+		FROM 
+			PRESCH_SCHEDULE
+		WHERE
+			SCHEDULE_ID = #{scheduleId}
+	</delete>
+</mapper>
