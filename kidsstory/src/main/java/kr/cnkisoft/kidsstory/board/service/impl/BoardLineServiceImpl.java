@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import kr.cnkisoft.framework.security.AuthUtils;
 import kr.cnkisoft.kidsstory.board.mapper.BoardLineMapper;
 import kr.cnkisoft.kidsstory.board.service.BoardLineService;
+import kr.cnkisoft.kidsstory.board.vo.BoardLineDto;
 import kr.cnkisoft.kidsstory.board.vo.BoardLineInfoVo;
 import kr.cnkisoft.kidsstory.board.vo.BoardLineServiceDto;
 import kr.cnkisoft.kidsstory.user.domain.LoginUserVo;
@@ -18,7 +19,7 @@ public class BoardLineServiceImpl implements BoardLineService {
 
 	@Autowired
 	BoardLineMapper boardLineMapper;
-	
+
 	@Override
 	public BoardLineInfoVo getBoardLineBasicInfo(Integer lineId) {
 		return boardLineMapper.selectBoardLineInfoByLineId(lineId);
@@ -28,7 +29,7 @@ public class BoardLineServiceImpl implements BoardLineService {
 	public BoardLineServiceDto getBoardServiceStatus(Integer lineId) {
 		return boardLineMapper.selectStartedBoardService(lineId);
 	}
-	
+
 	@Override
 	public List<BoardLineInfoVo> getBoardLineList(String lineType) {
 		UserVo user = AuthUtils.getLoginUser().getUser();
@@ -48,12 +49,41 @@ public class BoardLineServiceImpl implements BoardLineService {
 	@Override
 	public List<BoardLineInfoVo> getBoardLineListByCurretLoginPreshcoolCode() {
 		LoginUserVo loginUser =  AuthUtils.getLoginUser();
-		
+
 		if (loginUser == null) {
 			throw new RuntimeException("로그인 정보가 존재하지 않습니다.");
 		}
-		
+
 		return boardLineMapper.selectListBoardLineInfoByPreschoolCode(loginUser.getSchool().getSchCd());
+	}
+
+	@Override
+	public void createBoardLine(BoardLineDto boardLine) {
+		LoginUserVo loginUser =  AuthUtils.getLoginUser();
+
+		if (loginUser == null) {
+			throw new RuntimeException("로그인 정보가 존재하지 않습니다.");
+		}
+
+		boardLine.setSchCd(loginUser.getPreshcoolCode());
+		boardLine.setSttusCd("A");
+		boardLine.setCreatedBy(loginUser.getLoginUserId());
+
+		boardLineMapper.insertBoardLine(boardLine);
+
+	}
+
+	@Override
+	public void modifyBoardLine(BoardLineDto boardLine) {
+		LoginUserVo loginUser =  AuthUtils.getLoginUser();
+
+		if (loginUser == null) {
+			throw new RuntimeException("로그인 정보가 존재하지 않습니다.");
+		}
+
+		boardLine.setUpdatedBy(loginUser.getLoginUserId());
+
+		boardLineMapper.updateBoardLine(boardLine);
 	}
 
 }

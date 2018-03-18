@@ -76,8 +76,8 @@
 				<!-- Your Page Content Here -->
 
 			</section>
-			<!-- /.content -->		
-			
+			<!-- /.content -->
+
 			<!-- Modal -->
 			<div class="modal" id="studentModal" tabindex="-1" role="dialog" aria-labelledby="studentModalLabel">
 				<div class="modal-dialog" role="document">
@@ -86,7 +86,7 @@
 							<span aria-hidden="true">&times;</span>
 						</button>
 						<h4 class="modal-title">학생 등록</h4>
-					</div>					
+					</div>
 					<div class="modal-content">
 						<div class="modal-body">
 							<form class="form-horizontal" id="student-info-form">
@@ -94,12 +94,12 @@
 								<div class="box-body">
 									<div class="form-group">
 										<label class="col-sm-2 control-label">이름</label>
-		
+
 										<div class="col-sm-10">
 											<input type="text" class="form-control" placeholder="이름" name="userNm"/>
 										</div>
 									</div>
-		
+
 									<div class="form-group">
 										<label class="col-sm-2 control-label">학급</label>
 										<div class="col-sm-10">
@@ -110,7 +110,7 @@
 
 									<div class="form-group">
 										<label class="col-sm-2 control-label">학부형</label>
-		
+
 										<div class="col-sm-10">
 											<span class="input-group-btn" id="search-btn-parent-group">
 												<button type="button" id="search-btn-parent" class="btn btn-flat">
@@ -123,9 +123,9 @@
 											</ul>
 										</div>
 									</div>
-									
+
 								</div>
-							</form>					
+							</form>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-primary btn-sm data-save" >저장</button>
@@ -141,17 +141,17 @@
 	<script th:inline="javascript" layout:fragment="script">
 		/*<![CDATA[*/
 		var classList;
-			
+
 		$(document).ready(function() {
 
 			addClickEventInParentSearchButton();
 			addEventOnStudentModalShow();
 			addClickEventInNewStudentButton();
-			
+
 			getPreschoolClassList();
 			getStudentList();
 		});
-		
+
 		function addClickEventInParentSearchButton() {
 			var parentPopover = $("#search-btn-parent").popover({
 				trigger : "click"
@@ -181,7 +181,7 @@
 					        var title = $(this).text();
 					        $(this).html( '<input type="text" placeholder="Search '+title+'" /><br/>' );
 					    });
-						
+
 						var dataTable = $("#" + popoverId).find("#popover-table").DataTable(
 							{
 								data : result.data
@@ -199,19 +199,19 @@
 								, autoWidth: false
 							}
 						);
-						
+
 						dataTable.on( 'click', 'tr', function () {
 							var currntRowData = dataTable.row( this ).data();
 							console.log(currntRowData);
 							addParentList(currntRowData)
 							parentPopover.popover('hide')
 						});
-						
+
 
 					    // Apply the search
 					    dataTable.columns().every( function () {
 					        var that = this;
-					 		
+
 					        console.log(that);
 					        $( 'input', this.footer() ).on( 'keyup change', function () {
 					            if ( that.search() !== this.value ) {
@@ -226,7 +226,7 @@
 
 			});
 		}
-		
+
 		function getPreschoolClassList() {
 			$.ajax({
 				url : "/rest/admin/preschool/class/list",
@@ -240,9 +240,9 @@
 					classList = result.data;
 					createClassListComboBox();
 				}
-			});		
+			});
 		}
-		
+
 		function getStudentList() {
 			$.ajax({
 				url : "/rest/admin/user/student/list",
@@ -276,14 +276,14 @@
 								, { data : "parents"
 									, render : function(data, type, row, meta) {
 										var parentsHtml = "";
-										
+
 										data.forEach(function(v, i) {
 											if (i > 0) {
 												parentsHtml += ",";
 											}
 											parentsHtml += "<span>" + v.userNm +  "</span>";
 										})
-										
+
 										return parentsHtml;
 										}
 									}
@@ -303,65 +303,65 @@
 							, buttons: [ 'copy', 'csv', 'excel' ]
 						}
 					);
-					
+
 					dataTable.off("click");
 					dataTable.on( 'click', 'tr .data-edit', function () {
 						var trNode = $(this).closest("tr");
 						var currntRowData = dataTable.row(trNode).data();
-						
+
 						showStudentModalForm("edit");
-						
+
 						changeStudentModalFormValue(currntRowData);
 					});
 				}
-			});			
+			});
 		}
-		
+
 		function createClassListComboBox() {
 			var selectObject = $("select[name='clsId']")
-			
+
 			selectObject.empty();
-			
+
 			classList.forEach(function(v, i){
 				selectObject.append($('<option>', {value:v.clsId, text:v.clsNm}))
 			})
 		}
-		
+
 		function changeStudentModalFormValue(studentItem) {
 			$("#student-info-form input[name='userId']").val(studentItem.userId);
 			$("#student-info-form input[name='userNm']").val(studentItem.userNm);
-			
+
 			studentItem.parents.forEach(function(v, i){
 				addParentList(v);
 			});
-			
+
 			$("#student-info-form select[name='clsId']").val(studentItem.clsId);
 		}
-		
+
 		function addParentList(parentItem) {
 			var appedObject = $(".parent-list").append("<li class='list-group-item' id='parent-item-" + parentItem.userId + "'><span>" + parentItem.userNm + "</span><span> "
 					+ parentItem.contact + "</span><span class='glyphicon glyphicon-remove' aria-hidden='true'>"
 					+ "<input type='hidden' name='parents' value='" + parentItem.userId + "'/></span></li>");
-			
+
 			$("#parent-item-" + parentItem.userId + " .glyphicon-remove").click(function(){
 				$("#parent-item-" + parentItem.userId).remove();
 			});
 		}
-		
+
 		function addEventOnStudentModalShow() {
 			$("#studentModal").on("shown.bs.modal", function (e) {
 				resetStudentModalForm();
 			})
 		}
-		
+
 		function resetStudentModalForm() {
 			$(".parent-list").empty();
 			$("#student-info-form input[name='userId']").val("");
 			$("#student-info-form input[name='userNm']").val("");
 		}
-		
+
 		function showStudentModalForm(mode) {
-			$("#studentModal .data-save").unbind("click");			
+			$("#studentModal .data-save").unbind("click");
 			if (mode == "new") {
 				$("#studentModal .modal-title").text("학생 등록");
 				$("#studentModal .data-save").click(createStudent);
@@ -369,30 +369,30 @@
 				$("#studentModal .modal-title").text("학생 수정");
 				$("#studentModal .data-save").click(updateStudent);
 			}
-			
+
 			$("#studentModal").modal("show");
 		}
-		
+
 		function addClickEventInNewStudentButton() {
 			$(".data-new").click(function(){
 				showStudentModalForm("new");
 			});
 		}
-		
+
 		function createStudent() {
 			var studentInfoForm = $("#student-info-form");
 			var jsonData = studentInfoForm.serializeObject();
-			
+
 			var convertedParnetsObject = [];
-			
+
 			$("input[name='parents']").each(function(){
 				convertedParnetsObject.push({"userId":$(this).val()});
 			});
-			
+
 			console.log(convertedParnetsObject);
-			
+
 			jsonData.parents = convertedParnetsObject;
-			
+
 			console.log(jsonData);
 			$.ajax({
 				type : "POST"
@@ -414,17 +414,17 @@
 		function updateStudent() {
 			var studentInfoForm = $("#student-info-form");
 			var jsonData = studentInfoForm.serializeObject();
-			
+
 			var convertedParnetsObject = [];
-			
+
 			$("input[name='parents']").each(function(){
 				convertedParnetsObject.push({"userId":$(this).val()});
 			});
-			
+
 			console.log(convertedParnetsObject);
-			
+
 			jsonData.parents = convertedParnetsObject;
-			
+
 			console.log(jsonData);
 			$.ajax({
 				type : "PUT"
@@ -442,7 +442,7 @@
 				}
 			});
 		};
-		
+
 		function getJsonFormData(form) {
 			return JSON.stringify($(form).serializeObject());
 		}

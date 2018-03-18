@@ -10,15 +10,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.cnkisoft.kidsstory.common.domain.CommonResultVo;
+import kr.cnkisoft.kidsstory.preschool.domain.PreschoolBusDto;
 import kr.cnkisoft.kidsstory.preschool.domain.PreschoolClassDto;
 import kr.cnkisoft.kidsstory.preschool.service.PreschoolService;
 
 @RestController
 public class PreschcoolRestController {
-	
+
 	@Autowired
 	PreschoolService preschoolService;
-	
+
 	@GetMapping({"/rest/preschool/class/list", "/rest/admin/preschool/class/list"})
 	public CommonResultVo getClassListByPreshcoolCode() {
 		List<PreschoolClassDto> classList = preschoolService.getClassListByCurrentLoginPreshcoolCode();
@@ -28,7 +29,7 @@ public class PreschcoolRestController {
 
 		return result;
 	}
-	
+
 	@PostMapping({"/rest/preschool/class", "/rest/admin/preschool/class"})
 	public CommonResultVo createClassByPreshcoolCode(
 			@RequestBody PreschoolClassDto preschoolClass
@@ -40,7 +41,7 @@ public class PreschcoolRestController {
 
 		return result;
 	}
-	
+
 	@PutMapping({"/rest/preschool/class", "/rest/admin/preschool/class"})
 	public CommonResultVo modifyClassByPreshcoolCode(
 			@RequestBody PreschoolClassDto preschoolClass
@@ -49,6 +50,16 @@ public class PreschcoolRestController {
 
 		CommonResultVo result = new CommonResultVo();
 		result.setData("success");
+
+		return result;
+	}
+
+	@GetMapping({"/rest/preschool/bus/list", "/rest/admin/preschool/bus/list"})
+	public CommonResultVo getBusListByPreshcoolCode() {
+		List<PreschoolBusDto> classList = preschoolService.getBusListByCurrentLoginPreshcoolCode();
+
+		CommonResultVo result = new CommonResultVo();
+		result.setData(classList);
 
 		return result;
 	}

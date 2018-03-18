@@ -31,4 +31,7 @@ public class CommonResultVo {
 		this.data = data;
 	}
 
+	public static CommonResultVo createSuccessResult() {
+		return new CommonResultVo(JsonResultStatus.SUCCESS.getMessage());
+	}
 }

@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudentVo extends UserVo {
-
+	private String clsNm;
 	private List<ParentVo> parents;
 
 	public StudentVo(UserDto userDto) {

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import kr.cnkisoft.kidsstory.board.vo.BoardLineDto;
 import kr.cnkisoft.kidsstory.board.vo.BoardLineInfoVo;
 import kr.cnkisoft.kidsstory.board.vo.BoardLineServiceDto;
 
@@ -21,4 +22,6 @@ public interface BoardLineMapper {
 	public BoardLineInfoVo selectInProgressBoardLineInfoByLineId(@Param("lineId")int lineId);
 	public List<BoardLineInfoVo> selectBoardLineListInfoByLineType(@Param("lineType")String lineType, @Param("schCd")String schCd);
 	public List<BoardLineInfoVo> selectListBoardLineInfoByPreschoolCode(@Param("schCd")String schCd);
+	public int insertBoardLine(BoardLineDto boardLine);
+	public int updateBoardLine(BoardLineDto boardLine);
 }

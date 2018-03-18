@@ -5,10 +5,53 @@
 	  layout:decorator="layout/adminLayout">
 <head>
 	<style>
+		.popover {
+			min-width: 500px;
+		}
+
 		.modal-header {
 			background: #e3e3e3;
 			font-size: 1.2em;
 			font-weight: bold;
+		}
+		.station-time {
+			display: inline-block;
+			width: 4vw;
+		}
+		.station-location {
+			display: inline-block;
+			margin-left: 2vw;
+			width: 15vw;
+		}
+		.station-student {
+			display: inline-block;
+			margin-left: 2vw;
+		}
+		.station-student-name {
+			display: inline-block;
+			margin-left: 1vw;
+			width: 8vw;
+		}
+		.station-student-extra {
+			display: inline-block;
+			margin-left: 1vw;
+			width: 4vw;
+		}
+		.staion-function {
+			display: inline-block;
+			float: right;
+		}
+		.student-profile-image, .station-student-profile-image img {
+			width: auto;
+			height: 48px;
+		}
+		.station-student-class-name {
+			display: inline-block;
+			width: 10vw;
+		}
+		.station-student-function{
+			float: right;
+			line-height: 48px;
 		}
 	</style>
 </head>
@@ -34,7 +77,7 @@
 			</section>
 
 			<!-- Main content -->
-			<section class="content">
+			<section class="content line-wrapper">
 				<div class="box box-solid box-default">
 
 					<div class="box-header with-border">
@@ -63,11 +106,33 @@
 					<!-- /.box-footer -->
 				</div>
 				<!-- Your Page Content Here -->
-
 			</section>
-			<!-- /.content -->	
-			
-			<!-- Modal -->
+
+			<section class="content station-wrapper">
+				<div class="box box-solid box-default">
+
+					<div class="box-header with-border">
+						<h3 class="box-title">버스 노선 정류장 상세 정보</h3>
+					</div>
+					<!-- /.box-header -->
+					<!-- form start -->
+					<div class="box-body">
+						<ul class="list-group station-list">
+							<li class="list-group-item">test1</li>
+							<li class="list-group-item">test2</li>
+						</ul>
+					</div>
+					<!-- /.box-body -->
+					<div class="box-footer">
+						<span class="btn btn-info pull-right data-new">신규등록</span>
+					</div>
+					<!-- /.box-footer -->
+				</div>
+				<!-- Your Page Content Here -->
+			</section>
+			<!-- /.content -->
+
+			<!-- Modal 노선 -->
 			<div class="modal" id="main-modal" tabindex="-1" role="dialog" aria-labelledby="main-modalLabel">
 				<div class="modal-dialog" role="document">
 					<div class="modal-header">
@@ -75,7 +140,7 @@
 							<span aria-hidden="true">&times;</span>
 						</button>
 						<h4 class="modal-title">노선 등록</h4>
-					</div>					
+					</div>
 					<div class="modal-content">
 						<div class="modal-body">
 							<form class="form-horizontal" id="main-info-form">
@@ -83,14 +148,14 @@
 								<div class="box-body">
 									<div class="form-group">
 										<label class="col-sm-2 control-label">노선명</label>
-		
+
 										<div class="col-sm-10">
 											<input type="text" class="form-control" placeholder="노선명" name="lineNm"/>
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-2 control-label">노선명</label>
-		
+
 										<div class="col-sm-10">
 											<select class="form-control" name="lineType">
 												<option value="ATT">등교</option>
@@ -98,9 +163,17 @@
 											</select>
 										</div>
 									</div>
-									
+
+									<div class="form-group">
+										<label class="col-sm-2 control-label">버스</label>
+										<div class="col-sm-10">
+											<select class="form-control" name="busId">
+											</select>
+										</div>
+									</div>
+
 								</div>
-							</form>					
+							</form>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-primary btn-sm data-save" >저장</button>
@@ -109,18 +182,106 @@
 					</div>
 				</div>
 			</div>
-		</div>
+
+			<!-- Modal 정류장 -->
+			<div class="modal" id="station-modal" tabindex="-1" role="dialog" aria-labelledby="station-modal-label">
+				<div class="modal-dialog" role="document">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">정류장 등록</h4>
+					</div>
+					<div class="modal-content">
+						<div class="modal-body">
+							<form class="form-horizontal" id="station-info-form">
+								<input type="hidden" name="lineId" />
+								<input type="hidden" name="lineDtlId" />
+								<div class="box-body">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">정거시간</label>
+
+										<div class="col-sm-10">
+											<input type="text" class="form-control" placeholder="정거시간" name="boardTm"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">정류장명</label>
+
+										<div class="col-sm-10">
+											<input type="text" class="form-control" placeholder="정류장명" name="boardLoc"/>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary btn-sm data-save" >저장</button>
+							<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">취소</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Modal 학생 리스트 -->
+			<div class="modal" id="student-student-list-modal" tabindex="-1" role="dialog" aria-labelledby="student-student-list-modal-label">
+				<div class="modal-dialog" role="document">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">정류정 학생 정보</h4>
+					</div>
+					<div class="modal-content">
+						<div class="modal-body">
+							<div class="box-body">
+								<input type="hidden" name="lineDetailId" />
+								<div class="form-group">
+									<div class="col-sm-3">
+										<label class="control-label">학생리스트</label>
+										<button type="button" id="search-btn-student" class="btn btn-flat">
+											<i class="fa fa-search"></i>
+										</button>
+									</div>
+									<div class="col-sm-9">
+										<ul class="list-group station-student-list">
+											<li class="list-group-item station-student-data-item">
+												<input type="hidden" class="station-student-id">
+												<span class="station-student-name"></span>
+												<span class="station-student-class-name"></span>
+												<span class="station-student-profile-image"><img></span>
+												<span class="glyphicon glyphicon-pencil data-delete" aria-hidden="true"></span>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary btn-sm data-save">저장</button>
+							<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">취소</button>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		<!-- /.content-wrapper -->
 	</div>
 	<script th:inline="javascript" layout:fragment="script">
 		/*<![CDATA[*/
+		var globalStationList;
+		var globalseselectStationId;
 
 		$(document).ready(function () {
-			
+
 			addEventOnMainModalShow();
 			addClickEventInNewButton();
-			
+
+			addEventOnStationModalShow();
+			addClickEventInStationNewButton();
+			addClickEventInStudentSearchButton();
+
+			getPreschoolBusList();
 			getMainDataList();
 		});
 
@@ -141,15 +302,15 @@
 							, columns : [
 								{ data : "lineId" }
 								, { data : "lineNm" }
-								, { data : "lineType" 
+								, { data : "lineType"
 									, render : function(data, type, row, meta) {
 										return data == "ATT" ? "등교" : "하교";
-									}	
+									}
 								}
 								, { data : "bus"
 									, render : function(data, type, row, meta) {
 										return data.busNum;
-									}	
+									}
 								}
 								, { data : "sttusCd" }
 							    , {
@@ -158,7 +319,7 @@
 								}
 							]
 							, paging: false
-							, scrollY: "70vh"
+							, scrollY: "10vh"
 							, scrollCollapse: true
 							, lengthChange: false
 							, searching: true
@@ -168,39 +329,50 @@
 							, buttons: [ 'copy', 'csv', 'excel' ]
 						}
 					);
-					
+
 					dataTable.off("click");
+
+					dataTable.on( 'click', 'tr', function () {
+						var currntRowData = dataTable.row(this).data();
+
+						globalseselectStationId = currntRowData.lineId;
+
+						getStationList(currntRowData.lineId);
+					});
+
 					dataTable.on( 'click', 'tr .data-edit', function () {
 						var trNode = $(this).closest("tr");
 						var currntRowData = dataTable.row(trNode).data();
-						
+
 						showMainModalForm("edit");
-						
+
 						changeMainModalFormValue(currntRowData);
 					});
+
 				}
-			});			
+			});
 		}
-		
+
 		function addEventOnMainModalShow() {
 			$("#main-modal").on("shown.bs.modal", function (e) {
 				resetMainModalForm();
 			})
 		}
-		
+
 		function resetMainModalForm() {
 			$("#main-info-form input[name='lineId']").val("");
 			$("#main-info-form input[name='lineNm']").val("");
+			$("#main-info-form select[name='busId']").val("");
 		}
-		
+
 		function addClickEventInNewButton() {
-			$(".data-new").click(function(){
+			$(".line-wrapper .data-new").click(function(){
 				showMainModalForm("new");
 			});
 		}
-		
+
 		function showMainModalForm(mode) {
-			$("#main-modal .data-save").unbind("click");			
+			$("#main-modal .data-save").unbind("click");
 			if (mode == "new") {
 				$("#main-modal .modal-title").text("버스 노선 등록");
 				$("#main-modal .data-save").click(createMainData);
@@ -208,17 +380,17 @@
 				$("#main-modal .modal-title").text("버스 노선 수정");
 				$("#main-modal .data-save").click(updateMainData);
 			}
-			
+
 			$("#main-modal").modal("show");
 		}
-		
+
 		function hideMainModalForm() {
 			$("#main-modal").modal("hide");
 		}
-		
+
 		function createMainData() {
 			var mainInfoForm = $("#main-info-form");
-			
+
 			$.ajax({
 				type : "POST"
 				, url : "/rest/admin/board/line"
@@ -255,15 +427,367 @@
 				}
 			});
 		};
-		
+
 		function changeMainModalFormValue(mainDataItem) {
 			$("#main-info-form input[name='lineId']").val(mainDataItem.lineId);
 			$("#main-info-form input[name='lineNm']").val(mainDataItem.lineNm);
 			$("#main-info-form select[name='lineType']").val(mainDataItem.lineType);
+			$("#main-info-form select[name='busId']").val(mainDataItem.busId);
 		}
-		
+
 		function getJsonFormData(form) {
 			return JSON.stringify($(form).serializeObject());
+		}
+
+		function getStationList(lineId) {
+			$.ajax({
+				url : "/rest/admin/board/station/list/" + lineId,
+				type : "GET",
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+				dataType : "JSON",
+				success : function (result) {
+					globalStationList = result.data
+					makeStationList(globalStationList)
+				}
+			});
+		}
+
+		function makeStationList(stationList) {
+			var stationListObject = $('.station-list')
+			stationListObject.empty();
+
+			stationList.forEach(function(v, i) {
+				addStationList(stationListObject, v)
+			});
+
+			addEventInStationItem();
+		}
+
+
+		function addStationList(stationListObject, stationData) {
+			var studentList = stationData.studentList;
+
+			var listHtml = '<li class="list-group-item station-data-item">';
+			listHtml += '<input type="hidden" class="line-detail-id" value="' + stationData.lineDtlId + '" />';
+			listHtml += '<span class="station-time">' + stationData.boardTm + '</span>';
+			listHtml += '<span class="station-location">' + stationData.boardLoc + '</span>';
+			listHtml += '<span class="station-student">';
+			listHtml += '<span class="glyphicon glyphicon-user data-edit" aria-hidden="true"></span>';
+			if (studentList.length > 0) {
+				listHtml += '<span class="station-student-name">' + studentList[0].userNm + '</span>';
+			}
+			if (studentList.length > 1) {
+				listHtml += '<span class="station-student-extra">외' + studentList.length + '명 </span>';
+			}
+			listHtml += '</span>';
+			listHtml += '<span class="staion-function">';
+			listHtml += '<span class="glyphicon glyphicon-pencil data-edit" aria-hidden="true"></span>';
+			listHtml += '<span class="glyphicon glyphicon-remove data-delete" aria-hidden="true"></span>';
+			listHtml += '</span>';
+			listHtml += '</li>';
+
+			stationListObject.append(listHtml);
+		}
+
+		function addEventInStationItem() {
+			$(".station-data-item").each(function(){
+				var lineDtlId = $(this).find(".line-detail-id").val();
+
+				$(this).find(".station-student .data-edit").click(function(){
+					showStationStudentModalForm(lineDtlId, getSatationDataFromGloablStationListData(lineDtlId).studentList);
+				});
+
+				$(this).find(".staion-function .data-edit").click(function(){
+					showStationModalForm("edit");
+					changeStationModalFormValue(getSatationDataFromGloablStationListData(lineDtlId));
+				});
+
+				$(this).find(".staion-function .data-delete").click(function(){
+					console.log(getSatationDataFromGloablStationListData(lineDtlId));
+				});
+
+			})
+		}
+
+		function getSatationDataFromGloablStationListData(lineDtlId) {
+			return globalStationList.filter(function(item){
+				return item.lineDtlId == lineDtlId
+			})[0];
+		}
+
+		// 정류장 modal
+		function resetStationModalForm() {
+			$("#station-info-form input[name='lineDtlId']").val("");
+			$("#station-info-form input[name='lineId']").val("");
+			$("#station-info-form input[name='boardTm']").val("");
+			$("#station-info-form input[name='boardLoc']").val("");
+		}
+
+		function addClickEventInStationNewButton() {
+			$(".station-wrapper .data-new").click(function(){
+				showStationModalForm("new");
+
+				$("#station-info-form input[name='lineId']").val(globalseselectStationId);
+			});
+		}
+
+		function showStationModalForm(mode) {
+			$("#station-modal .data-save").unbind("click");
+
+			if (mode == "new") {
+				$("#station-modal .modal-title").text("정류장 등록");
+				$("#station-modal .data-save").click(createStationdData);
+			} else {
+				$("#station-modal .modal-title").text("정류장 수정");
+				$("#station-modal .data-save").click(updateStationData);
+			}
+
+			$("#station-modal").modal("show");
+		}
+
+		function changeStationModalFormValue(stationItem) {
+			$("#station-info-form input[name='lineDtlId']").val(stationItem.lineDtlId);
+			$("#station-info-form input[name='lineId']").val(stationItem.lineId);
+			$("#station-info-form input[name='boardTm']").val(stationItem.boardTm);
+			$("#station-info-form input[name='boardLoc']").val(stationItem.boardLoc);
+		}
+
+		function addEventOnStationModalShow() {
+			addEventOnModalShow($("#station-modal"), resetStationModalForm);
+		}
+
+		function createStationdData() {
+			var stationModal = $("#station-modal");
+			var stationInfoForm = $("#station-info-form");
+
+			$.ajax({
+				type : "POST"
+				, url : "/rest/admin/board/line/station"
+				, data : getJsonFormData(stationInfoForm)
+				, headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				}
+				, dataType : "JSON"
+				, success : function(){
+					alert("성공적으로 저장되었습니다.")
+					getStationList(globalseselectStationId);
+					hideModalForm(stationModal);
+				}
+			});
+		}
+
+		function updateStationData() {
+			var stationModal = $("#station-modal");
+			var stationInfoForm = $("#station-info-form");
+
+			$.ajax({
+				type : "PUT"
+				, url : "/rest/admin/board/line/station"
+				, data : getJsonFormData(stationInfoForm)
+				, headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				}
+				, dataType : "JSON"
+				, success : function(){
+					alert("성공적으로 저장되었습니다.")
+					getStationList(globalseselectStationId);
+					hideModalForm(stationModal);
+				}
+			});
+		}
+
+		// 정류장 학생 modal
+		function showStationStudentModalForm(lineDtlId, stationStudentList) {
+			$("input[name='lineDetailId']").val(lineDtlId);
+			$("#student-student-list-modal .data-save").unbind("click");
+			$("#student-student-list-modal .data-save").click(updateStationStudentData);
+
+			$("#student-student-list-modal").modal("show");
+			makeStationStudentList(stationStudentList);
+		}
+
+		function makeStationStudentList(stationStudentList) {
+			var stationStudentListObject = $(".station-student-list");
+			stationStudentListObject.empty();
+
+			stationStudentList.forEach(function(v, i){
+				addStationStudentItem(stationStudentListObject, v)
+			});
+
+			// 정류상 학생 삭제 버튼 이벤트 등록
+			$(".station-student-list .data-delete").each(function(){
+				$(this).click(function(){
+					$(this).closest(".station-student-data-item").remove();
+				});
+			});
+
+		}
+
+		function makeStaionStudentListTable(stationStudentList) {
+			var dataTable = $("#station-student-table").DataTable(
+					{
+						data : stationStudentList
+						, destroy : true
+						, columns : [
+							{ data : "userId" }
+							, { data : "profileImageUri"
+								, render : function(data, type, row, meta) {
+									return "<img class='student-profile-image' src='" + data + "' />";
+								}
+							}
+							, { data : "userNm" }
+							, { data : "clsNm" }
+						]
+						, paging: false
+						, scrollY: "40vh"
+						, scrollCollapse: true
+						, lengthChange: false
+						, searching: true
+						, ordering: true
+						, info: false
+						, autoWidth: false
+					}
+				);
+
+				dataTable.off("click");
+				dataTable.on( 'click', 'tr', function () {
+					var currntRowData = dataTable.row(this).data();
+					var stationStudentListObject = $(".station-student-list");
+
+					addStationStudentItem(stationStudentListObject, currntRowData);
+
+					$("#search-btn-student").popover('hide');
+				});
+		}
+
+		function addStationStudentItem(stationStudentListObject, studentObject) {
+			var listHtml = '<li class="list-group-item station-student-data-item">';
+			listHtml += '<input type="hidden" class="station-student-id" value="' + studentObject.userId + '" />';
+			listHtml += '<span class="station-student-profile-image"><img src="' + studentObject.profileImageUri + '"/></span>';
+			listHtml += '<span class="station-student-name">' + studentObject.userNm + '</span>';
+			listHtml += '<span class="station-student-class-name">' + studentObject.clsNm + '</span>';
+			listHtml += '<span class="station-student-function">';
+			listHtml += '<span class="glyphicon glyphicon-remove data-delete" aria-hidden="true"></span>';
+			listHtml += '</span>';
+			listHtml += '</li>';
+
+			stationStudentListObject.append(listHtml);
+		}
+
+
+		function addClickEventInStudentSearchButton() {
+			var tableHtml = '<table id="station-student-table" class="table table-bordered table-striped dataTable" role="grid" data-height="400">';
+			tableHtml += '<thead><tr>';
+			tableHtml += '<th data-field="userId">번호</th>';
+			tableHtml += '<th data-field="profileImageUri">사진</th>';
+			tableHtml += '<th data-field="userNm">학생 이름</th>';
+			tableHtml += '<th data-field="clsNm">학급 이름</th>';
+			tableHtml += '</tr></thead>';
+			tableHtml += '</table>';
+
+			var studentListPopover = $("#search-btn-student").popover({
+				trigger : "click"
+				,title : "학생을 선택해 주세요"
+				,placement : "bottom"
+				,content : tableHtml
+				,html : true
+			});
+
+			studentListPopover.on('inserted.bs.popover', function () {
+				var popoverId = $(this).attr("aria-describedby");
+
+				$.ajax({
+					url : "/rest/admin/user/student/list",
+					type : "GET",
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json'
+					},
+					dataType : "JSON",
+					success : function (result) {
+						makeStaionStudentListTable(result.data);
+					}
+				});
+
+			});
+		}
+
+		function updateStationStudentData() {
+			var lineDetailId = $("input[name='lineDetailId']").val();
+			var stationStudentModal = $("#student-student-list-modal");
+			var updateData = {};
+			var studentList = [];
+
+			$(".station-student-data-item").each(function(){
+				var studentObject = {};
+
+				studentObject.stduId = $(this).find(".station-student-id").val();
+				studentObject.lineDtlId = lineDetailId;
+
+				studentList.push(studentObject);
+			})
+
+			console.log(studentList);
+
+			$.ajax({
+				type : "PUT"
+				, url : "/rest/admin/board/line/station/" + lineDetailId + "/student"
+				, data : JSON.stringify(studentList)
+				, headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				}
+				, dataType : "JSON"
+				, success : function(){
+					alert("성공적으로 저장되었습니다.")
+					getStationList(globalseselectStationId);
+					hideModalForm(stationStudentModal);
+				}
+			});
+		}
+
+		function addEventOnModalShow(modalObject, initFunc) {
+			$(modalObject).on("shown.bs.modal", function (e) {
+				initFunc();
+			})
+		}
+
+		function hideModalForm(modalObject) {
+			$(modalObject).modal("hide");
+		}
+
+
+
+		// 버스 노선 조회
+		function getPreschoolBusList() {
+			$.ajax({
+				url : "/rest/admin/preschool/bus/list",
+				type : "GET",
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+				dataType : "JSON",
+				success : function (result) {
+					busList = result.data;
+					createBusListComboBox(busList);
+				}
+			});
+		}
+
+		function createBusListComboBox(busList) {
+			var selectObject = $("select[name='busId']")
+
+			selectObject.empty();
+
+			busList.forEach(function(v, i){
+				selectObject.append($('<option>', {value:v.busId, text:v.busNum + "(" + v.driverName + ")"}));
+			})
 		}
 		/*]]>*/
 	</script>

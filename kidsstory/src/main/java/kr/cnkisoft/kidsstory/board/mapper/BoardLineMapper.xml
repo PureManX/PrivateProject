@@ -13,7 +13,7 @@
 			<result property="serviceStartDt" column="SERVICE_START_DT"/>
 			<result property="serviceEndDt" column="SERVICE_END_DT"/>
 		</association>
-		<association property="bus" javaType="kr.cnkisoft.kidsstory.board.vo.PreschoolBusDto" autoMapping="true">
+		<association property="bus" javaType="kr.cnkisoft.kidsstory.preschool.domain.PreschoolBusDto" autoMapping="true">
 			<id property="busId" column="BUS_ID"/>
 			<result property="busNum" column="BUS_NUM"/>
 			<result property="driverName" column="DRIVER_NAME"/>
@@ -151,5 +151,24 @@
 			boardLine.SCH_CD = #{schCd}
 	]]>
 	</select>
-
+	
+	<insert id="insertBoardLine" parameterType="kr.cnkisoft.kidsstory.board.vo.BoardLineDto">
+		INSERT INTO PRESCH_LINE
+			(SCH_CD, BUS_ID, LINE_NM, LINE_TYPE, STTUS_CD, CREATED_DT, CREATED_BY)
+		VALUES
+			(#{schCd}, #{busId}, #{lineNm}, #{lineType}, #{sttusCd}, NOW(), #{createdBy})
+	</insert>
+	
+	<update id="updateBoardLine" parameterType="kr.cnkisoft.kidsstory.board.vo.BoardLineDto">
+		UPDATE 
+			PRESCH_LINE
+		SET
+			BUS_ID = #{busId}
+			, LINE_NM = #{lineNm}
+			, LINE_TYPE = #{lineType}
+			, UPDATED_DT = NOW()
+			, UPDATED_BY = #{updatedBy}
+		WHERE
+			LINE_ID = #{lineId}
+	</update>
 </mapper>

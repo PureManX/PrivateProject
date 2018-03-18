@@ -1,7 +1,5 @@
 package kr.cnkisoft.kidsstory.user.service.impl;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;

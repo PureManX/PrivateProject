@@ -12,18 +12,18 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class LoginUserVo implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private LoginUserType userType = LoginUserType.GUEST;
 
 	private UserVo user;
-	
+
 	public LoginUserVo(UserVo user) {
 		this.user = user;
 		this.userType = LoginUserType.fromCode(user.getUserType());
 	}
-	
+
 	public PreschoolVo getSchool() {
 		return user.getPreschool();
 	}
@@ -56,7 +56,7 @@ public class LoginUserVo implements Serializable {
 		return user.getUserId();
 	}
 
-
-
-
+	public String getPreshcoolCode() {
+		return getSchool().getSchCd();
+	}
 }

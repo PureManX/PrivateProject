@@ -15,6 +15,7 @@
 		<result property="schCd" column="SCH_CD"/>
 		<result property="clsId" column="CLS_ID"/>
 		<result property="imgSrc" column="IMG_SRC"/>
+		<result property="clsNm" column="CLS_NM"/>
 		<collection property="parents" ofType="kr.cnkisoft.kidsstory.user.domain.ParentVo" javaType="ArrayList">
 			<constructor>
 				<idArg column="PARENT_USER_ID" javaType="int"/>
@@ -94,6 +95,7 @@
 	<select id="selectListStudentByTeacherContact" parameterType="map" resultMap="StudentVo">
 		SELECT	/* 학생 정보 조회 (선생님 전화번호) */
 			student.*
+			, preshcoolClass.CLS_NM	AS CLS_NM
 			, parent.USER_ID	AS PARENT_USER_ID
 			, parent.USER_NM	AS PARENT_USER_NM
 			, parent.USER_TYPE	AS PARENT_USER_TYPE
@@ -109,6 +111,7 @@
 			VIEW_USER_BASE teacher
 			JOIN PRESCH_CLASS preschool ON teacher.USER_ID = preschool.HR_TEACHER_ID
 			JOIN VIEW_USER_BASE student ON student.CLS_ID = preschool.CLS_ID AND student.USER_TYPE = 'STU'
+			JOIN PRESCH_CLASS preshcoolClass ON student.CLS_ID = preshcoolClass.CLS_ID
 			JOIN MAP_PARENT_CHILD parentRelation ON student.USER_ID = parentRelation.CHILD_ID 
 			JOIN VIEW_USER_BASE parent ON parentRelation.PARENT_ID = parent.USER_ID AND parent.USER_TYPE = 'PAR'
 			LEFT JOIN PRESCH_PUSH_ID push ON parent.CONTACT = push.CONTACT
@@ -119,6 +122,7 @@
 	<select id="selectListStudentByBoardLineDetailId" parameterType="map" resultMap="StudentVo">
 		SELECT /* 학생 정보 조회 (라인 상세 정보, 탑승 예약 대기 제외) */
 			student.*
+			, preshcoolClass.CLS_NM	AS CLS_NM
 			, parent.USER_ID	AS PARENT_USER_ID
 			, parent.USER_NM	AS PARENT_USER_NM
 			, parent.USER_TYPE	AS PARENT_USER_TYPE
@@ -135,6 +139,7 @@
 			JOIN MAP_LINE_STDU relLine ON lineDetail.LINE_DTL_ID = relLine.LINE_DTL_ID
 			JOIN MAP_PARENT_CHILD relParent ON relLine.STDU_ID = relParent.CHILD_ID
 			JOIN VIEW_USER_BASE student ON relParent.CHILD_ID = student.USER_ID
+			JOIN PRESCH_CLASS preshcoolClass ON student.CLS_ID = preshcoolClass.CLS_ID
 			JOIN VIEW_USER_BASE parent ON relParent.PARENT_ID = parent.USER_ID
 			LEFT JOIN PRESCH_PUSH_ID push ON parent.CONTACT = push.CONTACT
 		WHERE 

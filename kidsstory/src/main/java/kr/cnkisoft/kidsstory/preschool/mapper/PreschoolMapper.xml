@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.cnkisoft.kidsstory.preschool.mapper.PreschoolMapper">
-	
+
 	<insert id="insertPreschoolClass" parameterType="kr.cnkisoft.kidsstory.preschool.domain.PreschoolClassDto">
 		INSERT INTO PRESCH_CLASS
 			(CLS_NM, SCH_CD, HR_TEACHER_ID, STTUS_CD, CREATED_DT, CREATED_BY)
 		VALUES
 			(#{clsNm}, #{schCd}, #{hrTeacherId}, #{schSttusCd}, NOW(), #{createdBy})
 	</insert>
-	
+
 	<update id="updatePreschoolClass" parameterType="kr.cnkisoft.kidsstory.preschool.domain.PreschoolClassDto">
-		UPDATE 
+		UPDATE
 			PRESCH_CLASS
-		SET 
+		SET
 			CLS_NM = #{clsNm}
 			, HR_TEACHER_ID = #{hrTeacherId}
 			, UPDATED_DT = NOW()
@@ -20,5 +20,12 @@
 		WHERE
 			CLS_ID = #{clsId}
 	</update>
-	
+
+	<select id="selectListPreschoolBus" parameterType="map"
+		resultType="kr.cnkisoft.kidsstory.preschool.domain.PreschoolBusDto">
+		SELECT
+			*
+		FROM
+			PRESCH_BUS
+	</select>
 </mapper>

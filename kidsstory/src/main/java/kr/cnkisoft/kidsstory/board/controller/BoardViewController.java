@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import kr.cnkisoft.kidsstory.board.mapper.BoardMapper;
-import kr.cnkisoft.kidsstory.board.service.BoardLineDetailService;
+import kr.cnkisoft.kidsstory.board.service.BoardRunningService;
 import kr.cnkisoft.kidsstory.board.service.BoardLineService;
 import kr.cnkisoft.kidsstory.board.vo.BoardLineDto;
 import kr.cnkisoft.kidsstory.board.vo.BoardLineInfoVo;
@@ -22,7 +22,7 @@ public class BoardViewController {
 	BoardMapper boardMapper;
 
 	@Autowired
-	BoardLineDetailService boardLineDetailService;
+	BoardRunningService boardLineDetailService;
 	
 	@Autowired
 	BoardLineService boardLineService;

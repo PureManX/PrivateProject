@@ -26,11 +26,10 @@ public class AdminAuthenticationServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
-		String userName = "admin";
-		String password = bCryptPasswordEncoder.encode("admin");
+		String password = bCryptPasswordEncoder.encode(username);
 
 		log.info(" == LOGIN USER : {}", username);
-		AdminUserDetails userDetails = new AdminUserDetails(userName, password);
+		AdminUserDetails userDetails = new AdminUserDetails(username, password);
 		
 		return userDetails;
 	}

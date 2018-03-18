@@ -1,4 +1,4 @@
-package kr.cnkisoft.kidsstory.board.vo;
+package kr.cnkisoft.kidsstory.preschool.domain;
 
 import kr.cnkisoft.kidsstory.common.domain.CommonDto;
 import lombok.Data;

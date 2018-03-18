@@ -1,6 +1,7 @@
 package kr.cnkisoft.kidsstory.board.vo;
 
 import kr.cnkisoft.framework.enums.BoardLineServiceType;
+import kr.cnkisoft.kidsstory.preschool.domain.PreschoolBusDto;
 import kr.cnkisoft.kidsstory.user.domain.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

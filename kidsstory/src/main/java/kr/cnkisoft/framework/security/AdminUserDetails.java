@@ -27,19 +27,26 @@ public class AdminUserDetails implements UserDetails {
 		this.username = username;
 		this.password = password;
 		
+		String schCd = "TEST1";
+		String schNm = "테스트 유치원";
+		if (username.equals("test02")) {
+			schCd = "000001";
+			schNm = "동화나라";
+		}
+		
 		UserVo user = new UserVo();
 		user.setUserNm("테스트관리자");
 		user.setUserId(999);
 		user.setUserType(LoginUserType.ADMIN.getCode());
 		user.setUserId(3);
 		user.setClsId(1);
-		user.setSchCd("TEST1");
+		user.setSchCd(schCd);
 		user.setUserType("TCH");
 		user.setImgSrc("/file/data//prof/prof_4.png");
 		
 		PreschoolVo preschool = new PreschoolVo();
-		preschool.setSchCd("TEST1");
-		preschool.setSchName("테스트유치원");
+		preschool.setSchCd(schCd);
+		preschool.setSchName(schNm);
 		
 		user.setPreschool(preschool);
 		
