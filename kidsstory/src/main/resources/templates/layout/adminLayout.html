@@ -30,7 +30,7 @@
 	<link rel="stylesheet" th:href="@{/adminlte/plugins/datatables/dataTables.bootstrap.css}"/>
 
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.bootstrap.min.css"/>
-	
+
 	<link rel="stylesheet" th:href="@{/css/common/admin-common.css}"/>
 </head>
 <body class="hold-transition skin-red-light sidebar-mini">
@@ -235,6 +235,18 @@
 <!-- 				<li> -->
 <!-- 					<a href="#"><i class="fa fa-users"></i> <span>선생님 관리</span></a> -->
 <!-- 				</li> -->
+				<li class="treeview" sec:authentication="ROLE_SUPER_ADMIN">
+					<a href="#">
+						<i class="fa fa-users"></i>
+						<span>키즈 스토리 관리</span>
+						<span class="pull-right-container">
+							<i class="fa fa-angle-left pull-right"></i>
+						</span>
+					</a>
+					<ul class="treeview-menu">
+						<li><a th:href="@{/admin/preschool}">유치원 관리</a></li>
+					</ul>
+				</li>
 				<li class="treeview">
 					<a href="#">
 						<i class="fa fa-users"></i>
@@ -385,8 +397,8 @@
 	<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
 	<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.bootstrap.min.js"></script>
 	<script layout:fragment="script">
-	 
-	
+
+
 	</script>
 </body>
 </html>

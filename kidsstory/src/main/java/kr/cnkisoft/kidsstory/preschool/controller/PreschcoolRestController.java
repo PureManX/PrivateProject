@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.cnkisoft.kidsstory.common.domain.CommonResultVo;
 import kr.cnkisoft.kidsstory.preschool.domain.PreschoolBusDto;
 import kr.cnkisoft.kidsstory.preschool.domain.PreschoolClassDto;
+import kr.cnkisoft.kidsstory.preschool.domain.PreschoolDto;
 import kr.cnkisoft.kidsstory.preschool.service.PreschoolService;
 
 @RestController
@@ -19,6 +20,40 @@ public class PreschcoolRestController {
 
 	@Autowired
 	PreschoolService preschoolService;
+
+	@GetMapping({"/rest/admin/preschool/list"})
+	public CommonResultVo getPreschiilList() {
+		List<PreschoolDto> classList = preschoolService.getPreschoolList();
+
+		CommonResultVo result = new CommonResultVo();
+		result.setData(classList);
+
+		return result;
+	}
+
+	@PostMapping({"/rest/admin/preschool"})
+	public CommonResultVo createPreshcool(
+			@RequestBody PreschoolDto preschool
+			) {
+		preschoolService.createPreschool(preschool);
+
+		CommonResultVo result = new CommonResultVo();
+		result.setData("success");
+
+		return result;
+	}
+
+	@PutMapping({"/rest/admin/preschool"})
+	public CommonResultVo modifyPreshcool(
+			@RequestBody PreschoolDto preschool
+			) {
+		preschoolService.modifyPreschool(preschool);
+
+		CommonResultVo result = new CommonResultVo();
+		result.setData("success");
+
+		return result;
+	}
 
 	@GetMapping({"/rest/preschool/class/list", "/rest/admin/preschool/class/list"})
 	public CommonResultVo getClassListByPreshcoolCode() {

@@ -9,31 +9,45 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import kr.cnkisoft.framework.enums.LoginUserType;
+import kr.cnkisoft.kidsstory.admin.domain.AdminUserVo;
 import kr.cnkisoft.kidsstory.preschool.domain.PreschoolVo;
 import kr.cnkisoft.kidsstory.user.domain.LoginUserVo;
 import kr.cnkisoft.kidsstory.user.domain.UserVo;
 
 public class AdminUserDetails implements UserDetails {
-	
+
 	private static final long serialVersionUID = 1L;
-	
-	
+
+
 	String username;
 	String password;
 	LoginUserVo loginUserVo;
-	
+	AdminUserVo adminUserVo;
+
+	protected AdminUserDetails(AdminUserVo adminUser) {
+		this.username = adminUser.getLoginId();
+		this.password = adminUser.getLoginPassword();
+		this.adminUserVo = adminUser;
+
+		UserVo user = adminUser.getUser();
+
+		user.setPreschool(adminUser.getSchool());
+
+		loginUserVo = new LoginUserVo(user);
+	}
+
 	protected AdminUserDetails(String username, String password) {
 		super();
 		this.username = username;
 		this.password = password;
-		
+
 		String schCd = "TEST1";
 		String schNm = "테스트 유치원";
 		if (username.equals("test02")) {
 			schCd = "000001";
 			schNm = "동화나라";
 		}
-		
+
 		UserVo user = new UserVo();
 		user.setUserNm("테스트관리자");
 		user.setUserId(999);
@@ -43,23 +57,19 @@ public class AdminUserDetails implements UserDetails {
 		user.setSchCd(schCd);
 		user.setUserType("TCH");
 		user.setImgSrc("/file/data//prof/prof_4.png");
-		
+
 		PreschoolVo preschool = new PreschoolVo();
 		preschool.setSchCd(schCd);
 		preschool.setSchName(schNm);
-		
+
 		user.setPreschool(preschool);
-		
+
 		loginUserVo = new LoginUserVo(user);
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-		SimpleGrantedAuthority roleUser = new SimpleGrantedAuthority("ADMIN");
-		authorities.add(roleUser);
-		
-		return authorities;
+		return adminUserVo.getRoles();
 	}
 
 	@Override

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.cnkisoft.kidsstory.admin.mapper.AdminUserMapper">
+
+	<resultMap type="kr.cnkisoft.kidsstory.user.domain.UserVo" id="userVo" autoMapping="true" />
+	<resultMap type="kr.cnkisoft.kidsstory.preschool.domain.PreschoolVo" id="preschoolVo" autoMapping="true" />
+	<resultMap type="kr.cnkisoft.kidsstory.admin.domain.AdminUserVo" id="adminUserVo" autoMapping="true">
+		<id property="adminId" column="ADMIN_ID"/>
+		<association property="user" resultMap="userVo"></association>
+		<association property="school" resultMap="preschoolVo"></association>
+		<collection property="roles"
+			ofType="org.springframework.security.core.authority.SimpleGrantedAuthority" javaType="ArrayList">
+			<constructor>
+				<idArg column="ADMIN_ROLE" javaType="string"/>
+			</constructor>
+		</collection>
+	</resultMap>
+
+	<select id="selectAdminUserByLoginId" parameterType="map"
+		resultMap="adminUserVo">
+		/* 어드민 유저 조회 (로그인 ID) */
+		SELECT
+			*
+		FROM
+			ADMIN_USER adminUser
+			LEFT JOIN VIEW_USER_BASE userView ON adminUser.USER_ID = userView.USER_ID
+			LEFT JOIN PRESCH_INFO preschool ON adminUser.SCH_CD =  preschool.SCH_CD
+			LEFT JOIN ADMIN_ROLE adminRole ON adminUser.ADMIN_ID = adminRole.ADMIN_ID
+		WHERE
+			LOGIN_ID = #{loginId}
+	</select>
+
+	<insert id="insertAdminUser" parameterType="kr.cnkisoft.kidsstory.admin.domain.AdminUserVo">
+		/* 어드민 사용자 생성 */
+		INSERT INTO ADMIN_USER
+			(LOGIN_ID, LOGIN_PASSWORD, SCH_CD, USER_ID, CREATED_DT, CREATED_BY, UPDATED_DT, UPDATED_BY)
+		VALUES
+			(#{loginId}, #{loginPassword}, #{schCd}, #{userId}, NOW(), #{adminId}, NOW(), #{adminId})
+	</insert>
+
+	<insert id="insertAdminUserRole" parameterType="map">
+		/* 어드민 사용자 권한 생성 */
+		INSERT INTO ADMIN_ROLE
+			(ADMIN_ID, ADMIN_ROLE, CREATED_DT, CREATED_BY)
+		VALUES
+			(#{adminId}, #{adminRole}, NOW(), #{adminId})
+	</insert>
+</mapper>

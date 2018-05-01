@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 
 import kr.cnkisoft.kidsstory.preschool.domain.PreschoolBusDto;
 import kr.cnkisoft.kidsstory.preschool.domain.PreschoolClassDto;
+import kr.cnkisoft.kidsstory.preschool.domain.PreschoolDto;
 import kr.cnkisoft.kidsstory.preschool.domain.PreschoolVo;
 
 @Mapper
@@ -24,4 +25,9 @@ public interface PreschoolMapper {
 	public int updatePreschoolClass(PreschoolClassDto preschoolClass);
 
 	public List<PreschoolBusDto> selectListPreschoolBus();
+	public List<PreschoolDto> selectListPreschool();
+
+	public int insertPreschool(PreschoolDto preschool);
+	public int updatePreschool(PreschoolDto preschool);
+
 }

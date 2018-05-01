@@ -1,7 +1,6 @@
 package kr.cnkisoft.kidsstory.preschool.service.impl;
 
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.util.StringUtils;
 import kr.cnkisoft.framework.security.AuthUtils;
 import kr.cnkisoft.kidsstory.preschool.domain.PreschoolBusDto;
 import kr.cnkisoft.kidsstory.preschool.domain.PreschoolClassDto;
+import kr.cnkisoft.kidsstory.preschool.domain.PreschoolDto;
 import kr.cnkisoft.kidsstory.preschool.mapper.PreschoolMapper;
 import kr.cnkisoft.kidsstory.preschool.service.PreschoolService;
 import kr.cnkisoft.kidsstory.user.domain.LoginUserVo;
@@ -20,6 +20,11 @@ public class PreschoolServiceImpl implements PreschoolService {
 
 	@Autowired
 	PreschoolMapper preschoolMapper;
+
+	@Override
+	public List<PreschoolDto> getPreschoolList() {
+		return preschoolMapper.selectListPreschool();
+	}
 
 	@Override
 	public List<PreschoolClassDto> getClassListByCurrentLoginPreshcoolCode() {
@@ -86,6 +91,33 @@ public class PreschoolServiceImpl implements PreschoolService {
 		List<PreschoolBusDto> busList = preschoolMapper.selectListPreschoolBus();
 
 		return busList.stream().filter(x -> x.getSchCd().equals(schCd)).collect(Collectors.toList());
+	}
+
+	@Override
+	public void createPreschool(PreschoolDto preschool) {
+		LoginUserVo loginUser =  AuthUtils.getLoginUser();
+
+		if (loginUser == null) {
+			throw new RuntimeException("로그인 정보가 존재하지 않습니다.");
+		}
+
+		preschool.setCreatedBy(loginUser.getLoginUserId());
+		preschool.setSttusCd("A");
+
+		preschoolMapper.insertPreschool(preschool);
+	}
+
+	@Override
+	public void modifyPreschool(PreschoolDto preschool) {
+		LoginUserVo loginUser =  AuthUtils.getLoginUser();
+
+		if (loginUser == null) {
+			throw new RuntimeException("로그인 정보가 존재하지 않습니다.");
+		}
+
+		preschool.setUpdatedBy(loginUser.getLoginUserId());
+
+		preschoolMapper.updatePreschool(preschool);
 	}
 
 }

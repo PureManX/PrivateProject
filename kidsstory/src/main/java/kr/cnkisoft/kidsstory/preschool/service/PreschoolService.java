@@ -4,8 +4,14 @@ import java.util.List;
 
 import kr.cnkisoft.kidsstory.preschool.domain.PreschoolBusDto;
 import kr.cnkisoft.kidsstory.preschool.domain.PreschoolClassDto;
+import kr.cnkisoft.kidsstory.preschool.domain.PreschoolDto;
 
 public interface PreschoolService {
+
+	// 유치원
+	public List<PreschoolDto> getPreschoolList();
+	public void createPreschool(PreschoolDto preschool);
+	public void modifyPreschool(PreschoolDto preschool);
 
 	// 학급
 	public List<PreschoolClassDto> getClassListByCurrentLoginPreshcoolCode();

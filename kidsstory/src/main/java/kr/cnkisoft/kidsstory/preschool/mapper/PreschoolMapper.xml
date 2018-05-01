@@ -28,4 +28,32 @@
 		FROM
 			PRESCH_BUS
 	</select>
+
+	<select id="selectListPreschool"
+		resultType="kr.cnkisoft.kidsstory.preschool.domain.PreschoolDto">
+		SELECT
+			*
+		FROM
+			PRESCH_INFO
+	</select>
+
+	<insert id="insertPreschool" parameterType="kr.cnkisoft.kidsstory.preschool.domain.PreschoolDto">
+		INSERT INTO PRESCH_INFO
+			(SCH_CD, SCH_NAME, STTUS_CD, CREATED_DT, CREATED_BY)
+		VALUES
+			(#{schCd}, #{schName}, 'A', NOW(), #{createdBy})
+	</insert>
+
+	<update id="updatePreschool" parameterType="kr.cnkisoft.kidsstory.preschool.domain.PreschoolDto">
+		UPDATE
+			PRESCH_INFO
+		SET
+			SCH_CD = #{schCd}
+			, SCH_NAME = #{schName}
+			, UPDATED_DT = NOW()
+			, UPDATED_BY = #{updatedBy}
+		WHERE
+			SCH_CD = #{schCd}
+	</update>
+
 </mapper>

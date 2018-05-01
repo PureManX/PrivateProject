@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import kr.cnkisoft.KidsstoryApplication;
 import kr.cnkisoft.framework.utils.DateUtils;
+import kr.cnkisoft.kidsstory.admin.mapper.AdminUserMapper;
 import kr.cnkisoft.kidsstory.manage.domain.DailyMenuVo;
 import kr.cnkisoft.kidsstory.manage.mapper.MenuMapper;
 import kr.cnkisoft.kidsstory.user.domain.StudentVo;
@@ -20,24 +21,32 @@ import kr.cnkisoft.kidsstory.user.mapper.UserMapper;
 @SpringBootTest(classes = KidsstoryApplication.class)
 @ActiveProfiles("local")
 public class MapperTest {
-	
+
 	@Autowired
 	UserMapper userMapper;
-	
+
 	@Autowired
 	MenuMapper menuMapper;
-	
+
+	@Autowired
+	AdminUserMapper adminAuthMapper;
+
 	@Test
 	public void test() {
 		List<StudentVo> studentList = userMapper.selectListStudentByTeacherContact("01125709371");
-		
+
 		System.out.println(studentList);
 	}
-	
+
 	@Test
 	public void test2() {
 		List<DailyMenuVo> studentList = menuMapper.selectListDailyMenu("TEST1", DateUtils.currentDateOfYear());
-		
+
 		System.out.println(studentList);
+	}
+
+	@Test
+	public void test3() {
+		System.out.println(adminAuthMapper.selectAdminUserByLoginId("kidsadmin").toString());
 	}
 }

@@ -7,7 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Admin 페이 호출 컨트롤러
- * 
+ *
  * @author PureMaN
  *
  */
@@ -20,10 +20,10 @@ public class AdminViewController {
 	public ModelAndView adminLogin() {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("views/admin/login");
-		
+
 		return mav;
 	}
-	
+
 	// Admin Home (미정)
 	@RequestMapping(value= "/admin/home", method = RequestMethod.GET)
 	public ModelAndView adminHome() {
@@ -32,7 +32,7 @@ public class AdminViewController {
 
 		return mav;
 	}
-	
+
 	// 학생 관리 페이지
 	@RequestMapping(value= "/admin/student", method = RequestMethod.GET)
 	public ModelAndView adminStudent() {
@@ -41,7 +41,7 @@ public class AdminViewController {
 
 		return mav;
 	}
-	
+
 	// 학무보 관리 페이지
 	@RequestMapping(value= "/admin/parent", method = RequestMethod.GET)
 	public ModelAndView adminParent() {
@@ -50,7 +50,7 @@ public class AdminViewController {
 
 		return mav;
 	}
-	
+
 	// 공지사항 관리 페이지
 	@RequestMapping(value= "/admin/notice", method = RequestMethod.GET)
 	public ModelAndView adminNotice() {
@@ -59,7 +59,16 @@ public class AdminViewController {
 
 		return mav;
 	}
-	
+
+	// 유치원 관리 페이지
+	@RequestMapping(value= "/admin/preschool", method = RequestMethod.GET)
+	public ModelAndView adminPreschool() {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("views/admin/preschool");
+
+		return mav;
+	}
+
 	// 학급 관리 페이지
 	@RequestMapping(value= "/admin/preschool/class", method = RequestMethod.GET)
 	public ModelAndView adminPreschoolClass() {
